@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>مُحقِّقات الجرد — مدرسة إناث الجوفة الإعدادية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --or:#F4845F;        /* برتقالي السجل */
+  --cr:#FFF8F0;        /* كريمي */
+  --tl:#1B6CA8;        /* تيل */
+  --gd:#FFBF3C;        /* ذهبي */
+  --ink:#2A2A2A;
+  --mut:#6B6257;
+  --ok:#1E7A4B;
+  --no:#B23A2F;
+  --line:#E7D9C9;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:'Cairo','Segoe UI','Tahoma',sans-serif;
+  background:var(--cr); color:var(--ink);
+  font-size:17px; line-height:1.7;
+}
+.wrap{max-width:980px;margin:0 auto;padding:14px 14px 40px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:14px;
+  box-shadow:0 2px 0 rgba(0,0,0,.03)}
+h1,h2,h3{margin:0 0 8px;line-height:1.4}
+h1{font-size:27px;font-weight:800}
+h2{font-size:21px;font-weight:800}
+.sub{color:var(--mut);font-size:15px}
+.btn{font-family:inherit;font-size:17px;font-weight:600;cursor:pointer;border:0;border-radius:12px;
+  padding:12px 20px;background:var(--or);color:#fff;transition:filter .12s}
+.btn:hover{filter:brightness(1.07)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.sec{background:#fff;color:var(--tl);border:2px solid var(--tl)}
+.btn.gold{background:var(--gd);color:#4A3200}
+.btn.sm{padding:8px 14px;font-size:15px}
+input[type=text]{font-family:inherit;font-size:17px;padding:11px 14px;border:2px solid var(--line);
+  border-radius:12px;width:100%;background:#fff;color:var(--ink)}
+input[type=text]:focus{outline:0;border-color:var(--or)}
+
+/* ===== الرأس ===== */
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  background:linear-gradient(135deg,var(--or),#E8694B);color:#fff;border-radius:16px;padding:14px 18px;margin-bottom:14px}
+.top .nm{font-weight:800;font-size:19px}
+.top .sp{flex:1}
+.pill{background:rgba(255,255,255,.22);border-radius:999px;padding:5px 14px;font-weight:700;font-size:15px}
+.bar{height:9px;background:#F0E2D2;border-radius:999px;overflow:hidden;margin-top:10px}
+.bar>i{display:block;height:100%;background:var(--tl);width:0;transition:width .35s}
+
+/* ===== شبكة البزل ===== */
+.puz{position:relative;border-radius:14px;overflow:hidden;border:3px solid var(--gd);background:#fff;aspect-ratio:4/3}
+.puz svg{display:block;width:100%;height:100%}
+.tiles{position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,1fr)}
+.tile{background:#6E5B4B;border:1px solid rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:800;font-size:19px;transition:opacity .5s,transform .5s}
+.tile.off{opacity:0;transform:scale(.7);pointer-events:none}
+
+/* ===== السجل ===== */
+.srch{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.srch input{flex:1;min-width:200px}
+.tblwrap{max-height:330px;overflow:auto;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{background:#FBEFE4;position:sticky;top:0;font-weight:800;color:#6b4a35}
+tr.hit td{background:#FFF4D6}
+.no-w{color:var(--no);font-weight:700}
+.ye-w{color:var(--ok);font-weight:700}
+.cnt{font-size:14px;color:var(--mut);margin-top:6px}
+
+/* ===== السؤال ===== */
+.tag{display:inline-block;background:#EAF2F9;color:var(--tl);border-radius:999px;padding:3px 12px;
+  font-size:14px;font-weight:700;margin-bottom:8px}
+.q{font-size:20px;font-weight:700;margin:4px 0 14px}
+.q code{background:#2A2A2A;color:#FFD88A;padding:2px 9px;border-radius:7px;font-size:19px;letter-spacing:1px;
+  font-family:ui-monospace,Consolas,monospace;direction:ltr;display:inline-block}
+.opts{display:grid;gap:9px}
+.opt{font-family:inherit;font-size:17px;text-align:right;background:#fff;border:2px solid var(--line);
+  border-radius:12px;padding:12px 15px;cursor:pointer;transition:border-color .12s,background .12s}
+.opt:hover:not(:disabled){border-color:var(--or);background:#FFF9F4}
+.opt.good{border-color:var(--ok);background:#E9F7EF}
+.opt.bad{border-color:var(--no);background:#FBECEA;opacity:.75}
+.opt:disabled{cursor:default;color:var(--ink);-webkit-text-fill-color:var(--ink)}
+.opt.bad:disabled{color:var(--mut);-webkit-text-fill-color:var(--mut)}
+.fb{margin-top:12px;border-radius:12px;padding:12px 14px;font-size:16px;display:none}
+.fb.show{display:block}
+.fb.good{background:#E9F7EF;border:1px solid #BFE4CE}
+.fb.bad{background:#FBECEA;border:1px solid #F0CFC9}
+.hintbox{margin-top:10px;background:#FFF7E3;border:1px dashed var(--gd);border-radius:12px;padding:10px 13px;
+  font-size:15px;display:none}
+.hintbox.show{display:block}
+.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:12px}
+
+/* ===== الشهادة ===== */
+.cert{border:6px double var(--or);border-radius:16px;padding:26px;text-align:center;background:#fff}
+.cert .ttl{font-size:25px;font-weight:800;color:var(--tl)}
+.cert .who{font-size:31px;font-weight:800;margin:14px 0;color:var(--or)}
+.cert .sc{font-size:21px;font-weight:700}
+.cert .bdg{font-size:46px;margin:6px 0}
+.cert .ftr{margin-top:16px;font-size:14px;color:var(--mut)}
+.skill{background:#EAF2F9;border:1px solid #C9DEEE;border-radius:12px;padding:14px 16px;font-size:16px}
+.skill kbd{background:#2A2A2A;color:#fff;border-radius:6px;padding:2px 8px;font-size:14px;
+  font-family:ui-monospace,Consolas,monospace;direction:ltr;display:inline-block}
+.hide{display:none}
+@media print{
+  body{background:#fff}
+  .noprint{display:none!important}
+  .card{border:0;box-shadow:none;margin:0;padding:0}
+}
+@media(max-width:560px){
+  body{font-size:16px}
+  .q{font-size:18px}
+  h1{font-size:23px}
+}
+/* ===== تأثيرات بصرية خفيفة (transform/opacity فقط) ===== */
+#fxc{position:fixed;inset:0;pointer-events:none;z-index:60}
+.tile{backface-visibility:hidden}
+.tile.off{opacity:0;transform:rotateY(85deg) scale(.6)}
+.tile.pop{animation:tpop .55s ease-out}
+@keyframes tpop{0%{box-shadow:0 0 0 0 rgba(255,191,60,.9)}100%{box-shadow:0 0 0 26px rgba(255,191,60,0)}}
+.puz.glow{animation:pglow .9s ease-out}
+@keyframes pglow{0%{box-shadow:0 0 0 0 rgba(255,191,60,.75)}100%{box-shadow:0 0 0 18px rgba(255,191,60,0)}}
+.opt.bad{animation:shk .34s}
+@keyframes shk{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.opt.good{animation:gpop .4s ease-out}
+@keyframes gpop{0%{transform:scale(1)}45%{transform:scale(1.035)}100%{transform:scale(1)}}
+.opt:hover:not(:disabled){transform:translateY(-2px)}
+.opt{transition:border-color .12s,background .12s,transform .12s}
+section{animation:fin .4s ease-out}
+@keyframes fin{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:none}}
+.card.qin{animation:qin .32s ease-out}
+@keyframes qin{0%{opacity:0;transform:translateX(18px)}100%{opacity:1;transform:none}}
+.bar>i{background:linear-gradient(90deg,var(--tl),#2E8BCE,var(--tl));background-size:200% 100%;animation:shim 2.4s linear infinite}
+@keyframes shim{0%{background-position:0 0}100%{background-position:200% 0}}
+#hdP.bump{animation:bmp .4s ease-out}
+@keyframes bmp{0%{transform:scale(1)}40%{transform:scale(1.22)}100%{transform:scale(1)}}
+.cert .bdg{animation:puls 2.2s ease-in-out infinite}
+@keyframes puls{0%,100%{transform:scale(1)}50%{transform:scale(1.11)}}
+.fxoff *,.fxoff *::before,.fxoff *::after{animation:none!important;transition:none!important}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.fxbtn{position:fixed;inset-inline-start:10px;bottom:10px;z-index:70;font-family:inherit;font-size:13px;
+  background:#fff;border:1px solid var(--line);color:var(--mut);border-radius:999px;padding:6px 12px;cursor:pointer;opacity:.85}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ======== شاشة البداية ======== -->
+<section id="scrStart">
+  <div class="card" style="text-align:center">
+    <div style="font-size:52px;line-height:1">🔍</div>
+    <h1>مُحقِّقات الجرد</h1>
+    <p class="sub">لعبة بحث في سجل أجهزة مدرسة إناث الجوفة الإعدادية — ٥٨ جهازًا<br>
+    منطقة عمان التعليمية · جرد 17/02/2026</p>
+    <div style="max-width:380px;margin:18px auto 0;text-align:right">
+      <label for="nm" style="font-weight:700;display:block;margin-bottom:6px">اسمك:</label>
+      <input type="text" id="nm" placeholder="اكتبي اسمك هنا" autocomplete="off">
+      <div id="startErr" style="color:var(--no);font-size:15px;height:22px"></div>
+      <button class="btn" id="go" style="width:100%">ابدئي التحقيق</button>
+    </div>
+    <div id="best" class="sub" style="margin-top:14px"></div>
+  </div>
+  <div class="card">
+    <h3>كيف تلعبين؟</h3>
+    <p class="sub" style="color:var(--ink)">
+    عندك <b>١٢ مهمة</b> على سجل الجرد الحقيقي للمدرسة. السجل كامل موجود أمامك مع <b>مربّع بحث</b> — استخدميه.<br>
+    ✦ كل إجابة صحيحة بتكشف قطعة من الصورة المخفيّة.<br>
+    ✦ ما في انتقال للمهمة التالية إلا بالإجابة الصحيحة — بتقدري تحاولي من جديد.<br>
+    ✦ كل محاولة خاطئة بتقلّل نقاط المهمة، والتلميح بيكلّف ٢ نقطة.</p>
+  </div>
+</section>
+
+<!-- ======== شاشة اللعب ======== -->
+<section id="scrGame" class="hide">
+  <div class="top">
+    <span class="nm" id="hdNm">—</span>
+    <span class="sp"></span>
+    <span class="pill" id="hdQ">المهمة ١ / ١٢</span>
+    <span class="pill" id="hdP">٠ نقطة</span>
+  </div>
+  <div class="bar"><i id="hdBar"></i></div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="tag" id="qTag">—</div>
+    <div class="q" id="qText">—</div>
+    <div class="opts" id="qOpts"></div>
+    <div class="hintbox" id="qHint"></div>
+    <div class="fb" id="qFb"></div>
+    <div class="row">
+      <button class="btn sec sm" id="btnHint">💡 تلميح (−٢)</button>
+      <button class="btn sm hide" id="btnNext">المهمة التالية ←</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🧩 الصورة المخفيّة</h3>
+    <p class="sub">كل إجابة صحيحة بتكشف قطعة.</p>
+    <div class="puz" id="puz">
+      <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-label="مختبر الحاسوب">
+  <defs>
+    <pattern id="tz" width="20" height="20" patternUnits="userSpaceOnUse">
+      <rect width="20" height="20" fill="#1B6CA8"/>
+      <path d="M10 2 L18 10 L10 18 L2 10 Z" fill="#FFF8F0"/>
+      <path d="M10 6 L14 10 L10 14 L6 10 Z" fill="#F4845F"/>
+    </pattern>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#CDE6F7"/><stop offset="1" stop-color="#EAF6FF"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="#FFF8F0"/>
+  <rect y="0" width="400" height="20" fill="url(#tz)"/>
+  <rect y="280" width="400" height="20" fill="url(#tz)"/>
+  <rect x="0" y="20" width="14" height="260" fill="url(#tz)"/>
+  <rect x="386" y="20" width="14" height="260" fill="url(#tz)"/>
+
+  <!-- نافذة وشجرة زيتون -->
+  <rect x="250" y="44" width="118" height="86" rx="6" fill="url(#sky)" stroke="#C9B9A6" stroke-width="3"/>
+  <line x1="309" y1="44" x2="309" y2="130" stroke="#C9B9A6" stroke-width="3"/>
+  <line x1="250" y1="87" x2="368" y2="87" stroke="#C9B9A6" stroke-width="3"/>
+  <path d="M330 126 L330 104" stroke="#7B5E3B" stroke-width="5"/>
+  <circle cx="330" cy="98" r="15" fill="#6E8F4A"/>
+  <circle cx="320" cy="104" r="9" fill="#7FA055"/>
+  <circle cx="340" cy="103" r="8" fill="#7FA055"/>
+
+  <!-- لوح/سبورة -->
+  <rect x="36" y="44" width="186" height="86" rx="6" fill="#23433A" stroke="#C9B9A6" stroke-width="3"/>
+  <text x="129" y="80" font-family="Cairo,Tahoma,sans-serif" font-size="20" font-weight="800" fill="#FFBF3C" text-anchor="middle">مختبر الحاسوب</text>
+  <text x="129" y="106" font-family="Cairo,Tahoma,sans-serif" font-size="13" fill="#FFF8F0" text-anchor="middle">مدرسة إناث الجوفة الإعدادية</text>
+
+  <!-- طاولة -->
+  <rect x="30" y="196" width="340" height="12" rx="4" fill="#C98A5B"/>
+  <rect x="44" y="208" width="10" height="40" fill="#A9703F"/>
+  <rect x="346" y="208" width="10" height="40" fill="#A9703F"/>
+
+  <!-- ثلاثة أجهزة -->
+  <g>
+    <rect x="52" y="150" width="76" height="48" rx="4" fill="#2A2A2A"/>
+    <rect x="57" y="155" width="66" height="36" rx="2" fill="#1B6CA8"/>
+    <text x="90" y="178" font-family="monospace" font-size="11" fill="#FFBF3C" text-anchor="middle">3YNKJZ1</text>
+    <rect x="62" y="210" width="56" height="16" rx="3" fill="#4A4A4A"/>
+  </g>
+  <g>
+    <rect x="162" y="150" width="76" height="48" rx="4" fill="#2A2A2A"/>
+    <rect x="167" y="155" width="66" height="36" rx="2" fill="#1B6CA8"/>
+    <text x="200" y="178" font-family="monospace" font-size="11" fill="#FFBF3C" text-anchor="middle">JFBGF62</text>
+    <rect x="172" y="210" width="56" height="16" rx="3" fill="#4A4A4A"/>
+  </g>
+  <g>
+    <rect x="272" y="150" width="76" height="48" rx="4" fill="#2A2A2A"/>
+    <rect x="277" y="155" width="66" height="36" rx="2" fill="#1B6CA8"/>
+    <text x="310" y="178" font-family="monospace" font-size="11" fill="#FFBF3C" text-anchor="middle">H5N0TZ2</text>
+    <rect x="282" y="210" width="56" height="16" rx="3" fill="#4A4A4A"/>
+  </g>
+
+  <text x="200" y="262" font-family="Cairo,Tahoma,sans-serif" font-size="17" font-weight="800" fill="#F4845F" text-anchor="middle">أحسنتِ — كشفتِ الصورة كاملة 🎉</text>
+</svg>
+
+      <div class="tiles" id="tiles"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📋 سجل الجرد — ٥٨ جهازًا</h3>
+    <div class="srch">
+      <input type="text" id="sq" placeholder="ابحثي: Service Tag أو موديل أو مكان أو نوع…" autocomplete="off">
+      <button class="btn sec sm" id="sclr">مسح</button>
+    </div>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>م</th><th>النوع</th><th>الموديل</th><th>الشركة</th><th>Service Tag</th><th>يعمل؟</th><th>المكان</th></tr></thead>
+        <tbody id="tb"></tbody>
+      </table>
+    </div>
+    <div class="cnt" id="scount"></div>
+  </div>
+</section>
+
+<!-- ======== شاشة النهاية ======== -->
+<section id="scrEnd" class="hide">
+  <div class="card">
+    <div class="cert" id="cert">
+      <div class="ttl">شهادة إنجاز — مُحقِّقات الجرد</div>
+      <div class="sub">مدرسة إناث الجوفة الإعدادية · منطقة عمان التعليمية · UNRWA</div>
+      <div class="who" id="cNm">—</div>
+      <div class="bdg" id="cBdg">🥇</div>
+      <div class="sc" id="cSc">—</div>
+      <div class="sub" id="cDet">—</div>
+      <div class="ftr">معلمة المادة: ريم توفيق · <span id="cDate">—</span></div>
+    </div>
+    <div class="row noprint">
+      <button class="btn" id="btnPrint">🖨️ اطبعي الشهادة</button>
+      <button class="btn sec" id="btnAgain">🔁 العبي مرة أخرى</button>
+    </div>
+  </div>
+
+  <div class="card noprint">
+    <h3>📸 مهارتك الأولى: صوّري الشاشة وابعثيها</h3>
+    <div class="skill">
+      <b>١) صورة للشاشة كلها:</b> اضغطي <kbd>PrtScn</kbd> (أو <kbd>Win</kbd> + <kbd>PrtScn</kbd> لحفظها تلقائيًا في مجلد الصور ← Screenshots).<br>
+      <b>٢) صورة لجزء تختارينه:</b> اضغطي <kbd>Win</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>، ثم اسحبي حول الشهادة.<br>
+      <b>٣) التنقّل بين النوافذ:</b> <kbd>Alt</kbd> + <kbd>Tab</kbd> للتبديل السريع، و<kbd>Win</kbd> + <kbd>Tab</kbd> لعرض كل النوافذ.<br>
+      <b>٤) اللصق والإرسال:</b> افتحي Teams بـ <kbd>Alt</kbd> + <kbd>Tab</kbd>، وفي خانة الرسالة اضغطي <kbd>Ctrl</kbd> + <kbd>V</kbd> ثم أرسلي.
+    </div>
+  </div>
+
+  <div class="card noprint">
+    <h3>📊 مراجعة مهماتك</h3>
+    <div id="rev"></div>
+  </div>
+</section>
+
+</div>
+<script>
+/* =========================================================
+   مُحقِّقات الجرد — لعبة بحث على سجل جرد المدرسة
+   المصدر الوحيد للبيانات: سجل_جرد_الأجهزة_17-02-2026.xlsx
+   ملاحظة لريم: لتعديل الأسئلة غيّري مصفوفة Q في الأسفل فقط.
+   ========================================================= */
+
+/* ---------- ١) بيانات الجرد (٥٨ سجلًا) ---------- */
+const INV=[
+{n:1,t:"حاسوب",m:"OPTIPLEX 3010",b:"Dell",g:"3YNKJZ1",w:1,l:"مختبر الحاسوب"},
+{n:2,t:"حاسوب",m:"Optiplex 3060",b:"Dell",g:"HCN0TZ2",w:1,l:"مختبر الحاسوب"},
+{n:3,t:"حاسوب",m:"OPTIPLEX 3010",b:"Dell",g:"CQGJ5Y1",w:1,l:"مختبر الحاسوب"},
+{n:4,t:"حاسوب",m:"OPTIPLEX 390",b:"Dell",g:"لا يوجد",w:0,l:"مستودع الحاسوب"},
+{n:5,t:"حاسوب",m:"PowerEdge T360 Server",b:"Dell",g:"BJZ5C72",w:0,l:"مختبر الحاسوب"},
+{n:6,t:"حاسوب",m:"OPTIPLEX 3010",b:"Dell",g:"BL373Y1",w:1,l:"مختبر الحاسوب"},
+{n:7,t:"حاسوب",m:"OPTIPLEX 3010",b:"Dell",g:"لا يوجد",w:0,l:"مستودع الحاسوب"},
+{n:8,t:"حاسوب",m:"OPTIPLEX 3010",b:"Dell",g:"3NNKJZ1",w:1,l:"مختبر الحاسوب"},
+{n:9,t:"طابعة",m:"HP LaserJet P3005n",b:"HP",g:"Q7815A",w:0,l:"مختبر الحاسوب"},
+{n:10,t:"حاسوب",m:"OPTIPLEX 3010",b:"Dell",g:"5NJXH5J",w:1,l:"مختبر الحاسوب"},
+{n:11,t:"حاسوب",m:"Optiplex 3010",b:"Dell",g:"5KJXH5J",w:1,l:"مختبر الحاسوب"},
+{n:12,t:"حاسوب",m:"OPTIPLEX 3010",b:"Dell",g:"5QJXH5J",w:1,l:"مختبر الحاسوب"},
+{n:13,t:"حاسوب",m:"Optiplex 3010",b:"Dell",g:"3GNKJ21",w:1,l:"مختبر الحاسوب"},
+{n:14,t:"حاسوب",m:"OPTIPLEX 3010",b:"Dell",g:"JCGJ5Y1",w:1,l:"مختبر الحاسوب"},
+{n:15,t:"حاسوب",m:"Optiplex 3010",b:"Dell",g:"6KJXH5J",w:1,l:"مختبر الحاسوب"},
+{n:16,t:"حاسوب",m:"OPTIPLEX 3010",b:"Dell",g:"27275615929",w:0,l:"مستودع الحاسوب"},
+{n:17,t:"حاسوب",m:"OPTIPLEX 3020",b:"Dell",g:"42CFG86",w:1,l:"مختبر الحاسوب"},
+{n:18,t:"حاسوب",m:"OPTIPLEX 3010",b:"Dell",g:"لا يوجد",w:0,l:"مستودع الحاسوب"},
+{n:19,t:"حاسوب",m:"Optiplex 3010",b:"Dell",g:"3HPKJ21",w:1,l:"مختبر الحاسوب"},
+{n:20,t:"حاسوب",m:"OPTIPLEX 3010",b:"Dell",g:"26429089465",w:0,l:"مستودع الحاسوب"},
+{n:21,t:"حاسوب",m:"OPTIPLEX 3010",b:"Dell",g:"C3HJ5Y1",w:1,l:"مختبر الحاسوب"},
+{n:22,t:"حاسوب",m:"Optiplex 3010",b:"Dell",g:"6PJXH5J",w:1,l:"مختبر الحاسوب"},
+{n:23,t:"حاسوب",m:"OPTIPLEX GX270",b:"Dell",g:"H25391J",w:0,l:"مستودع الحاسوب"},
+{n:24,t:"حاسوب",m:"Optiplex 3010",b:"Dell",g:"CS273Y1",w:1,l:"مختبر الحاسوب"},
+{n:25,t:"حاسوب",m:"OPTIPLEX 3010",b:"Dell",g:"6RJXH5J",w:1,l:"مختبر الحاسوب"},
+{n:26,t:"حاسوب",m:"Optiplex 3010",b:"Dell",g:"CJHJ5Y1",w:1,l:"مختبر الحاسوب"},
+{n:27,t:"حاسوب",m:"OPTIPLEX 3010",b:"Dell",g:"6LJXH5J",w:1,l:"مختبر الحاسوب"},
+{n:28,t:"حاسوب",m:"OPTIPLEX 380",b:"Dell",g:"67YGM4J",w:0,l:"مستودع الحاسوب"},
+{n:29,t:"حاسوب",m:"OPTIPLEX 3010",b:"Dell",g:"DZ573Y4",w:1,l:"مختبر الحاسوب"},
+{n:30,t:"حاسوب",m:"Optiplex 3010",b:"Dell",g:"6QJXH5J",w:1,l:"مختبر الحاسوب"},
+{n:31,t:"حاسوب",m:"OPTIPLEX 3010",b:"Dell",g:"3VNKJZ1",w:1,l:"مختبر الحاسوب"},
+{n:32,t:"حاسوب",m:"OPTIPLEX 380",b:"Dell",g:"29YGI14J",w:0,l:"مستودع الحاسوب"},
+{n:33,t:"حاسوب",m:"OPTIPLEX 3010",b:"Dell",g:"5MJXH5U",w:1,l:"مختبر الحاسوب"},
+{n:34,t:"حاسوب",m:"OPTIPLEX 3010",b:"Dell",g:"3ZNKJZ1",w:1,l:"مختبر الحاسوب"},
+{n:35,t:"حاسوب",m:"Optiplex 3010",b:"Dell",g:"BH373Y1",w:1,l:"مختبر الحاسوب"},
+{n:36,t:"حاسوب",m:"OPTIPLEX 3010",b:"Dell",g:"BP273Y1",w:1,l:"غرفة المعلمات"},
+{n:37,t:"حاسوب",m:"OPTIPLEX 3010",b:"Dell",g:"5LJXH5J",w:1,l:"إدارة البنات"},
+{n:38,t:"حاسوب",m:"OPTIPLEX 3010",b:"Dell",g:"6JMXH5J",w:1,l:"إدارة البنات"},
+{n:39,t:"حاسوب",m:"OPTIPLEX 3010",b:"Dell",g:"B8573Y1",w:1,l:"إدارة البنين"},
+{n:40,t:"حاسوب",m:"OPTIPLEX 3010",b:"Dell",g:"5PJXH5J",w:0,l:"مستودع الحاسوب"},
+{n:41,t:"حاسوب",m:"OPTIPLEX 3010",b:"Dell",g:"5PJXH5J",w:0,l:"مستودع الحاسوب"},
+{n:42,t:"حاسوب",m:"OPTIPLEX 390",b:"Dell",g:"BMSCD5J",w:0,l:"مستودع الحاسوب"},
+{n:43,t:"حاسوب",m:"OPTIPLEX 3010",b:"Dell",g:"6NJXH5J",w:0,l:"مستودع الحاسوب"},
+{n:44,t:"طابعة",m:"AltaLink 8170B",b:"Xerox",g:"502B-D",w:0,l:"إدارة البنين"},
+{n:45,t:"طابعة",m:"HP LaserJet 1020",b:"HP",g:"Q5911A",w:0,l:"إدارة البنين"},
+{n:46,t:"طابعة",m:"HP LaserJet P3005n",b:"HP",g:"Q7814A",w:1,l:"إدارة البنين"},
+{n:47,t:"حاسوب",m:"OPTIPLEX 5040",b:"Dell",g:"JFBGF62",w:1,l:"مختبر العلوم"},
+{n:48,t:"طابعة",m:"imageFORCE 6160",b:"Canon",g:"4-3193FL",w:1,l:"إدارة البنين"},
+{n:49,t:"حاسوب",m:"OPTIPLEX 3020",b:"Dell",g:"C2N4C92",w:1,l:"غرفة الرياضيات"},
+{n:50,t:"داتاشو",m:"Dell 1410X",b:"Dell",g:"F738LJ1",w:1,l:"مختبر العلوم"},
+{n:51,t:"حاسوب",m:"OptiPlex 3060",b:"Dell",g:"H5N0TZ2",w:1,l:"المكتبة"},
+{n:52,t:"داتاشو",m:"NEC HDml",b:"NEC",g:"لا يوجد",w:1,l:"غرفة الرياضيات"},
+{n:53,t:"نظام صوت",m:"AXB_60",b:"Opuimus",g:"166501",w:0,l:"المكتبة"},
+{n:54,t:"سبورة ذكية",m:"WX-WB07522H",b:"Kalboard",g:"C2L5H2G002504B0011",w:1,l:"المكتبة"},
+{n:55,t:"حاسوب",m:"OPTIPLEX 3040",b:"Dell",g:"2HWB383",w:1,l:"الإرشاد"},
+{n:56,t:"طابعة",m:"LaserJet Pro M402dne",b:"HP",g:"C5J91A",w:1,l:"الإرشاد"},
+{n:57,t:"داتاشو",m:"Dell 1550",b:"Dell",g:"F9RMJ92",w:1,l:"الإرشاد"},
+{n:58,t:"طابعة",m:"LaserJet Pro M402dne",b:"HP",g:"C5J91A",w:1,l:"الإرشاد"}
+];
+
+
+/* ---------- ٢) الأسئلة ----------
+   t  : نوع المهمة (يظهر كوسم فوق السؤال)
+   q  : نص السؤال (يسمح بوسوم HTML بسيطة)
+   c  : الخيارات   | a : رقم الخيار الصحيح (يبدأ من صفر)
+   h  : التلميح (يكلّف ٢ نقطة)  | w : الشرح بعد الإجابة
+   كل الأرقام في الأسئلة محسوبة من ملف الجرد نفسه.          */
+const Q=[
+{t:"🔎 بحث عن جهاز",
+ q:"اذهبي إلى سجل الجرد وابحثي عن الجهاز صاحب الـ Service Tag: <code>3YNKJZ1</code><br>أين تجدينه؟",
+ c:["مختبر الحاسوب","مختبر العلوم","المكتبة","غرفة الرياضيات"],a:0,
+ h:"اكتبي 3YNKJZ1 في مربّع البحث، وشوفي آخر عمود.",
+ w:"الجهاز رقم ١ في السجل: OPTIPLEX 3010 من Dell، يعمل، في مختبر الحاسوب."},
+
+{t:"🔎 بحث عن جهاز",
+ q:"في مختبر العلوم حاسوب واحد فقط، Service Tag له <code>JFBGF62</code>.<br>ما موديله؟",
+ c:["OPTIPLEX 5040","OPTIPLEX 3010","OPTIPLEX 3060","PowerEdge T360 Server"],a:0,
+ h:"ابحثي بكلمة: مختبر العلوم — رح يطلع لك سجلّان فقط.",
+ w:"الجهاز رقم ٤٧: حاسوب Dell OPTIPLEX 5040، يعمل، في مختبر العلوم. والجهاز الثاني هناك داتاشو."},
+
+{t:"🔎 بحث عن جهاز",
+ q:"ابحثي في المكتبة.<br>كم جهازًا مسجَّلًا فيها؟",
+ c:["٣","٤","٥","٦"],a:0,
+ h:"اكتبي: المكتبة — وعُدّي الصفوف الظاهرة.",
+ w:"في المكتبة ٣ أجهزة: حاسوب OptiPlex 3060، وسبورة ذكية Kalboard، ونظام صوت Opuimus (لا يعمل)."},
+
+{t:"📊 تحليل بيانات",
+ q:"كم جهازًا <b>لا يعمل</b> في المدرسة كلها؟",
+ c:["١٧","١٢","١٥","١٩"],a:0,
+ h:"العمود «يعمل؟» فيه كلمة «لا» — عُدّيها، أو ابحثي بكلمة: لا",
+ w:"١٧ جهازًا لا تعمل من أصل ٥٨ — أي أكثر من ربع أجهزة المدرسة. ١٢ منها في مستودع الحاسوب."},
+
+{t:"📊 تحليل بيانات",
+ q:"أي مكان في المدرسة فيه <b>أكبر عدد</b> من الأجهزة؟",
+ c:["مختبر الحاسوب","مستودع الحاسوب","إدارة البنين","الإرشاد"],a:0,
+ h:"جرّبي البحث بكل مكان على حدة وقارني عدد الصفوف.",
+ w:"مختبر الحاسوب فيه ٢٧ جهازًا (٢٦ حاسوبًا وطابعة)، يليه مستودع الحاسوب بـ ١٢ جهازًا."},
+
+{t:"📊 تحليل بيانات",
+ q:"كم <b>طابعة</b> في إدارة البنين؟",
+ c:["٢","٣","٤","٥"],a:2,
+ h:"ابحثي: إدارة البنين — ثم عُدّي صفوف الطابعات فقط.",
+ w:"في إدارة البنين ٥ أجهزة: ٤ طابعات (Xerox وHP ×٢ وCanon) وحاسوب واحد. ٣ من الطابعات لا تعمل."},
+
+{t:"📊 تحليل بيانات",
+ q:"ما الموديل <b>الأكثر تكرارًا</b> بين أجهزة المدرسة؟",
+ c:["OPTIPLEX 3010","OPTIPLEX 3020","OPTIPLEX 3060","PowerEdge T360 Server"],a:0,
+ h:"ابحثي: 3010 — وشوفي عدد الصفوف أسفل الجدول.",
+ w:"OPTIPLEX 3010 مكرر ٣٤ مرة من أصل ٥٨ — أي أكثر من نصف أجهزة المدرسة من الموديل نفسه."},
+
+{t:"📊 تحليل بيانات",
+ q:"الأجهزة الـ ١٢ الموجودة في <b>مستودع الحاسوب</b> يجمعها شيء واحد.<br>ما هو؟",
+ c:["كلها مسجَّلة على أنها لا تعمل","كلها من نوع طابعة وليست حواسيب","كلها تحمل Service Tag واضحًا ومقروءًا","كلها من موديل OPTIPLEX 3010 بالضبط"],a:0,
+ h:"ابحثي: مستودع — وراقبي عمود «يعمل؟».",
+ w:"كل الـ ١٢ جهازًا في المستودع لا تعمل. المستودع هو المكان الذي تُنقَل إليه الأجهزة المعطّلة."},
+
+{t:"🧩 لغز حاسوبي",
+ q:"جهاز <b>Dell OPTIPLEX 3010</b> — ما نوعه؟",
+ c:["حاسوب مكتبي","حاسوب محمول","خادم شبكة","جهاز لوحي"],a:0,
+ h:"الـ OptiPlex سلسلة أجهزة Dell للمكاتب والمدارس.",
+ w:"OptiPlex سلسلة حواسيب مكتبية من Dell، تتكوّن من وحدة نظام منفصلة عن الشاشة ولوحة المفاتيح."},
+
+{t:"🧩 لغز حاسوبي",
+ q:"ما فائدة الـ <b>Service Tag</b> على جهاز Dell؟",
+ c:["رقم فريد يعرّف الجهاز عند الشركة","كلمة مرور الدخول إلى نظام التشغيل عليه","رقم إصدار نظام التشغيل المثبّت عليه","عدد سنوات الضمان المتبقية على الجهاز"],a:0,
+ h:"في الجدول، هل تكرّر هذا الرقم في جهازين؟ المفروض لا.",
+ w:"Service Tag رقم فريد لكل جهاز، تُعرّفه به الشركة المصنّعة لمعرفة مواصفاته وضمانه — ولهذا يُستخدم في الجرد."},
+
+{t:"🧩 لغز حاسوبي",
+ q:"في المكتبة جهاز <b>Kalboard WX-WB07522H</b>.<br>ما وظيفته؟",
+ c:["سبورة ذكية للعرض التفاعلي","طابعة ليزر بالأبيض والأسود للمكتبة","نظام صوت للقاعات والاحتفالات المدرسية","جهاز عرض داتاشو يُعلَّق في سقف الغرفة"],a:0,
+ h:"ابحثي عن الرقم WX في السجل، وشوفي عمود «النوع».",
+ w:"السجل يصنّفه سبورة ذكية (Kalboard) في المكتبة، وهو جهاز عرض تفاعلي يُكتب عليه ويُتحكَّم به باللمس."},
+
+{t:"🧩 لغز حاسوبي",
+ q:"ابحثي عن <code>5PJXH5J</code>.<br>رح تلاقيه في <b>صفّين</b>. ما دلالة ذلك؟",
+ c:["خطأ في السجل، فالرقم يجب أن يكون فريدًا","أمر طبيعي، فالجهازان من الموديل نفسه تمامًا","يعني أن الجهاز انتقل من مكان إلى مكان آخر","يعني أن الجهاز مسجّل مرتين لأنه ما زال يعمل"],a:0,
+ h:"تذكّري جواب السؤال السابق عن الـ Service Tag.",
+ w:"مكرر فعلًا في السجل (الصفّان ٤٠ و٤١)، وبما أن الـ Service Tag فريد لكل جهاز فهذا خطأ تسجيل يحتاج مراجعة — وكذلك الرقم C5J91A في الإرشاد."}
+];
+
+/* ---------- ٣) الحالة ---------- */
+const AR=n=>String(n).replace(/\d/g,d=>"٠١٢٣٤٥٦٧٨٩"[d]);
+const KEY="jofeh:hunt:v1";
+let S={name:"",i:0,pts:0,tries:0,used:false,log:[]};
+
+function load(){try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return {}}}
+function store(o){try{localStorage.setItem(KEY,JSON.stringify(o))}catch(e){}}
+
+/* ---------- ٤) جدول السجل والبحث ---------- */
+const tb=document.getElementById("tb"), sq=document.getElementById("sq"), sc=document.getElementById("scount");
+function drawTable(f){
+  f=(f||"").trim().toLowerCase();
+  const rows=INV.filter(r=>!f||[r.n,r.t,r.m,r.b,r.g,r.l,(r.w?"نعم يعمل":"لا يعمل")].join(" ").toLowerCase().includes(f));
+  tb.innerHTML=rows.map(r=>
+    `<tr class="${f?'hit':''}"><td>${AR(r.n)}</td><td>${r.t}</td><td>${r.m}</td><td>${r.b||"—"}</td>`+
+    `<td style="direction:ltr;text-align:left">${r.g}</td>`+
+    `<td class="${r.w?'ye-w':'no-w'}">${r.w?"نعم":"لا"}</td><td>${r.l}</td></tr>`).join("");
+  sc.textContent="الظاهر الآن: "+AR(rows.length)+" من "+AR(INV.length)+" جهازًا";
+}
+sq.addEventListener("input",()=>drawTable(sq.value));
+document.getElementById("sclr").addEventListener("click",()=>{sq.value="";drawTable("");sq.focus()});
+drawTable("");
+
+/* ---------- ٥) شبكة البزل ---------- */
+const tiles=document.getElementById("tiles");
+function buildTiles(){
+  tiles.innerHTML="";
+  for(let k=0;k<12;k++){
+    const d=document.createElement("div");
+    d.className="tile"; d.id="t"+k; d.textContent=AR(k+1);
+    tiles.appendChild(d);
+  }
+}
+buildTiles();
+
+/* ---------- ٦) سير اللعبة ---------- */
+const $=id=>document.getElementById(id);
+function show(id){["scrStart","scrGame","scrEnd"].forEach(s=>$(s).classList.toggle("hide",s!==id));window.scrollTo(0,0)}
+
+function head(){
+  $("hdNm").textContent=S.name;
+  $("hdQ").textContent="المهمة "+AR(S.i+1)+" / "+AR(Q.length);
+  $("hdBar").style.width=(S.i/Q.length*100)+"%";
+}
+function pointsNow(){
+  const f=[10,7,5,3][Math.min(S.tries,3)];
+  return Math.max(f-(S.used?2:0),1);
+}
+function render(){
+  const q=Q[S.i]; S.tries=0; S.used=false;
+  head();
+  $("hdP").textContent=AR(S.pts)+" نقطة";
+  $("qTag").textContent=q.t;
+  $("qText").innerHTML=q.q;
+  $("qHint").className="hintbox"; $("qHint").textContent="";
+  $("qFb").className="fb"; $("qFb").innerHTML="";
+  $("btnHint").classList.remove("hide"); $("btnHint").disabled=false;
+  $("btnNext").classList.add("hide");
+  const c=$("qOpts").closest(".card");
+  c.classList.remove("qin"); void c.offsetWidth; c.classList.add("qin");
+  const box=$("qOpts"); box.innerHTML="";
+  q.c.forEach((txt,k)=>{
+    const b=document.createElement("button");
+    b.className="opt"; b.innerHTML=txt; b.dataset.k=k;
+    b.addEventListener("click",()=>answer(k,b));
+    box.appendChild(b);
+  });
+}
+function answer(k,btn){
+  const q=Q[S.i], fb=$("qFb");
+  if(k===q.a){
+    const got=pointsNow(); S.pts+=got;
+    btn.classList.add("good");
+    [...$("qOpts").children].forEach(b=>b.disabled=true);
+    const before=S.pts-got;
+    confetti(S.i===Q.length-1?110:50); sndGood();
+    const tEl=$("t"+S.i); tEl.classList.add("pop"); $("puz").classList.add("glow");
+    setTimeout(()=>{tEl.classList.remove("pop");$("puz").classList.remove("glow")},950);
+    countTo($("hdP"),before,S.pts); $("hdP").classList.add("bump");
+    setTimeout(()=>$("hdP").classList.remove("bump"),420);
+    fb.className="fb good show";
+    fb.innerHTML="✅ <b>صحيح! +"+AR(got)+" نقطة</b><br>"+q.w;
+    $("t"+S.i).classList.add("off");
+    $("btnHint").classList.add("hide");
+    $("btnNext").classList.remove("hide");
+    $("btnNext").textContent = S.i===Q.length-1 ? "النتيجة النهائية ←" : "المهمة التالية ←";
+    S.log.push({q:S.i,pts:got,tries:S.tries,hint:S.used});
+    head();
+  }else{
+    S.tries++;
+    sndBad();
+    btn.classList.add("bad"); btn.disabled=true;
+    fb.className="fb bad show";
+    fb.innerHTML="❌ <b>مش صح — جرّبي مرة ثانية.</b><br>ارجعي لسجل الجرد وابحثي قبل ما تختاري. المهمة التالية ما بتفتح إلا بالإجابة الصحيحة."+
+      (S.tries>=2?"<br>💡 استعملي زرّ التلميح إذا بدك.":"");
+  }
+}
+$("btnHint").addEventListener("click",()=>{
+  if(S.used)return;
+  S.used=true;
+  $("qHint").className="hintbox show";
+  $("qHint").innerHTML="💡 <b>تلميح:</b> "+Q[S.i].h;
+  $("btnHint").disabled=true;
+});
+$("btnNext").addEventListener("click",()=>{
+  S.i++;
+  if(S.i>=Q.length){finish()}else{render()}
+});
+
+/* ---------- ٧) النهاية والشهادة ---------- */
+function badge(p){
+  if(p>=100)return["🥇","خبيرة جرد"];
+  if(p>=80) return["🥈","محقّقة متقدّمة"];
+  if(p>=50) return["🥉","محقّقة أوّلية"];
+  return["🎖️","محقّقة مبتدئة"];
+}
+function finish(){
+  const [ic,ttl]=badge(S.pts);
+  const noHint=S.log.filter(x=>!x.hint).length;
+  const first=S.log.filter(x=>x.tries===0).length;
+  $("cNm").textContent=S.name;
+  $("cBdg").textContent=ic;
+  $("cSc").innerHTML=AR(S.pts)+" نقطة من "+AR(Q.length*10)+" — <b>"+ttl+"</b>";
+  $("cDet").innerHTML="أنجزت <bdi>"+AR(Q.length)+"</bdi> مهمة &nbsp;·&nbsp; من المحاولة الأولى: <bdi>"+AR(first)+
+    "</bdi> &nbsp;·&nbsp; بدون تلميح: <bdi>"+AR(noHint)+"</bdi>";
+  const d=new Date();
+  const MN=["كانون الثاني","شباط","آذار","نيسان","أيار","حزيران","تموز","آب","أيلول","تشرين الأول","تشرين الثاني","كانون الأول"];
+  $("cDate").innerHTML="<bdi>"+AR(d.getDate())+"</bdi> "+MN[d.getMonth()]+" <bdi>"+AR(d.getFullYear())+"</bdi>";
+  $("rev").innerHTML=Q.map((q,k)=>{
+    const L=S.log.find(x=>x.q===k)||{pts:0,tries:0,hint:false};
+    return '<div style="border-bottom:1px solid var(--line);padding:7px 0">'+
+      '<b>'+AR(k+1)+'.</b> '+q.t+' — <b>'+AR(L.pts)+'</b> نقطة'+
+      (L.tries?' · '+AR(L.tries)+' محاولة خاطئة':' · من أول محاولة ✔')+(L.hint?' · استعملتِ التلميح':'')+
+      '<div class="sub">'+q.w+'</div></div>';
+  }).join("");
+  const db=load();
+  db.name=S.name;
+  db.best=Math.max(db.best||0,S.pts);
+  db.runs=(db.runs||0)+1;
+  db.last={pts:S.pts,date:new Date().toISOString()};
+  store(db);
+  $("hdBar").style.width="100%";
+  show("scrEnd");
+  setTimeout(()=>confetti(140),260);
+  setTimeout(()=>confetti(100),900);
+}
+$("btnPrint").addEventListener("click",()=>window.print());
+$("btnAgain").addEventListener("click",()=>{
+  S={name:S.name,i:0,pts:0,tries:0,used:false,log:[]};
+  buildTiles(); sq.value=""; drawTable("");
+  show("scrGame"); render();
+});
+
+/* ---------- ٨) البداية ---------- */
+(function init(){
+  const db=load();
+  if(db.name){
+    $("nm").value=db.name;
+    $("best").innerHTML="أهلًا <b>"+db.name+"</b> — أعلى نتيجة سابقة: <b>"+AR(db.best||0)+"</b> نقطة من "+AR(Q.length*10)+
+      " · عدد المحاولات: "+AR(db.runs||0);
+  }
+})();
+$("go").addEventListener("click",start);
+$("nm").addEventListener("keydown",e=>{if(e.key==="Enter")start()});
+function start(){
+  const v=$("nm").value.trim();
+  if(v.length<2){$("startErr").textContent="اكتبي اسمك أولًا 🙂";return}
+  $("startErr").textContent="";
+  S={name:v,i:0,pts:0,tries:0,used:false,log:[]};
+  buildTiles();
+  show("scrGame"); render();
+}
+
+/* ---------- ٩) تأثيرات بصرية وصوتية خفيفة ---------- */
+let FX = (function(){
+  try{ return localStorage.getItem("jofeh:fx")!=="0" }catch(e){ return true }
+})();
+const fxBtn=document.createElement("button");
+fxBtn.className="fxbtn noprint";
+fxBtn.textContent=FX?"✨ الحركة: مفعّلة":"✨ الحركة: مخفّفة";
+fxBtn.addEventListener("click",()=>{
+  FX=!FX;
+  document.body.classList.toggle("fxoff",!FX);
+  fxBtn.textContent=FX?"✨ الحركة: مفعّلة":"✨ الحركة: مخفّفة";
+  try{localStorage.setItem("jofeh:fx",FX?"1":"0")}catch(e){}
+});
+document.body.appendChild(fxBtn);
+document.body.classList.toggle("fxoff",!FX);
+
+/* كونفيتي بسيط على canvas — يتوقف تلقائيًا */
+const fxc=document.createElement("canvas"); fxc.id="fxc"; document.body.appendChild(fxc);
+const ctx=fxc.getContext("2d");
+let parts=[],raf=0;
+function fit(){fxc.width=innerWidth;fxc.height=innerHeight}
+addEventListener("resize",fit); fit();
+const COLS=["#F4845F","#FFBF3C","#1B6CA8","#1E7A4B","#FFF8F0"];
+function confetti(n){
+  if(!FX)return;
+  const cx=innerWidth/2, cy=innerHeight*0.32;
+  for(let k=0;k<n;k++){
+    const a=Math.random()*Math.PI*2, s=3+Math.random()*7;
+    parts.push({x:cx,y:cy,vx:Math.cos(a)*s,vy:Math.sin(a)*s-4,
+      c:COLS[k%COLS.length],r:3+Math.random()*4,rot:Math.random()*6,vr:(Math.random()-.5)*.4,life:62});
+  }
+  if(!raf)raf=requestAnimationFrame(step);
+}
+function step(){
+  ctx.clearRect(0,0,fxc.width,fxc.height);
+  parts=parts.filter(p=>p.life>0);
+  parts.forEach(p=>{
+    p.vy+=0.22; p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr; p.life--;
+    ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+    ctx.globalAlpha=Math.min(1,p.life/22); ctx.fillStyle=p.c;
+    ctx.fillRect(-p.r,-p.r*.6,p.r*2,p.r*1.2); ctx.restore();
+  });
+  if(parts.length){raf=requestAnimationFrame(step)}else{raf=0;ctx.clearRect(0,0,fxc.width,fxc.height)}
+}
+
+/* نغمة نجاح/خطأ مولّدة بالكود — بلا ملفات صوت */
+let AC=null;
+function tone(seq){
+  if(!FX)return;
+  try{
+    AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+    let t=AC.currentTime;
+    seq.forEach(([f,d])=>{
+      const o=AC.createOscillator(), g=AC.createGain();
+      o.type="sine"; o.frequency.value=f;
+      g.gain.setValueAtTime(0.0001,t);
+      g.gain.exponentialRampToValueAtTime(0.14,t+0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001,t+d);
+      o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t+d+0.02);
+      t+=d*0.85;
+    });
+  }catch(e){}
+}
+const sndGood=()=>tone([[523,.12],[659,.12],[784,.2]]);
+const sndBad =()=>tone([[300,.13],[220,.17]]);
+
+/* عدّاد نقاط تصاعدي */
+function countTo(el,from,to){
+  if(!FX||from===to){el.textContent=AR(to)+" نقطة";return}
+  const t0=performance.now(), dur=520;
+  (function tick(t){
+    const k=Math.min(1,(t-t0)/dur);
+    el.textContent=AR(Math.round(from+(to-from)*(1-Math.pow(1-k,3))))+" نقطة";
+    if(k<1)requestAnimationFrame(tick);
+  })(t0);
+}
+
+</script>
+</body>
+</html>
