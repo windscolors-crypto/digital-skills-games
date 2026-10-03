@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ألعاب المهارات الرقمية — السابع</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@600;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --ground:#FBF7F0; --surface:#FFFFFF; --ink:#211C17; --muted:#6B6055; --line:#E6DCCC;
+  --olive:#3F6B3A; --olive-soft:#E6EFE2; --red:#B23A2E; --red-soft:#F8E6E2;
+  --gold:#A9781B; --gold-soft:#FBF0D9; --night:#22303A;
+  --accent:var(--olive); --accent-ink:#FFFFFF;
+  --display:"Baloo Bhaijaan 2","IBM Plex Sans Arabic",Tahoma,sans-serif;
+  --body:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#14181A; --surface:#1C2326; --ink:#F0EAE0; --muted:#A99E90; --line:#2E3A3E;
+  --olive:#8FC486; --olive-soft:#1B2A1D; --red:#EE9385; --red-soft:#2E1C19;
+  --gold:#E3B860; --gold-soft:#2C2313; --accent-ink:#14181A;
+}}
+:root[data-theme="dark"]{
+  --ground:#14181A; --surface:#1C2326; --ink:#F0EAE0; --muted:#A99E90; --line:#2E3A3E;
+  --olive:#8FC486; --olive-soft:#1B2A1D; --red:#EE9385; --red-soft:#2E1C19;
+  --gold:#E3B860; --gold-soft:#2C2313; --accent-ink:#14181A;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--ground);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.65;margin:0}
+.tatreez{height:14px;background-image:
+  linear-gradient(45deg,var(--red) 25%,transparent 25%),
+  linear-gradient(-45deg,var(--red) 25%,transparent 25%),
+  linear-gradient(45deg,transparent 75%,var(--olive) 75%),
+  linear-gradient(-45deg,transparent 75%,var(--olive) 75%);
+  background-size:14px 14px;background-position:0 0,0 7px,7px -7px,-7px 0;opacity:.85}
+.wrap{max-width:980px;margin:0 auto;padding-inline:20px;padding-block:22px 60px}
+h1{font-family:var(--display);font-size:clamp(28px,5.4vw,46px);margin:0;line-height:1.15}
+h2{font-family:var(--display);font-size:clamp(20px,3.4vw,28px);margin:0 0 8px}
+.sub{color:var(--muted);margin:6px 0 0}
+button{font:inherit;font-family:var(--body);cursor:pointer;border-radius:14px;border:2px solid var(--line);background:var(--surface);color:var(--ink);padding:11px 18px;font-weight:600;transition:transform .08s,background .15s}
+button:active{transform:scale(.97)}
+button:focus-visible{outline:3px solid var(--olive);outline-offset:2px}
+button.primary{background:var(--olive);color:var(--accent-ink);border-color:var(--olive)}
+button.ghost{background:transparent}
+button:disabled{opacity:.6;cursor:default}
+.card{background:var(--surface);border:2px solid var(--line);border-radius:20px;padding:22px;position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:6px;background:
+  repeating-linear-gradient(180deg,var(--olive) 0 10px,var(--red) 10px 20px);opacity:.7}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.setup{display:grid;gap:18px}
+.opts{display:flex;flex-wrap:wrap;gap:10px}
+.opts button[aria-pressed="true"]{background:var(--olive);color:var(--accent-ink);border-color:var(--olive)}
+.players{display:grid;gap:8px}
+.players .prow{display:flex;gap:8px;align-items:center}
+.players .prow span{color:var(--muted);font-weight:700;min-width:22px}
+.players input{font:inherit;padding:9px 12px;border-radius:12px;border:2px solid var(--line);background:var(--ground);color:var(--ink);max-width:280px}
+
+.hud{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{background:var(--surface);border:2px solid var(--line);border-radius:999px;padding:4px 14px;font-weight:700;font-size:15px}
+.pill.turn{background:var(--olive);color:var(--accent-ink);border-color:var(--olive)}
+.pill.streak{background:var(--gold-soft);color:var(--gold);border-color:var(--gold)}
+.bar{height:10px;border-radius:999px;background:var(--line);overflow:hidden;margin-bottom:16px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--olive),var(--gold));width:0;transition:width .35s}
+
+.q{font-family:var(--display);font-size:clamp(20px,3.4vw,29px);line-height:1.45;margin:0 0 4px}
+.meta{color:var(--muted);font-size:15px;margin:0 0 14px;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
+.diff{border-radius:999px;padding:1px 10px;font-size:13px;font-weight:700;border:1.5px solid currentColor}
+.d1{color:var(--olive)} .d2{color:var(--gold)} .d3{color:var(--red)}
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.choice{text-align:start;padding:15px 16px;font-size:17.5px;line-height:1.5;border-radius:16px}
+.choice .k{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:9px;background:var(--olive-soft);color:var(--olive);font-weight:800;margin-inline-end:10px;font-size:15px}
+.choice.ok{background:var(--olive-soft);border-color:var(--olive);color:var(--olive)}
+.choice.bad{background:var(--red-soft);border-color:var(--red);color:var(--red)}
+
+.pairs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pairs h3{font-family:var(--display);font-size:16px;margin:0 0 6px;color:var(--muted)}
+.pcol{display:grid;gap:8px;align-content:start}
+.pitem{text-align:start;padding:12px 14px;border-radius:14px;font-size:16px;line-height:1.45}
+.pitem.sel{background:var(--gold-soft);border-color:var(--gold);color:var(--gold)}
+.pitem.done{background:var(--olive-soft);border-color:var(--olive);color:var(--olive);opacity:.85}
+.pitem.miss{background:var(--red-soft);border-color:var(--red);color:var(--red)}
+
+.slots{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:12px 0}
+.slot{min-width:150px;min-height:54px;border:2px dashed var(--line);border-radius:14px;display:grid;place-items:center;font-weight:700;background:var(--surface);padding:6px 10px;text-align:center;font-size:15px}
+.slot.filled{border-style:solid;border-color:var(--olive);background:var(--olive-soft);color:var(--olive)}
+.chipset{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border-radius:999px;padding:8px 14px;font-size:15px;font-weight:600;border:2px solid var(--line);background:var(--ground)}
+
+.fb{margin-top:16px;border-radius:16px;padding:14px 16px;font-weight:700;display:none}
+.fb.show{display:block;animation:pop .25s ease-out}
+.fb.ok{background:var(--olive-soft);color:var(--olive)}
+.fb.bad{background:var(--red-soft);color:var(--red)}
+.fb small{display:block;font-weight:500;margin-top:5px;font-size:15.5px}
+@keyframes pop{from{transform:translateY(6px);opacity:0}to{transform:none;opacity:1}}
+.hintbox .page{display:block;margin-top:6px;font-weight:700}
+.hintbtn.pulse{border-color:var(--gold);color:var(--gold);animation:pulse 1.2s ease-in-out 2}
+@keyframes pulse{50%{transform:scale(1.05)}}
+.hintbox{margin-top:12px;background:var(--gold-soft);color:var(--gold);border-radius:14px;padding:12px 14px;font-size:16px;font-weight:600;display:none}
+.hintbox.show{display:block}
+.foot{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;margin-top:18px}
+
+/* praise + badges */
+#praise{position:fixed;inset-inline:0;top:14px;display:grid;place-items:center;pointer-events:none;z-index:9}
+#praise div{background:var(--olive);color:var(--accent-ink);font-family:var(--display);font-size:20px;padding:8px 20px;border-radius:999px;box-shadow:0 8px 24px rgba(0,0,0,.18);animation:praise 1.6s ease-out forwards}
+@keyframes praise{0%{transform:translateY(-14px) scale(.9);opacity:0}15%{transform:none;opacity:1}75%{opacity:1}100%{transform:translateY(-10px);opacity:0}}
+.spark{position:fixed;width:12px;height:12px;pointer-events:none;z-index:8}
+.spark i{display:block;width:100%;height:100%;background:var(--red);clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.badge{border:2px solid var(--line);border-radius:14px;padding:8px 12px;font-size:14px;font-weight:700;color:var(--muted);background:var(--surface);opacity:.45}
+.badge.on{opacity:1;color:var(--gold);border-color:var(--gold);background:var(--gold-soft)}
+.score{font-family:var(--display);font-size:clamp(40px,9vw,70px);line-height:1;margin:4px 0}
+.tbl{width:100%;border-collapse:collapse;margin-top:10px}
+.tbl th,.tbl td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:start}
+.tbl th{color:var(--muted);font-size:15px}
+.miss{margin-top:16px;display:grid;gap:8px}
+.miss div{background:var(--red-soft);color:var(--red);border-radius:12px;padding:10px 14px;font-size:16px;font-weight:600}
+
+.levels{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.lvl{text-align:start;padding:16px;border-radius:18px;display:block}
+.lvl b{display:block;font-family:var(--display);font-size:19px;margin-bottom:4px}
+.lvl small{display:block;color:var(--muted);font-weight:500;line-height:1.5;font-size:14.5px}
+.lvl[aria-pressed="true"]{background:var(--olive);border-color:var(--olive);color:var(--accent-ink)}
+.lvl[aria-pressed="true"] small{color:var(--accent-ink);opacity:.85}
+.lvl .tick{float:inline-end;color:var(--gold);font-weight:800}
+
+.sendbtn{display:inline-block;background:var(--gold);color:#fff;border:2px solid var(--gold);
+  border-radius:14px;padding:11px 18px;font-weight:700;text-decoration:none;font-size:16.5px}
+.sendbtn:active{transform:scale(.97)}
+.home{display:inline-block;margin-top:10px;color:var(--muted);text-decoration:none;font-weight:600}
+.card2{background:var(--surface);border:3px solid var(--olive);border-radius:22px;padding:24px;margin-top:18px;position:relative}
+.card2 h3{font-family:var(--display);font-size:24px;margin:0 0 2px;color:var(--olive)}
+.card2 .when{color:var(--muted);font-size:14px;margin:0 0 14px}
+.card2 .tbl th,.card2 .tbl td{padding:7px 10px;font-size:16px}
+.card2 .grand{font-family:var(--display);font-size:34px;color:var(--olive);margin-top:10px}
+.shot{background:var(--gold-soft);color:var(--gold);border-radius:12px;padding:10px 14px;font-weight:700;font-size:15px;margin-top:12px}
+@media (max-width:620px){ .pairs{grid-template-columns:1fr} }
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+</head>
+<body style="margin:0">
+<div class="wrap" dir="rtl" lang="ar">
+  <div class="tatreez" style="margin-bottom:16px"></div>
+  <header style="margin-bottom:18px">
+    <h1>ألعاب المهارات الرقمية — السابع</h1>
+    <p class="sub">الصف السابع · ثلاثة مستويات · الدرس الأول والثاني</p>
+  </header>
+
+  <section id="setup" class="card setup">
+    <div><h2>مين رح تلعب؟</h2>
+      <p class="sub">اكتبي اسمك، وإذا بتلعبوا أكتر من وحدة على نفس الجهاز ضيفي أسماءهن. الدور بيلف بينكن، وبآخر كل مستوى بتطلع بطاقة نتيجة بتقدري تصوّريها وتبعتيها للمعلمة.</p></div>
+    <div><p style="margin:0 0 8px;font-weight:700">اختاري المستوى</p>
+      <div class="levels" id="lvlPick"></div></div>
+    <div class="row"><label style="font-weight:700">الصف والشعبة:</label><input type="text" id="clsInput" placeholder="مثال: ٩ ب" style="font:inherit;padding:9px 12px;border-radius:12px;border:2px solid var(--line);background:var(--ground);color:var(--ink);max-width:160px"></div>
+    <div class="players" id="playerRows"></div>
+    <div class="row">
+      <button class="ghost" id="addP" type="button">+ أضيفي طالبة</button>
+      <button class="ghost" id="delP" type="button">حذف الأخيرة</button>
+    </div>
+    <div class="row">
+      <button class="primary" id="start" type="button">يلا نبدأ</button>
+      <button class="ghost" id="themeBtn" type="button">تبديل الإضاءة</button>
+    </div>
+    <p class="sub" id="setupNote" style="color:var(--red);font-weight:600" hidden>اكتبي اسم وحدة على الأقل.</p>
+  </section>
+
+  <section id="game" hidden>
+    <div class="hud">
+      <div class="pills" id="scorePills"></div>
+      <div class="pills"><span class="pill" id="qCount"></span></div>
+    </div>
+    <div class="bar"><i id="prog"></i></div>
+    <div class="card" id="stage"></div>
+    <div class="badges" id="badgeRow"></div>
+  </section>
+
+  <section id="results" class="card" hidden></section>
+  <div class="tatreez" style="margin-top:22px"></div>
+  <a class='home' href='/'>← كل الصفوف</a>
+</div>
+<div id="praise"></div>
+
+<script>
+/* ====== إعدادات الإرسال — تُعبّأ مرة واحدة ======
+   بعد ما تعملي نموذج Microsoft Forms، خذي رابط Get pre-filled URL
+   وحطّيه هنا، وحطّي أرقام الحقول (rXXXX) مكان الفراغات. */
+const SUBMIT={
+  url:"https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=QoWSx2QeIUimYh4GU_yQCXkPYNJN8CJDkPMMgh2Vy6tUODg0S1M1VFZINFczWVlRTThRQUNHRFhIMy4u",
+  f:{cls:"r43e5b2ed34e345e1ba30786b608224df",
+     level:"r637b4343d36345e19e3a438ac27566ff",
+     score:"r97c591a829f04904ae5e01e4870c0ba0",
+     name:"r7ab483cd2eeb4108a9207e81115eef5d"},
+  grade:"السابع"
+};
+
+const LEVELS=[
+{id:"l1",name:"المستوى الأول — دروب الحاسوب",desc:"١٧ تحديًا · التلميح يعطي رقم الصفحة",hints:true,bank:(function(){ return [
+{t:"mcq",d:1,p:"ص ١١",q:"حسب الكتاب، جهاز الحاسوب هو:",
+ c:["جهاز إلكتروني يستقبل البيانات ويعالجها ويخرجها معلومات","جهاز إلكتروني يعرض الصور والفيديو ويشغّل الألعاب والتطبيقات","آلة حاسبة متطورة تنفّذ العمليات الحسابية الطويلة بسرعة عالية","شاشة متصلة بالإنترنت تعرض المواقع وصفحات البحث والفيديو"],a:0,
+ why:"تعريف الكتاب: جهاز إلكتروني لديه القدرة على استقبال البيانات ومعالجتها وتخزينها واسترجاعها وإخراجها في صورة معلومات وفق أوامر برمجية."},
+{t:"order",d:1,p:"ص ١١",q:"رتّبي مراحل عمل جهاز الحاسوب كما وردت في الكتاب",
+ items:["الإدخال","المعالجة","التخزين","الإخراج"],
+ why:"الكتاب: يمر العمل بأربع مراحل أساسية: الإدخال، والمعالجة، والتخزين، والإخراج."},
+{t:"mcq",d:2,p:"ص ١١",q:"في مرحلة الإدخال، جهاز الحاسوب:",
+ c:["يستقبل البيانات والأوامر ثم يخزنها تمهيدًا لمعالجتها","يحوّل البيانات إلى معلومات مفيدة وذات معنى واضح للمستخدم","يعرض النتيجة على شاشة الجهاز أو يطبعها على الورق","يحفظ الملفات مدة طويلة ليسترجعها المستخدم فيما بعد"],a:0,
+ hint:"شو بيصير أول شي قبل المعالجة؟",
+ why:"الكتاب: في مرحلة الإدخال يستقبل الجهاز البيانات والأوامر ثم يخزنها تمهيدًا لمعالجتها."},
+{t:"mcq",d:2,p:"ص ١٢",q:"علامات الطلبة في الاختبارات قبل تنظيمها وتحليلها تُعد:",
+ c:["بيانات","معلومات","أوامر برمجية","وحدات إخراج"],a:0,
+ hint:"لسا ما انعالجت ولا انظمت.",
+ why:"الكتاب: البيانات حقائق أولية غير معالجة، ومن أمثلتها علامات الطلبة في الاختبارات."},
+{t:"mcq",d:2,p:"ص ١٣",q:"قائمة منظمة بأسماء الطلبة ونتائجهم، ورسم بياني لنسبة الناجحين، مثال على:",
+ c:["المعلومات","البيانات","وحدات الإدخال","المكونات المادية"],a:0,
+ hint:"صارت مفيدة وإلها معنى للمستخدم.",
+ why:"الكتاب: المعلومات بيانات نُظِّمت وحُلِّلت وعُولجت لتصبح مفيدة وذات معنى، ومن أمثلتها القائمة المنظمة والرسم البياني."},
+{t:"match",d:2,p:"ص ١٤",q:"وصّلي كل نوع حاسوب بوصفه في الكتاب",
+ pairs:[["الحاسوب المكتبي","وحدة نظام منفصلة وشاشة ولوحة مفاتيح وفأرة"],
+        ["الحاسوب اللوحي","شاشة لمس بلا لوحة مفاتيح مادية"],
+        ["الحاسوب المحمول","يدمج المكونات في وحدة واحدة خفيفة"],
+        ["الهاتف الذكي","يجمع مزايا الهاتف التقليدي ووظائف الحاسوب"]],
+ why:"جدول الكتاب (1-1) يقارن أنواع الحواسيب بمواصفاتها واستخداماتها."},
+{t:"mcq",d:3,p:"ص ١٤",q:"حسب الكتاب، الحاسوب المكتبي مناسب للاستخدامات التي تتطلب:",
+ c:["أداءً عاليًا ومساحة تخزين كبيرة","التنقل الدائم بين الأماكن والمدن المختلفة","شاشة تعمل باللمس بشكل أساسي ودائم","دمج كل المكونات في وحدة واحدة خفيفة"],a:0,
+ hint:"هو جهاز ثابت بمكانه، فشو ميزته؟",
+ why:"الكتاب: المكتبي مصمم للاستخدام في مكان ثابت، ومناسب للاستخدامات التي تتطلب أداءً عاليًا ومساحة تخزين كبيرة."},
+{t:"mcq",d:3,p:"ص ١٥",q:"في مجال النقل والتوصيل، ذكر الكتاب تقنيات تتبّع الشحنات:",
+ c:["RFID وGPS","HDMI وVGA","RAM وROM","CPU وGPU"],a:0,
+ hint:"تقنيتان للتتبّع، مش للتخزين ولا للعرض.",
+ why:"الكتاب: يمكن متابعة الشحنات والحوالات باستخدام تقنيات عديدة مثل RFID وGPS."},
+{t:"mcq",d:1,p:"ص ٢٢",q:"المكونات المادية الخارجية لجهاز الحاسوب توجد:",
+ c:["خارج الهيكل الرئيس (وحدة النظام)","داخل هيكل الحاسوب المعدني المغلق","داخل اللوحة الأم مباشرة دون غيرها","داخل مزود الطاقة الرئيس للجهاز"],a:0,
+ why:"الكتاب: هذه المكونات توجد خارج الهيكل الرئيس لجهاز الحاسوب، أو ما يسمى وحدة النظام System Unit."},
+{t:"match",d:2,p:"ص ٢٢",q:"وصّلي كل وحدة إدخال بوظيفتها في الكتاب",
+ pairs:[["لوحة المفاتيح","إدخال النصوص والأوامر"],
+        ["الفأرة","التفاعل مع الواجهات الرسومية"],
+        ["الماسح الضوئي","تحويل الوثائق الورقية إلى صورة رقمية"]],
+ why:"هذه وظائف وحدات الإدخال كما وردت في الدرس الثاني."},
+{t:"mcq",d:2,p:"ص ٢٥",q:"القطعة التي تربط بين مكونات الحاسوب والأجهزة الطرفية وتُثبَّت عليها المكونات الداخلية:",
+ c:["اللوحة الأم","القرص الصلب","مزود الطاقة","مروحة التبريد"],a:0,
+ hint:"هي الوحدة الأساسية اللي بتتركب عليها القطع.",
+ why:"الكتاب: اللوحة الأم هي الوحدة الأساسية، تربط بين مكونات الجهاز والأجهزة الطرفية، وتوفّر وسائل الاتصال بينها."},
+{t:"mcq",d:2,p:"ص ٢٥",q:"وحدة المعالجة المركزية CPU تُعد:",
+ c:["دماغ جهاز الحاسوب","ذاكرة تخزين دائمة","مصدر الطاقة الكهربائية","وحدة إخراج للصورة"],a:0,
+ hint:"مين بينفّذ العمليات الحسابية والمنطقية؟",
+ why:"الكتاب: تُعد هذه الوحدة دماغ جهاز الحاسوب؛ تتولى تنفيذ العمليات الحسابية والمنطقية وعمليات الإدخال والإخراج."},
+{t:"mcq",d:3,p:"ص ٢٥",q:"حسب الكتاب، ذاكرة الوصول العشوائي RAM:",
+ c:["ذاكرة قصيرة المدى تخزّن البيانات المؤقتة","ذاكرة دائمة تخزّن نظام التشغيل والبيانات","وحدة تخزين طويلة المدى للملفات الكبيرة","بطاقة تعالج الرسوم وتعرض الفيديو"],a:0,
+ hint:"بيانات بيحتاجها الجهاز أثناء استعمال التطبيقات.",
+ why:"الكتاب: RAM ذاكرة تخزين قصيرة المدى تخزّن البيانات المؤقتة التي يحتاجها الجهاز أثناء استعمال التطبيقات."},
+{t:"mcq",d:3,p:"ص ٢٦",q:"ذاكرة القراءة فقط ROM تُستخدم في تخزين:",
+ c:["البيانات الأساسية لتشغيل الجهاز BIOS","ملفات الطالبة وصورها ومقاطعها المرئية","البيانات المؤقتة أثناء تشغيل البرامج والتطبيقات","إعدادات الشاشة وبطاقة معالجة الرسوم"],a:0,
+ hint:"ذاكرة ثابتة إلها علاقة بإقلاع الجهاز.",
+ why:"الكتاب: تُستخدم ROM في تخزين البيانات الأساسية لتشغيل جهاز الحاسوب (BIOS) ونظام التشغيل بصورة دائمة."},
+{t:"mcq",d:2,p:"ص ٢٥",q:"كلما زاد حجم ذاكرة RAM في الجهاز:",
+ c:["زادت سرعته في تنفيذ العمليات","قلّت سعة قرصه الصلب","زادت جودة الصورة المعروضة","زادت الطاقة الكهربائية المستهلكة"],a:0,
+ hint:"الكتاب ربط حجم الذاكرة بشي وحد.",
+ why:"الكتاب: كلما كان حجم الذاكرة كبيرًا زادت سرعة الجهاز في تنفيذ العمليات، والعكس صحيح."},
+{t:"match",d:3,p:"ص ٢٥–٢٦",q:"وصّلي كل مكوّن داخلي بوظيفته",
+ pairs:[["القرص الصلب HDD","تخزين طويل المدى للبيانات"],
+        ["بطاقة معالجة الرسوم","معالجة الرسوم وعرض الصور"],
+        ["مزود الطاقة","توفير الطاقة الكهربائية للأجزاء"],
+        ["هيكل الحاسوب","احتواء المكونات الداخلية"]],
+ hint:"فكّري بكل قطعة: بتخزّن، بتعرض، بتغذّي، أو بتحتوي.",
+ why:"هذه وظائف المكونات الداخلية كما وردت في الدرس الثاني."},
+{t:"mcq",d:3,p:"ص ٢٦",q:"بطاقة معالجة الرسوم قد تكون مدمجة في اللوحة الأم أو منفصلة، وكلما زادت قدرتها:",
+ c:["كانت جودة الصورة أفضل","زادت سعة التخزين في القرص","قلّت حرارة الجهاز أثناء العمل","زادت سرعة الاتصال بالإنترنت"],a:0,
+ hint:"وظيفتها إلها علاقة بالصورة.",
+ why:"الكتاب: تتحكم قدراتها في جودة الصور ومقاطع الفيديو، وكلما زادت قدرة البطاقة كانت الجودة أفضل."}
+];})()},
+{id:"l2",name:"المستوى الثاني — رحلة يافا الرقمية",desc:"١٤ تحديًا · التلميح يعطي رقم الصفحة",hints:true,bank:(function(){ return [
+{t:"mcq",d:1,p:"ص ٢٢",q:"وظيفة الشاشة كما وردت في الكتاب:",
+ c:["عرض المعلومات بصورة مرئية وتقديم الواجهات","طباعة الوثائق والصور على الورق بجودة عالية","إخراج الصوت من جهاز الحاسوب إلى المستخدمة","إدخال الصوت وإجراء المكالمات الصوتية والمرئية"],a:0,
+ why:"الكتاب: تستعمل الشاشة لعرض المعلومات بصورة مرئية، وتقديم واجهات المستخدم."},
+{t:"mcq",d:1,p:"ص ٢٢",q:"السماعات Speakers تُعد من:",
+ c:["وحدات الإخراج","وحدات الإدخال","وحدات التخزين","المكونات الداخلية"],a:0,
+ why:"الكتاب: تستعمل السماعات لإخراج الصوت من جهاز الحاسوب، وهي ضمن وحدات الإخراج."},
+{t:"mcq",d:2,p:"ص ٢٢",q:"الميكروفون حسب الكتاب يُستعمل لـ:",
+ c:["إدخال الصوت وإجراء المكالمات","طباعة الملفات الصوتية والصور","عرض الواجهات الرسومية للمستخدمة","تخزين المقاطع الصوتية بشكل دائم"],a:0,
+ hint:"وحدة إدخال إلها علاقة بالصوت.",
+ why:"الكتاب: يستعمل الميكروفون لإدخال الصوت، وإجراء المكالمات الصوتية ومكالمات الفيديو."},
+{t:"match",d:2,p:"ص ٢٢",q:"طابقي كل وحدة إخراج مع وظيفتها",
+ pairs:[["الشاشة","عرض المعلومات بصورة مرئية"],["الطابعة","طباعة الوثائق والصور على الورق"],["السماعات","إخراج الصوت من جهاز الحاسوب"]],
+ why:"هذه وظائف وحدات الإخراج الثلاث كما وردت في الدرس الثاني."},
+{t:"mcq",d:3,p:"ص ٢٢",q:"شاشة اللمس ونظارات الواقع الافتراضي وأجهزة الاستشعار الرقمية والقلم الرقمي ذكرها الكتاب كأمثلة على:",
+ c:["وحدات إدخال ووحدات إخراج","مكونات مادية داخلية فقط","وحدات تخزين حديثة للبيانات","برمجيات تشغيل الأجهزة الطرفية"],a:0,
+ hint:"الكتاب ذكرها إضافة إلى أمثلة الإدخال والإخراج السابقة.",
+ why:"الكتاب: إضافة إلى الأمثلة السابقة توجد أمثلة أخرى على وحدات الإدخال ووحدات الإخراج، مثل شاشة اللمس ونظارات الواقع الافتراضي وأجهزة الاستشعار الرقمية والقلم الرقمي."},
+{t:"mcq",d:3,p:"ص ٢٣",q:"مروحة التبريد Cooling Fan من:",
+ c:["المكونات الداخلية للجهاز","وحدات الإدخال الخارجية","وحدات الإخراج الخارجية","البرمجيات المساعدة للنظام"],a:0,
+ hint:"وين موقعها؟ جوّا وحدة النظام.",
+ why:"الشكل (2-2) في الكتاب يبيّن أهم الأجزاء الداخلية، ومنها مروحة التبريد وبطاقة الذاكرة ومزود الطاقة."},
+{t:"mcq",d:2,p:"ص ١٥",q:"في تحليل الأداء الرياضي، أجهزة الحاسوب والبرمجيات المتخصصة تقوم بـ:",
+ c:["تدوين البيانات الحركية والفسيولوجية","تدريب الرياضيين بدل المدرب في أرض الملعب","بيع تذاكر المباريات الرياضية للجمهور","تصميم ملابس الرياضيين وتجهيز أدواتهم"],a:0,
+ hint:"شو نوع البيانات اللي بتسجلها الأجهزة؟",
+ why:"الكتاب: تعمل هذه الأجهزة والبرمجيات على تدوين البيانات الحركية والفسيولوجية، وتحليل الأنماط الحركية، وإصدار تقارير عن أداء الرياضيين."},
+{t:"order",d:3,p:"ص ١٥",q:"رتّبي خطوات تحليل أداء الرياضيين كما وردت في الكتاب",
+ items:["تدوين البيانات الحركية والفسيولوجية","تحليل الأنماط الحركية","إصدار تقارير عن أداء الرياضيين","اتخاذ المدربين قرارات لتحسين الأداء"],
+ hint:"من جمع البيانات إلى القرار.",
+ why:"الكتاب يذكرها بهذا التسلسل: تدوين البيانات، فتحليل الأنماط، فإصدار التقارير، فاتخاذ القرارات."},
+{t:"mcq",d:2,p:"ص ١٥",q:"حسب الكتاب، استخدام الروبوتات والمركبات الآلية في التوصيل أدى إلى:",
+ c:["انخفاض التكاليف وسرعة التوصيل","زيادة أسعار الشحن على الزبائن","إلغاء الحاجة إلى شركات الشحن","إيقاف استعمال تقنيات التتبّع"],a:0,
+ hint:"الكتاب ذكر فائدتين: وحدة بالكلفة ووحدة بالوقت.",
+ why:"الكتاب: تستخدم الطائرات من دون طيار والروبوتات الأرضية في عمليات التوصيل؛ إذ تنخفض فيها التكاليف، وتسرع إجراءات التوصيل."},
+{t:"mcq",d:2,p:"ص ١٥",q:"أي مجال من هذول ذكره الكتاب ضمن مجالات استخدام الحواسيب؟",
+ c:["الزراعة والصناعة والإحصاء","صناعة الأثاث الخشبي يدويًا","تربية النحل التقليدية فقط","حياكة الملابس بالإبرة والخيط"],a:0,
+ why:"الكتاب: أصبحت الحواسيب جزءًا لا يتجزأ من جوانب الحياة: التعليم، والرعاية الصحية، والتجارة، والتسويق، والزراعة، والصناعة، والإحصاء، والنقل، والترفيه."},
+{t:"mcq",d:2,p:"ص ١٦",q:"قبل مغادرة حاسوب مشترك في المختبر أو المكتبة، أول إجراء توصي به المواطنة الرقمية:",
+ c:["تسجيل الخروج من جميع الحسابات","إطفاء الشاشة وترك الجهاز شغّالًا","حذف كل الملفات الموجودة عليه","تغيير خلفية سطح المكتب للجهاز"],a:0,
+ hint:"عشان ما يوصل حدا لحساباتك.",
+ why:"الكتاب: تسجيل خروجي من جميع الحسابات قبل مغادرة الجهاز؛ ما يمنع الآخرين من الوصول إلى حساباتي ومعلوماتي."},
+{t:"mcq",d:3,p:"ص ١٦",q:"كلمات المرور الخاصة فيّ، حسب الكتاب:",
+ c:["لا أُطلع عليها أحدًا إلا الموثوقين","أشاركها مع صديقاتي المقربات في الصف","أكتبها على ورقة وألصقها على الجهاز","أستخدم نفسها في كل الحسابات لتسهيل الحفظ"],a:0,
+ hint:"في استثناء وحيد ذكره الكتاب.",
+ why:"الكتاب: عدم إطلاع الآخرين على كلمات المرور الخاصة بي، باستثناء الأشخاص الموثوق بهم مثل الوالدين."},
+{t:"mcq",d:3,p:"ص ٢٢–٢٣",q:"أيّ مجموعة كلّها مكوّنات داخلية توجد داخل وحدة النظام؟",
+ c:["مروحة التبريد وبطاقة الذاكرة ومزود الطاقة","الطابعة والميكروفون والسماعات الخارجية","الشاشة ولوحة المفاتيح والفأرة والطابعة","القلم الرقمي وشاشة اللمس وأجهزة الاستشعار"],a:0,
+ hint:"المكونات الخارجية خارج الهيكل الرئيس (وحدة النظام).",
+ why:"الشكل (2-2) في الكتاب يبيّن أهم الأجزاء الداخلية داخل وحدة النظام، ومنها مروحة التبريد وبطاقة الذاكرة ومزود الطاقة، أما المكونات الخارجية فتوجد خارج الهيكل الرئيس."},
+{t:"mcq",d:1,p:"ص ٢٢",q:"الطابعة Printer تُستعمل لـ:",
+ c:["طباعة الوثائق والصور على الورق","عرض الواجهات الرسومية للمستخدمة","إدخال النصوص والأوامر إلى الجهاز","تخزين الملفات مدة طويلة في الجهاز"],a:0,
+ why:"الكتاب: تستعمل الطابعة لطباعة الوثائق والصور على الورق."}
+];})()},
+{id:"ch",name:"مستوى التحدي — مفتاح البيت",desc:"١٠ تحديات حل مشكلات · بلا تلميحات",hints:false,bank:(function(){ return [
+{t:"mcq",d:3,q:"طالبة قالت: «حفظ الصورة على الجهاز مرحلة إخراج، لأن الصورة طلعت من البرنامج». وين الخطأ في تفكيرها؟",
+ c:["الحفظ مرحلة تخزين، والإخراج عرض النتيجة للمستخدم","الحفظ مرحلة معالجة، لأن الجهاز يغيّر شكل الملف","الحفظ مرحلة إدخال، لأن الملف يدخل إلى القرص الصلب","لا خطأ، فالحفظ والإخراج مرحلة واحدة في الكتاب"],a:0,
+ probe:"مراحل عمل الحاسوب أربعة. أي مرحلة بتخلّي النتيجة تظهر لك أنتِ، وأي مرحلة بتحطّها في مكان آمن؟",
+ why:"الكتاب: يمرّ عمل الحاسوب بأربع مراحل: الإدخال، والمعالجة، والتخزين، والإخراج. الحفظ على الجهاز تخزين، أما الإخراج فهو إظهار المعلومات للمستخدم عبر الشاشة أو الطابعة أو السماعات."},
+{t:"mcq",d:3,q:"معلمة بدها جهازًا للمختبر يشتغل على برامج تصميم ثقيلة ساعات طويلة، وما بينتقل من مكانه. الأنسب ولماذا؟",
+ c:["المكتبي، لأنه للاستخدامات التي تتطلب أداءً عاليًا","المحمول، لأن بطاريته تحميه من انقطاع الكهرباء فجأة","اللوحي، لأن شاشته تعمل باللمس فتسهّل عمل التصميم","الكفّي، لأن حجمه صغير فلا يشغل مساحة على الطاولة"],a:0,
+ probe:"شرطان في الطلب: أداء ثقيل، وثبات في المكان. أي نوع وصفه الكتاب بالضبط هيك؟",
+ why:"الكتاب: الحاسوب المكتبي مصمّم للاستخدام في مكان ثابت، وهو مناسب للاستخدامات التي تتطلّب أداءً عاليًا ومساحة تخزين كبيرة."},
+{t:"mcq",d:3,q:"طالبة اشتغلت على مشروعها ساعتين، وقبل ما تحفظه انقطعت الكهرباء. ضاع الشغل كله. أي مكوّن يفسّر ما حدث؟",
+ c:["RAM، لأنها ذاكرة قصيرة المدى تخزّن البيانات المؤقتة","ROM، لأنها تخزّن البيانات الأساسية للتشغيل بصورة دائمة","اللوحة الأم، لأنها تربط بين المكونات والأجهزة الطرفية","بطاقة الرسوم، لأنها تتحكّم في جودة الصور ومقاطع الفيديو"],a:0,
+ probe:"وين بيكون الملف وهي شغّالة عليه قبل ما تضغط «حفظ»؟ وشو نوع هاي الذاكرة؟",
+ why:"الكتاب: ذاكرة الوصول العشوائي RAM ذاكرة تخزين قصيرة المدى تخزّن البيانات المؤقتة التي يحتاجها الجهاز أثناء استعمال التطبيقات. وبانقطاع الكهرباء يضيع ما فيها لأنها ليست تخزينًا دائمًا."},
+{t:"mcq",d:3,q:"جهاز يفتح برنامجًا واحدًا بسرعة، لكنه يصير بطيئًا جدًا لمّا نفتح عدة برامج معًا. أي ترقية الأنسب ولماذا؟",
+ c:["زيادة RAM، لأن زيادة حجمها تزيد سرعة تنفيذ العمليات","تغيير الشاشة، لأن حجمها يؤثر في سرعة عرض البرامج","إضافة طابعة أسرع، لأنها تقلّل زمن انتظار المخرجات","تغيير الفأرة، لأن استجابتها تؤثر في سرعة فتح البرامج"],a:0,
+ probe:"المشكلة بتظهر بس لمّا يكون في برامج كتيرة مفتوحة مع بعض. وين بينحطّوا وهنّ شغّالين؟",
+ why:"الكتاب: كلما كان حجم ذاكرة RAM كبيرًا زادت سرعة الجهاز في تنفيذ العمليات، والعكس صحيح. والبطء عند تعدّد البرامج مؤشّر على ضيق الذاكرة المؤقتة."},
+{t:"mcq",d:3,q:"جهاز في المختبر شغّال تمامًا، بس تصميم ثلاثي الأبعاد بيظهر متقطّعًا ورديء الجودة. الأقرب إن المشكلة في:",
+ c:["بطاقة معالجة الرسوم","مزوّد الطاقة الكهربائية","ذاكرة القراءة فقط ROM","الميكروفون ولوحة المفاتيح"],a:0,
+ probe:"المشكلة في الصورة وحدها، والباقي شغّال. أي مكوّن الكتاب ربطه بجودة الصور والفيديو؟",
+ why:"الكتاب: بطاقة معالجة الرسوم قد تكون مدمجة في اللوحة الأم أو منفصلة، وتتحكّم قدراتها في جودة الصور ومقاطع الفيديو، وكلما زادت قدرة البطاقة كانت الجودة أفضل."},
+{t:"mcq",d:3,q:"زميلتك عرضت جدولًا فيه أسماء الطالبات وعلاماتهن مرتّبة من الأعلى للأدنى، وقالت: «هذي بيانات خام». وين الخطأ؟",
+ c:["الترتيب والتنظيم حوّلها إلى معلومات ذات معنى","العلامات دائمًا معلومات، والأسماء وحدها بيانات خام","الجدول ليس بيانات ولا معلومات، بل هو وسيلة عرض","لا خطأ، فالعلامات تبقى بيانات مهما نُظِّمت ورُتِّبت"],a:0,
+ probe:"شو اللي لازم يصير للبيانات عشان تصير معلومات حسب الكتاب؟ وهل صار هون؟",
+ why:"الكتاب: البيانات حقائق أولية غير معالجة مثل علامات الطلبة في الاختبارات؛ أما المعلومات فهي بيانات نُظِّمت وحُلِّلت وعُولجت لتصبح مفيدة وذات معنى، ومن أمثلتها القائمة المنظمة والرسم البياني."},
+{t:"mcq",d:3,q:"طالبة دخلت بريدها على جهاز المكتبة، وبعدين سكّرت النافذة وراحت. ليش هذا خطر حسب المواطنة الرقمية؟",
+ c:["إغلاق النافذة لا يسجّل الخروج، فيبقى الحساب مفتوحًا","إغلاق النافذة يمسح الملفات التي حمّلتها على الجهاز","الجهاز المشترك لا يسمح بفتح البريد الإلكتروني أصلًا","الخطر في كلمة المرور فقط، أما البريد فليس فيه خطر"],a:0,
+ probe:"شو الإجراء المحدد اللي أوصى فيه الكتاب قبل مغادرة جهاز مشترك؟ هل «سكّر النافذة» هو نفسه؟",
+ why:"الكتاب: تسجيل خروجي من جميع الحسابات قبل مغادرة الجهاز؛ ما يمنع الآخرين من الوصول إلى حساباتي ومعلوماتي. إغلاق النافذة ليس تسجيل خروج."},
+{t:"mcq",d:3,q:"سؤال امتحان: «صنّفي شاشة اللمس: وحدة إدخال أم إخراج؟» الإجابة الأدق حسب الكتاب:",
+ c:["الاثنان معًا، فالكتاب ذكرها مثالًا على النوعين","وحدة إخراج فقط، لأنها تعرض المعلومات للمستخدم","وحدة إدخال فقط، لأن المستخدم يضغط عليها بإصبعه","ليست وحدة إدخال ولا إخراج، بل مكوّن داخلي للجهاز"],a:0,
+ probe:"لمّا تلمسيها، بتدخلي أمر. ولمّا تقرأي عليها، بتشوفي نتيجة. فشو بتطلع؟",
+ why:"الكتاب: إضافة إلى الأمثلة السابقة توجد أمثلة أخرى على وحدات الإدخال ووحدات الإخراج، مثل شاشة اللمس ونظارات الواقع الافتراضي وأجهزة الاستشعار الرقمية والقلم الرقمي."},
+{t:"order",d:3,q:"رتّبي رحلة علامات الاختبار من ورقة المعلمة إلى قرار مدرسي",
+ items:["علامات مكتوبة في دفتر المعلمة","إدخال العلامات إلى برنامج على الجهاز","جدول مرتّب ورسم بياني لنسبة الناجحات","قرار بتخصيص حصص دعم للطالبات المتعثّرات"],
+ probe:"أي خطوة فيها أرقام بلا معنى؟ وأي خطوة فيها قرار؟ رتّبي اللي بينهم.",
+ why:"الكتاب يفرّق بين البيانات (حقائق أولية غير معالجة مثل علامات الطلبة) والمعلومات (بيانات نُظِّمت وحُلِّلت لتصبح مفيدة، مثل القائمة المنظمة والرسم البياني)، ثم تُستخدم المعلومات في اتخاذ القرار."},
+{t:"mcq",d:3,q:"فنّي قال: «بنغيّر اللوحة الأم بس، وما رح يتأثر إشي غيرها». ليش كلامه غير دقيق حسب الكتاب؟",
+ c:["اللوحة الأم تربط بين المكونات والأجهزة الطرفية كلها","اللوحة الأم هي دماغ الجهاز الذي ينفّذ العمليات الحسابية","اللوحة الأم تخزّن البيانات المؤقتة أثناء تشغيل التطبيقات","اللوحة الأم مكوّن خارجي يوجد خارج الهيكل الرئيس للجهاز"],a:0,
+ probe:"شو دور اللوحة الأم بالنسبة لباقي القطع؟ هل هي قطعة مستقلة ولا نقطة وصل؟",
+ why:"الكتاب: اللوحة الأم هي الوحدة الأساسية، تربط بين مكونات الجهاز والأجهزة الطرفية، وتوفّر وسائل الاتصال بينها، وتُثبَّت عليها المكونات الداخلية. أما دماغ الجهاز فهو وحدة المعالجة المركزية CPU."}
+];})()}
+];
+let BANK=[];
+let CUR=LEVELS[0];
+
+
+</script>
+
+<script>
+const LET=["أ","ب","ج","د"];
+const PRAISE=["أحسنتِ!","ممتاز!","يا سلام!","إجابة دقيقة!","صح تمامًا!","شغل مهندسة!"];
+const RETRY=["قريبة! جرّبي مرة ثانية","مش هيك، فكّري مرة كمان","ما زال في محاولة، ركّزي بالسؤال"];
+const BADGES=[
+ {id:"seed",n:"بذرة زيتون",need:s=>s.firstTry>=3,hint:"٣ إجابات صحيحة من أول محاولة"},
+ {id:"branch",n:"غصن زيتون",need:s=>s.best>=3,hint:"٣ إجابات متتالية من أول محاولة"},
+ {id:"stitch",n:"قطبة تطريز",need:s=>s.noHint>=5,hint:"٥ إجابات صحيحة بدون تلميح"},
+ {id:"iris",n:"سوسنة سوداء",need:s=>s.done>=10,hint:"إنهاء ١٠ تحديات"},
+ {id:"bird",n:"طائر الشنّار",need:s=>s.best>=6,hint:"٦ إجابات متتالية من أول محاولة"}
+];
+const S={players:[""],pstats:[],turn:0,i:0,scores:[0],review:[],
+         streak:0,best:0,firstTry:0,done:0,noHint:0,usedHint:false,tries:0,earned:[],locked:false};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const shuffle=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1]);
+
+let PLAYERS=[""];
+function drawPlayers(){
+  $("playerRows").innerHTML=PLAYERS.map((p,i)=>`<div class="prow"><span>${i+1}</span><input type="text" id="pn${i}" value="${esc(p)}" placeholder="اسم الطالبة" aria-label="اسم الطالبة ${i+1}"></div>`).join("");
+  $("delP").disabled=PLAYERS.length<=1; $("addP").disabled=PLAYERS.length>=6;
+}
+function readPlayers(){ PLAYERS=PLAYERS.map((p,i)=>($("pn"+i)?$("pn"+i).value:p)); }
+$("addP").addEventListener("click",()=>{readPlayers();PLAYERS.push("");drawPlayers();const n=$("pn"+(PLAYERS.length-1));if(n)n.focus();});
+$("delP").addEventListener("click",()=>{readPlayers();PLAYERS.pop();drawPlayers();});
+drawPlayers();
+$("themeBtn").addEventListener("click",()=>{const r=document.documentElement,c=r.getAttribute("data-theme");
+  const dark=c?c==="dark":matchMedia("(prefers-color-scheme: dark)").matches;r.setAttribute("data-theme",dark?"light":"dark");});
+$("start").addEventListener("click",()=>{
+  readPlayers();
+  const names=PLAYERS.map(p=>p.trim()).filter(Boolean);
+  if(!names.length){$("setupNote").hidden=false;const n=$("pn0");if(n)n.focus();return;}
+  $("setupNote").hidden=true;
+  CUR=LEVELS[LIDX]; BANK=CUR.bank;
+  const st=saved(); st.players=names; st.cls=($("clsInput")&&$("clsInput").value||"").trim(); save(st);
+  S.players=names; S.scores=names.map(()=>0); S.pstats=names.map(()=>({first:0,done:0}));
+  Object.assign(S,{i:0,turn:0,review:[],streak:0,best:0,firstTry:0,done:0,noHint:0,earned:[]});
+  $("setup").hidden=true;$("results").hidden=true;$("game").hidden=false;drawBadges();render();});
+
+
+/* ===== اختيار المستوى ===== */
+let LIDX=0;
+const KEY="dsg:"+document.title;
+function saved(){try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return{}}}
+function save(o){try{localStorage.setItem(KEY,JSON.stringify(o))}catch(e){}}
+function drawLevels(){
+  const done=saved().levels||{};
+  $("lvlPick").innerHTML=LEVELS.map((l,i)=>
+    `<button class="ghost lvl" type="button" data-i="${i}" aria-pressed="${i===LIDX}">
+       <b>${l.name}${done[l.id]?`<span class="tick">✓ ${done[l.id].total}</span>`:""}</b>
+       <small>${l.desc}</small></button>`).join("");
+}
+$("lvlPick").addEventListener("click",e=>{const b=e.target.closest(".lvl");if(!b)return;
+  LIDX=+b.dataset.i;drawLevels();});
+drawLevels();
+const prev=saved();
+if(prev.players&&prev.players.length){PLAYERS=prev.players.slice();drawPlayers();}
+if(prev.cls&&$("clsInput"))$("clsInput").value=prev.cls;
+
+/* ===== بطاقة النتيجة ===== */
+
+function submitUI(total,max){
+  if(!SUBMIT.url||!SUBMIT.f.level)return "";
+  const cls=(($("clsInput")&&$("clsInput").value)||saved().cls||"").trim();
+  return `<div class="row" style="margin-top:14px">`+S.players.map((t,i)=>{
+    const u=new URL(SUBMIT.url);
+    if(SUBMIT.f.name)u.searchParams.set(SUBMIT.f.name,t);
+    if(SUBMIT.f.cls)u.searchParams.set(SUBMIT.f.cls,SUBMIT.grade+(cls?" "+cls:""));
+    if(SUBMIT.f.level)u.searchParams.set(SUBMIT.f.level,CUR.name);
+    if(SUBMIT.f.score)u.searchParams.set(SUBMIT.f.score,String(S.scores[i]));
+    return `<a class="sendbtn" target="_blank" rel="noopener" href="${u.toString()}">📤 أرسلي نتيجة ${esc(t)}</a>`;
+  }).join("")+`</div>
+  <p class="sub" style="font-size:14.5px">بيفتح النموذج معبّى — اضغطي «إرسال» وبس.</p>`;
+}
+
+function resultCard(total,max){
+  const d=new Date(), two=n=>String(n).padStart(2,"0");
+  const when=`${d.getFullYear()}/${two(d.getMonth()+1)}/${two(d.getDate())}`;
+  const st=saved().levels||{};
+  const rows=S.players.map((t,i)=>`<tr><td>${esc(t)}</td><td><b>${S.scores[i]}</b></td><td>${S.pstats[i].first}</td></tr>`).join("");
+  const others=LEVELS.filter(l=>l.id!==CUR.id&&st[l.id]).map(l=>
+    `<tr><td>${l.name.split(" — ")[0]}</td><td><b>${st[l.id].total}</b></td><td>—</td></tr>`).join("");
+  const grand=total+LEVELS.filter(l=>l.id!==CUR.id&&st[l.id]).reduce((a,l)=>a+st[l.id].total,0);
+  return `<div class="card2" id="shotCard">
+    <h3>بطاقة النتيجة</h3>
+    <p class="when">${document.title} · ${CUR.name} · ${when}</p>
+    <table class="tbl"><thead><tr><th>الطالبة</th><th>النقاط</th><th>صح من أول محاولة</th></tr></thead>
+      <tbody>${rows}<tr><td><b>مجموع هذا المستوى</b></td><td><b>${total}</b> من ${max}</td><td><b>${S.firstTry}</b> من ${BANK.length}</td></tr>${others}</tbody></table>
+    ${others?`<div class="grand">المجموع عبر المستويات: ${grand}</div>`:""}
+    <div class="shot">📸 صوّري هذه البطاقة وابعتيها للمعلمة.</div>
+  </div>`;
+}
+
+function praise(t){const p=$("praise");p.innerHTML=`<div>${t}</div>`;setTimeout(()=>p.innerHTML="",1600);}
+function sparks(){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  const colors=["var(--red)","var(--olive)","var(--gold)"];
+  for(let i=0;i<18;i++){const s=document.createElement("div");s.className="spark";
+    s.style.cssText=`left:${innerWidth/2+(Math.random()-.5)*160}px;top:${innerHeight/2}px`;
+    s.innerHTML=`<i style="background:${colors[i%3]}"></i>`;document.body.appendChild(s);
+    s.animate([{transform:"translate(0,0)",opacity:1},{transform:`translate(${(Math.random()-.5)*420}px,${-140-Math.random()*260}px) rotate(${(Math.random()-.5)*720}deg)`,opacity:0}],
+      {duration:1100+Math.random()*500,easing:"cubic-bezier(.2,.7,.4,1)"}).onfinish=()=>s.remove();}
+}
+function drawBadges(){$("badgeRow").innerHTML=BADGES.map(b=>`<span class="badge ${S.earned.includes(b.id)?"on":""}" title="${b.hint}">${S.earned.includes(b.id)?"✦ ":""}${b.n}</span>`).join("");}
+function checkBadges(){BADGES.forEach(b=>{if(!S.earned.includes(b.id)&&b.need(S)){S.earned.push(b.id);praise("وسام جديد: "+b.n);sparks();}});drawBadges();}
+function hud(){
+  $("scorePills").innerHTML = S.players.map((t,i)=>`<span class="pill ${i===S.turn&&S.players.length>1?"turn":(S.players.length===1?"turn":"")}">${esc(t)}: ${S.scores[i]}</span>`).join("")
+    + (S.streak>1?`<span class="pill streak">سلسلة ${S.streak} ✦</span>`:"");
+  $("qCount").textContent=`تحدٍ ${S.i+1} من ${BANK.length}`;
+  $("prog").style.width=(S.i/BANK.length*100)+"%";
+}
+function pointsFor(base){const f=CUR.hints?[1,.6,.3]:[1,.75,.5,.35,.25];let p=Math.round(base*f[Math.min(S.tries,f.length-1)]);if(S.usedHint)p=Math.max(p-2,1);return Math.max(p,1);}
+function succeed(base,q,st,extra){
+  const first=S.tries===0;
+  S.done++; if(first){S.firstTry++;S.streak++;S.best=Math.max(S.best,S.streak);} else {S.streak=0;S.review.push(q.q.replace(/<[^>]+>/g,""));}
+  if(!S.usedHint&&first)S.noHint++;
+  S.scores[S.turn]+=pointsFor(base); S.pstats[S.turn].done++; if(first)S.pstats[S.turn].first++;
+  praise(first&&S.streak>=3?`سلسلة ${S.streak}! ${PRAISE[S.i%PRAISE.length]}`:PRAISE[S.i%PRAISE.length]);sparks();
+  const f=document.createElement("div");f.className="fb show ok";
+  f.innerHTML=`✔ صحيح${first?"":" – بعد التصحيح"}${extra?" – "+extra:""}<small>${q.why}</small>`;
+  st.appendChild(f);st.appendChild(nextBtn());hud();checkBadges();
+}
+function retry(q,st,msg){
+  S.tries++;S.streak=0;
+  let f=st.querySelector(".fb.bad");
+  if(!f){f=document.createElement("div");f.className="fb show bad";st.appendChild(f);}
+  f.innerHTML=`✖ ${RETRY[Math.min(S.tries-1,RETRY.length-1)]}${msg?" – "+msg:""}<small>ما في انتقال للتحدي اللي بعده إلا بالإجابة الصحيحة. صححي وكمّلي.</small>`;
+  const hb=st.querySelector(".hintbtn");if(hb&&!hb.disabled){hb.classList.add("pulse");}
+  if(S.tries>=3)probeUI(q,st);
+  hud();
+}
+function nextBtn(){
+  const d=document.createElement("div");d.className="foot";
+  const b=document.createElement("button");b.className="primary";
+  b.textContent=S.i===BANK.length-1?"النتيجة":"التحدي التالي";
+  b.addEventListener("click",()=>{S.i++;S.turn=(S.turn+1)%S.players.length;S.i<BANK.length?render():results();});
+  d.appendChild(b);return d;
+}
+function head(q){
+  const lv=["","سهل","متوسط","تحدٍ"][q.d||1];
+  return `<p class="q">${q.q}</p><div class="meta"><span class="diff d${q.d||1}">${lv}</span>${S.players.length>1?`<span>الدور على: <b>${esc(S.players[S.turn])}</b></span>`:""}${CUR.hints?((q.hint||q.p)?`<span>التلميح بيخصم نقطتين</span>`:""):`<span>بلا تلميحات — فكّري بالجواب</span>`}</div>`;
+}
+function probeUI(q,st){
+  if(!q.probe||st.querySelector(".probebox"))return;
+  const b=document.createElement("div");b.className="hintbox probebox show";
+  b.innerHTML=`<b>سؤال يساعدك تفكّري:</b><br>${q.probe}`;st.appendChild(b);
+}
+function hintUI(q,st){
+  if(!CUR.hints||(!q.hint&&!q.p))return;
+  const box=document.createElement("div");box.className="hintbox";
+  box.innerHTML=(q.hint?"✦ "+q.hint:"")+(q.p?`<span class="page">📖 الجواب موجود في ${q.p}</span>`:"");
+  const b=document.createElement("button");b.className="ghost hintbtn";b.type="button";
+  b.textContent=q.hint?"أعطيني تلميح":"بأي درس ألاقي الجواب؟";b.style.marginTop="12px";
+  b.addEventListener("click",()=>{S.usedHint=true;box.classList.add("show");b.disabled=true;b.classList.remove("pulse");});
+  st.appendChild(b);st.appendChild(box);
+}
+function render(){
+  hud();const q=BANK[S.i],st=$("stage");st.innerHTML=head(q);S.usedHint=false;S.tries=0;
+  ({mcq:mcq,match:match,order:order}[q.t])(q,st);
+  hintUI(q,st);
+}
+function mcq(q,st){
+  const order=shuffle(q.c.map((c,i)=>({c,i})));
+  const wrap=document.createElement("div");wrap.className="choices";
+  order.forEach((o,idx)=>{
+    const b=document.createElement("button");b.className="choice";b.type="button";
+    b.innerHTML=`<span class="k">${LET[idx]}</span>${o.c}`;
+    b.addEventListener("click",()=>{
+      if(b.disabled||st.querySelector(".fb.ok"))return;
+      if(o.i===q.a){b.classList.add("ok");[...wrap.children].forEach(x=>x.disabled=true);
+        const f=st.querySelector(".fb.bad");if(f)f.remove();
+        succeed(10,q,st);
+      } else {b.classList.add("bad");b.disabled=true;retry(q,st,"هاي الإجابة مش صحيحة، ضلّ عندك خيارات");}
+    });
+    wrap.appendChild(b);
+  });
+  st.appendChild(wrap);
+}
+function match(q,st){
+  const left=shuffle(q.pairs.map((p,i)=>({t:p[0],i}))),right=shuffle(q.pairs.map((p,i)=>({t:p[1],i})));
+  let sel=null,ok=0;
+  const box=document.createElement("div");box.className="pairs";
+  const cl=document.createElement("div");cl.className="pcol";cl.innerHTML='<h3>العمود الأول</h3>';
+  const cr=document.createElement("div");cr.className="pcol";cr.innerHTML='<h3>العمود الثاني</h3>';
+  const mk=(o,side)=>{const b=document.createElement("button");b.type="button";b.className="pitem";b.textContent=o.t;b.dataset.i=o.i;b.dataset.k=q.pairs[o.i][1];b.dataset.side=side;
+    b.addEventListener("click",()=>{
+      if(b.disabled||st.querySelector(".fb.ok"))return;
+      if(!sel||sel.dataset.side===side){if(sel)sel.classList.remove("sel");sel=b;b.classList.add("sel");return;}
+      const good=sel.dataset.k===b.dataset.k,a=sel;sel=null;a.classList.remove("sel");
+      if(good){[a,b].forEach(x=>{x.disabled=true;x.classList.add("done");});ok++;
+        if(ok===q.pairs.length){const f=st.querySelector(".fb.bad");if(f)f.remove();succeed(q.pairs.length*4,q,st);}
+      } else {
+        [a,b].forEach(x=>x.classList.add("miss"));
+        retry(q,st,"التوصيلة غلط، بتقدري تعيديها");
+        setTimeout(()=>[a,b].forEach(x=>x.classList.remove("miss")),700);
+      }
+    });return b;};
+  left.forEach(o=>cl.appendChild(mk(o,"L")));right.forEach(o=>cr.appendChild(mk(o,"R")));
+  box.appendChild(cl);box.appendChild(cr);st.appendChild(box);
+}
+function order(q,st){
+  const target=q.items;let pool=shuffle([...target]),picked=[];
+  const slots=document.createElement("div");slots.className="slots";
+  const chips=document.createElement("div");chips.className="chipset";
+  const undo=document.createElement("button");undo.type="button";undo.className="ghost";undo.textContent="تراجع عن آخر خطوة";undo.style.marginTop="10px";
+  undo.addEventListener("click",()=>{if(st.querySelector(".fb.ok"))return;picked.pop();draw();});
+  function draw(){
+    slots.innerHTML="";
+    target.forEach((_,i)=>{const s=document.createElement("div");s.className="slot"+(picked[i]?" filled":"");
+      s.textContent=picked[i]||`الخطوة ${i+1}`;slots.appendChild(s);});
+    chips.innerHTML="";
+    pool.forEach(p=>{const b=document.createElement("button");b.type="button";b.className="chip";b.textContent=p;
+      b.disabled=picked.includes(p)||!!st.querySelector(".fb.ok");
+      b.addEventListener("click",()=>{picked.push(p);draw();if(picked.length===target.length)check();});
+      chips.appendChild(b);});
+    undo.disabled=picked.length===0||!!st.querySelector(".fb.ok");
+  }
+  function check(){
+    if(picked.every((p,i)=>p===target[i])){const f=st.querySelector(".fb.bad");if(f)f.remove();draw();succeed(14,q,st);}
+    else{retry(q,st,"الترتيب مش مظبوط، رجّعي ورتّبي من جديد");picked=[];draw();}
+  }
+  st.appendChild(slots);st.appendChild(chips);st.appendChild(undo);draw();
+}
+function results(){
+  $("game").hidden=true;const r=$("results");r.hidden=false;
+  const max=BANK.reduce((a,q)=>a+(q.t==="mcq"?10:q.t==="order"?14:q.pairs.length*4),0);
+  const total=S.scores.reduce((a,b)=>a+b,0);
+  const solo=S.players.length===1;
+  const pct=Math.round(total/max*100);
+  let body=`<h2>${pct>=85?"إتقان كامل للدرسين":pct>=60?"كويس، وفي مجال نصير أسرع":"خلصتي التحديات، وبدنا نراجع سوا"}</h2>`;
+  if(solo){
+    body+=`<div class="score">${total} <span style="font-size:22px;color:var(--muted)">من ${max}</span></div>
+      <p class="sub">${esc(S.players[0])} · صح من أول محاولة: <b>${S.firstTry}</b> من ${BANK.length} · أطول سلسلة: <b>${S.best}</b></p>`;
+  } else {
+    body+=`<table class="tbl"><thead><tr><th>الطالبة</th><th>النقاط</th><th>تحديات حلّتها</th><th>صح من أول محاولة</th></tr></thead><tbody>
+      ${S.players.map((t,i)=>`<tr><td>${esc(t)}</td><td>${S.scores[i]}</td><td>${S.pstats[i].done}</td><td>${S.pstats[i].first}</td></tr>`).join("")}
+      <tr><td><b>المجموع</b></td><td><b>${total}</b></td><td><b>${BANK.length}</b></td><td><b>${S.firstTry}</b></td></tr>
+      </tbody></table><p class="sub">المجموع من ${max} نقطة.</p>`;
+  }
+  const st0=saved(); st0.levels=st0.levels||{}; st0.levels[CUR.id]={total:total,max:max,first:S.firstTry,n:BANK.length}; save(st0);
+  body+=resultCard(total,max)+submitUI(total,max);
+  const got=BADGES.filter(b=>S.earned.includes(b.id)),rev=[...new Set(S.review)];
+  r.innerHTML=body
+    +`<div class="badges">${BADGES.map(b=>`<span class="badge ${S.earned.includes(b.id)?"on":""}">${S.earned.includes(b.id)?"✦ ":""}${b.n}</span>`).join("")}</div>`
+    +(got.length?`<p class="sub">وسام الجولة: ${got.map(b=>b.n).join("، ")}</p>`:"")
+    +(rev.length?`<div class="miss"><b>تحديات احتاجت أكثر من محاولة، راجعيها من الكتاب:</b>${rev.map(m=>`<div>${m}</div>`).join("")}</div>`
+                :`<p class="sub">كل التحديات انحلّت من أول محاولة.</p>`)
+    +`<div class="foot"><div class="row">${LIDX<LEVELS.length-1?`<button class="primary" id="nextlvl" type="button">المستوى التالي ←</button>`:""}<button class="ghost" id="again" type="button">أعيدي هذا المستوى</button></div><button class="ghost" id="back" type="button">تغيير الأسماء أو المستوى</button></div>`;
+  if(!rev.length)sparks();
+  $("again").addEventListener("click",()=>{Object.assign(S,{i:0,turn:0,review:[],streak:0,best:0,firstTry:0,done:0,noHint:0,earned:[]});
+    S.scores=S.scores.map(()=>0);S.pstats=S.players.map(()=>({first:0,done:0}));r.hidden=true;$("game").hidden=false;drawBadges();render();});
+  $("back").addEventListener("click",()=>{r.hidden=true;drawLevels();$("setup").hidden=false;});
+  const nx=$("nextlvl"); if(nx) nx.addEventListener("click",()=>{
+    LIDX++; CUR=LEVELS[LIDX]; BANK=CUR.bank; drawLevels();
+    S.scores=S.players.map(()=>0); S.pstats=S.players.map(()=>({first:0,done:0}));
+    Object.assign(S,{i:0,turn:0,review:[],streak:0,best:0,firstTry:0,done:0,noHint:0,earned:[]});
+    r.hidden=true;$("game").hidden=false;drawBadges();render();window.scrollTo(0,0);});
+  r.scrollIntoView({block:"start"});
+}
+</script>
+
+</body></html>
