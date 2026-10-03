@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ألعاب المهارات الرقمية</title>
+<link rel="icon" href="favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@600;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --ground:#FBF7F0; --surface:#FFFFFF; --ink:#211C17; --muted:#6B6055; --line:#E6DCCC;
+  --olive:#3F6B3A; --olive-soft:#E6EFE2; --red:#B23A2E; --red-soft:#F8E6E2;
+  --gold:#A9781B; --gold-soft:#FBF0D9; --ghost:#F3EEE6; --accent-ink:#FFFFFF;
+  --display:"Baloo Bhaijaan 2","IBM Plex Sans Arabic",Tahoma,sans-serif;
+  --body:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#14181A; --surface:#1C2326; --ink:#F0EAE0; --muted:#A99E90; --line:#2E3A3E;
+  --olive:#8FC486; --olive-soft:#1B2A1D; --red:#EE9385; --red-soft:#2E1C19;
+  --gold:#E3B860; --gold-soft:#2C2313; --ghost:#181E21; --accent-ink:#14181A;
+}}
+:root[data-theme="dark"]{
+  --ground:#14181A; --surface:#1C2326; --ink:#F0EAE0; --muted:#A99E90; --line:#2E3A3E;
+  --olive:#8FC486; --olive-soft:#1B2A1D; --red:#EE9385; --red-soft:#2E1C19;
+  --gold:#E3B860; --gold-soft:#2C2313; --ghost:#181E21; --accent-ink:#14181A;
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;margin:0}
+.tatreez{height:14px;background-image:
+  linear-gradient(45deg,var(--red) 25%,transparent 25%),
+  linear-gradient(-45deg,var(--red) 25%,transparent 25%),
+  linear-gradient(45deg,transparent 75%,var(--olive) 75%),
+  linear-gradient(-45deg,transparent 75%,var(--olive) 75%);
+  background-size:14px 14px;background-position:0 0,0 7px,7px -7px,-7px 0;opacity:.85}
+.wrap{max-width:1040px;margin:0 auto;padding:22px 16px 60px}
+h1{font-family:var(--display);font-size:clamp(28px,5.4vw,44px);margin:0;line-height:1.15}
+.sub{color:var(--muted);margin:6px 0 0}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 6px}
+.tab{font:inherit;font-weight:700;cursor:pointer;border-radius:999px;border:2px solid var(--line);
+  background:var(--surface);color:var(--ink);padding:8px 18px}
+.tab[aria-selected="true"]{background:var(--olive);border-color:var(--olive);color:var(--accent-ink)}
+.tab:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.tab .n{font-size:13px;opacity:.8;margin-inline-start:6px}
+.unit{margin-top:26px}
+.unit h2{font-family:var(--display);font-size:clamp(20px,3.4vw,26px);margin:0 0 12px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.unit h2 small{font-family:var(--body);font-size:15px;color:var(--muted);font-weight:500}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.slot{display:flex;flex-direction:column;gap:8px;border-radius:18px;padding:16px 18px 16px;
+  border:2px dashed var(--line);background:var(--ghost);color:var(--muted);text-decoration:none;position:relative;min-height:150px}
+.slot .tag{font-size:13px;font-weight:700;letter-spacing:0}
+.slot ol{list-style-type:arabic-indic;margin:0;padding-inline-start:20px;font-weight:600;color:inherit}
+.slot ol li{margin:2px 0}
+.slot .st{margin-top:auto;font-weight:700;font-size:15px}
+.slot.ready{border-style:solid;border-color:var(--line);background:var(--surface);color:var(--ink);overflow:hidden;
+  transition:transform .12s,border-color .12s}
+.slot.ready::before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:6px;
+  background:repeating-linear-gradient(180deg,var(--olive) 0 10px,var(--red) 10px 20px)}
+.slot.ready .tag{color:var(--olive)}
+.slot.ready .st{color:var(--olive)}
+.slot.ready:hover{border-color:var(--olive);transform:translateY(-2px)}
+.slot.ready:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.slot.ready .name{font-family:var(--display);font-size:20px;line-height:1.3;color:var(--ink)}
+.extras{margin-top:36px;border-top:2px solid var(--line);padding-top:18px}
+.extras h2{font-family:var(--display);font-size:22px;margin:0 0 4px}
+.extras p{color:var(--muted);margin:0 0 12px;font-size:15px}
+.foot{margin-top:40px;color:var(--muted);font-size:14px}
+@media (prefers-reduced-motion:reduce){.slot.ready{transition:none}.slot.ready:hover{transform:none}}
+</style>
+</head>
+<body>
+<div class="tatreez" aria-hidden="true"></div>
+<div class="wrap">
+  <h1>ألعاب المهارات الرقمية</h1>
+  <p class="sub">اختارا الصف، ثم الدرسين. كل لعبة فيها ثلاثة مستويات وتُلعب بثنائي على جهاز واحد.</p>
+
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <div id="panel" role="tabpanel"></div>
+
+  <section class="extras" id="extras" hidden>
+    <h2>ألعاب إضافية</h2>
+    <p>ألعاب مساندة ليست مبنية على دروس الكتاب مباشرة.</p>
+    <div class="grid" id="extraGrid"></div>
+  </section>
+
+  <p class="foot">المهارات الرقمية · الفصل الأول · الصفوف ٧–١٠</p>
+</div>
+
+<script>
+/* ===== خريطة الموقع =====
+   كل خانة = درسان. مسار الصفحة يُبنى تلقائيًا:  g{الصف}/u{الوحدة}-l{أ}-{ب}.html
+   أو للدرس المنفرد:                         g{الصف}/u{الوحدة}-l{أ}.html
+   ارفعا ملفًا بهذا الاسم فتتفعّل خانته وحدها — لا حاجة لتعديل هذه الصفحة. */
+const GRADES=[
+ {g:7,label:"السابع",units:[
+   {u:1,name:"أنظمة الحوسبة",en:"Computing Systems",lessons:["جهاز الحاسوب","مكونات الحاسوب المادية","مكونات الحاسوب البرمجية","أنظمة التشغيل","تفاعل الإنسان مع أجهزة الحاسوب"]},
+   {u:2,name:"شبكات الحاسوب",en:"Computer Networks",lessons:["مقدمة إلى شبكات الحاسوب","مكونات شبكات الحاسوب","نماذج الربط في الشبكات السلكية","أنواع شبكات الحاسوب","التواصل باستخدام الشبكات","أداء الشبكة"]}
+ ]},
+ {g:8,label:"الثامن",units:[
+   {u:1,name:"أنظمة الحوسبة",en:"Computing Systems",lessons:["إصلاح الأعطال","صيانة الأعطال المادية","صيانة الأعطال البرمجية","إصلاح الأعطال باستخدام أدوات نظام التشغيل"]},
+   {u:2,name:"الخوارزميات والبرمجة",en:"Algorithms & Programming",lessons:["مقدمة في برمجية سكراتش","عناصر التصميم في سكراتش","عناصر البرمجة في سكراتش: اللبنات البرمجية","المتغيرات في برمجية سكراتش","لبنات التحكم في برمجية سكراتش"]}
+ ]},
+ {g:9,label:"التاسع",units:[
+   {u:1,name:"أثر الحوسبة",en:"Impact of Computing",lessons:["وسائل التكنولوجيا الحديثة","التعلّم الإلكتروني: الأدوات والمنصات","الجريمة الإلكترونية","التنمّر الإلكتروني","الإعلام الرقمي"]},
+   {u:2,name:"الخوارزميات والبرمجة",en:"Algorithms & Programming",lessons:["المتغيرات البرمجية في برمجية سكراتش","الجمل الشرطية المركّبة","حلقات التكرار المتداخلة","الدوال البرمجية والروتين الفرعي"]}
+ ]},
+ {g:10,label:"العاشر",units:[
+   {u:1,name:"تحليل البيانات",en:"Data Analysis",lessons:["البيانات والمعلومات","أنواع البيانات وطرائق تنظيمها","التمثيل المرئي للبيانات","تحليل البيانات"]},
+   {u:2,name:"الخوارزميات والبرمجة",en:"Algorithms & Programming",lessons:["مقدمة إلى المواقع الإلكترونية","إنشاء الصفحات الإلكترونية","تنسيق النصوص","التعليقات والقوائم","الصور","الوسائط المتعددة والارتباطات التشعبية","الجداول"]}
+ ]}
+];
+const EXTRAS=[
+ {path:"extra/g8-jard.html",name:"مُحقِّقات الجرد",tag:"الصف الثامن · لعبة بحث"}
+];
+const AR="٠١٢٣٤٥٦٧٨٩", ar=n=>String(n).replace(/\d/g,d=>AR[d]);
+const ORD=["","الأول","الثاني","الثالث","الرابع","الخامس","السادس","السابع"];
+const ORDF=["","الأولى","الثانية","الثالثة","الرابعة"];
+
+function slotsOf(g,unit){
+  const out=[];
+  for(let i=0;i<unit.lessons.length;i+=2){
+    const a=i+1, b=i+2<=unit.lessons.length?i+2:null;
+    out.push({a,b,names:unit.lessons.slice(i,i+2),
+      path:`g${g}/u${unit.u}-l${a}${b?"-"+b:""}.html`});
+  }
+  return out;
+}
+
+const cache={};
+async function exists(path){
+  if(path in cache) return cache[path];
+  try{ const r=await fetch(path,{method:"HEAD",cache:"no-store"}); cache[path]=r.ok; }
+  catch(e){ cache[path]=false; }
+  return cache[path];
+}
+
+function card(s){
+  const el=document.createElement("div");
+  el.className="slot";
+  const tag=s.b?`الدرسان ${ORD[s.a]} و${ORD[s.b]}`:`الدرس ${ORD[s.a]}`;
+  el.innerHTML=`<span class="tag">${tag}</span><ol start="${s.a}">${s.names.map(n=>`<li>${n}</li>`).join("")}</ol><span class="st">قريبًا</span>`;
+  exists(s.path).then(ok=>{
+    if(!ok) return;
+    const a=document.createElement("a");
+    a.className="slot ready"; a.href=s.path; a.innerHTML=el.innerHTML;
+    a.querySelector(".st").textContent="ابدآ اللعب ←";
+    el.replaceWith(a);
+  });
+  return el;
+}
+
+function render(gi){
+  const G=GRADES[gi], panel=document.getElementById("panel");
+  panel.innerHTML="";
+  panel.setAttribute("aria-labelledby","tab"+G.g);
+  G.units.forEach(U=>{
+    const sec=document.createElement("section"); sec.className="unit";
+    sec.innerHTML=`<h2>الوحدة ${ORDF[U.u]}: ${U.name} <small>${U.en}</small></h2>`;
+    const grid=document.createElement("div"); grid.className="grid";
+    slotsOf(G.g,U).forEach(s=>grid.appendChild(card(s)));
+    sec.appendChild(grid); panel.appendChild(sec);
+  });
+  document.querySelectorAll(".tab").forEach((t,i)=>t.setAttribute("aria-selected",i===gi));
+  try{localStorage.setItem("dsg:grade",gi)}catch(e){}
+}
+
+const tabs=document.getElementById("tabs");
+GRADES.forEach((G,i)=>{
+  const b=document.createElement("button");
+  b.className="tab"; b.id="tab"+G.g; b.setAttribute("role","tab");
+  b.innerHTML=`الصف ${G.label}<span class="n">${ar(G.g)}</span>`;
+  b.onclick=()=>render(i);
+  tabs.appendChild(b);
+});
+let start=0;
+try{const v=+localStorage.getItem("dsg:grade"); if(v>=0&&v<GRADES.length) start=v;}catch(e){}
+const q=new URLSearchParams(location.search).get("g");
+GRADES.forEach((G,i)=>{ if(q==String(G.g)) start=i; });
+render(start);
+
+(async()=>{
+  const grid=document.getElementById("extraGrid"); let any=false;
+  for(const x of EXTRAS){
+    if(!(await exists(x.path))) continue;
+    any=true;
+    const a=document.createElement("a"); a.className="slot ready"; a.href=x.path;
+    a.innerHTML=`<span class="tag">${x.tag}</span><span class="name">${x.name}</span><span class="st">ابدآ اللعب ←</span>`;
+    grid.appendChild(a);
+  }
+  document.getElementById("extras").hidden=!any;
+})();
+</script>
+</body>
+</html>
