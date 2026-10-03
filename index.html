@@ -10,21 +10,19 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@600;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
 <style>
 :root{
-  --ground:#FBF7F0; --surface:#FFFFFF; --ink:#211C17; --muted:#6B6055; --line:#E6DCCC;
-  --olive:#3F6B3A; --olive-soft:#E6EFE2; --red:#B23A2E; --red-soft:#F8E6E2;
-  --gold:#A9781B; --gold-soft:#FBF0D9; --ghost:#F3EEE6; --accent-ink:#FFFFFF;
+  --ground:#FBF7F0; --surface:#FFFFFF; --ink:#211C17; --muted:#6B6055; --line:#E6DCCC; --ghost:#F3EEE6;
+  --olive:#3F6B3A; --red:#B23A2E; --gold:#E0A526; --sea:#1B6CA8; --orange:#E8732C; --sky:#CFE6F5;
+  --g7:#3F8A3A; --g8:#E8732C; --g9:#1B6CA8; --g10:#B23A2E;
   --display:"Baloo Bhaijaan 2","IBM Plex Sans Arabic",Tahoma,sans-serif;
   --body:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --ground:#14181A; --surface:#1C2326; --ink:#F0EAE0; --muted:#A99E90; --line:#2E3A3E;
-  --olive:#8FC486; --olive-soft:#1B2A1D; --red:#EE9385; --red-soft:#2E1C19;
-  --gold:#E3B860; --gold-soft:#2C2313; --ghost:#181E21; --accent-ink:#14181A;
+  --ground:#14181A; --surface:#1C2326; --ink:#F0EAE0; --muted:#A99E90; --line:#2E3A3E; --ghost:#181E21;
+  --g7:#7CC473; --g8:#F59A5C; --g9:#6BB3E6; --g10:#EE9385; --sky:#1E3442;
 }}
 :root[data-theme="dark"]{
-  --ground:#14181A; --surface:#1C2326; --ink:#F0EAE0; --muted:#A99E90; --line:#2E3A3E;
-  --olive:#8FC486; --olive-soft:#1B2A1D; --red:#EE9385; --red-soft:#2E1C19;
-  --gold:#E3B860; --gold-soft:#2C2313; --ghost:#181E21; --accent-ink:#14181A;
+  --ground:#14181A; --surface:#1C2326; --ink:#F0EAE0; --muted:#A99E90; --line:#2E3A3E; --ghost:#181E21;
+  --g7:#7CC473; --g8:#F59A5C; --g9:#6BB3E6; --g10:#EE9385; --sky:#1E3442;
 }
 *{box-sizing:border-box}
 body{background:var(--ground);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;margin:0}
@@ -34,46 +32,112 @@ body{background:var(--ground);color:var(--ink);font-family:var(--body);font-size
   linear-gradient(45deg,transparent 75%,var(--olive) 75%),
   linear-gradient(-45deg,transparent 75%,var(--olive) 75%);
   background-size:14px 14px;background-position:0 0,0 7px,7px -7px,-7px 0;opacity:.85}
-.wrap{max-width:1040px;margin:0 auto;padding:22px 16px 60px}
-h1{font-family:var(--display);font-size:clamp(28px,5.4vw,44px);margin:0;line-height:1.15}
-.sub{color:var(--muted);margin:6px 0 0}
-.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 6px}
-.tab{font:inherit;font-weight:700;cursor:pointer;border-radius:999px;border:2px solid var(--line);
-  background:var(--surface);color:var(--ink);padding:8px 18px}
-.tab[aria-selected="true"]{background:var(--olive);border-color:var(--olive);color:var(--accent-ink)}
+.wrap{max-width:1040px;margin:0 auto;padding:18px 16px 60px}
+
+/* ---------- hero ---------- */
+.hero{display:grid;grid-template-columns:1.1fr 1fr;align-items:center;gap:10px;
+  background:linear-gradient(160deg,#FFF3DC 0%,#FDE3CF 55%,#E9F2E4 100%);
+  border-radius:26px;padding:22px 24px;overflow:hidden;position:relative}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hero{background:linear-gradient(160deg,#2A2418,#2B1E17 55%,#18241A)}}
+.hero h1{font-family:var(--display);font-size:clamp(30px,5.6vw,48px);margin:0;line-height:1.1}
+.hero h1 span{color:var(--g8)}
+.hero p{color:var(--muted);margin:8px 0 0;font-size:16.5px}
+.hero svg{width:100%;height:auto;max-height:230px}
+@media (max-width:640px){.hero{grid-template-columns:1fr;padding:18px}.hero svg{max-height:170px;order:-1}}
+
+/* ---------- tabs ---------- */
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0 4px}
+@media (max-width:640px){.tabs{grid-template-columns:repeat(2,1fr)}}
+.tab{font:inherit;cursor:pointer;border-radius:18px;border:2px solid var(--line);background:var(--surface);color:var(--ink);
+  padding:10px 12px;display:flex;align-items:center;gap:10px;text-align:start;transition:transform .1s}
+.tab .num{flex:none;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;
+  font-family:var(--display);font-size:24px;font-weight:800;color:#fff;background:var(--c)}
+.tab b{display:block;font-family:var(--display);font-size:18px;line-height:1.2}
+.tab small{color:var(--muted);font-size:13px}
+.tab[aria-selected="true"]{border-color:var(--c);background:color-mix(in srgb,var(--c) 12%,var(--surface));transform:translateY(-2px)}
 .tab:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
-.tab .n{font-size:13px;opacity:.8;margin-inline-start:6px}
-.unit{margin-top:26px}
-.unit h2{font-family:var(--display);font-size:clamp(20px,3.4vw,26px);margin:0 0 12px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-.unit h2 small{font-family:var(--body);font-size:15px;color:var(--muted);font-weight:500}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
-.slot{display:flex;flex-direction:column;gap:8px;border-radius:18px;padding:16px 18px 16px;
-  border:2px dashed var(--line);background:var(--ghost);color:var(--muted);text-decoration:none;position:relative;min-height:150px}
-.slot .tag{font-size:13px;font-weight:700;letter-spacing:0}
-.slot ol{list-style-type:arabic-indic;margin:0;padding-inline-start:20px;font-weight:600;color:inherit}
+
+/* ---------- units ---------- */
+.unit{margin-top:28px}
+.unit-head{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.unit-head .ic{flex:none;width:58px;height:58px;border-radius:18px;background:color-mix(in srgb,var(--c) 15%,var(--surface));display:grid;place-items:center}
+.unit-head .ic svg{width:52px;height:40px}
+.unit-head h2{font-family:var(--display);font-size:clamp(20px,3.4vw,26px);margin:0;line-height:1.2}
+.unit-head small{display:block;font-family:var(--body);font-size:14px;color:var(--muted);font-weight:500}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.slot{display:flex;flex-direction:column;border-radius:20px;overflow:hidden;text-decoration:none;color:var(--muted);
+  border:2px dashed var(--line);background:var(--ghost);min-height:230px}
+.slot .art{height:104px;position:relative;display:grid;place-items:center;background:var(--line)}
+.slot .art svg{width:100%;height:100%}
+.slot .art .badge{position:absolute;inset-block-start:10px;inset-inline-start:10px;background:var(--surface);color:var(--ink);
+  border-radius:999px;padding:2px 12px;font-size:13px;font-weight:700}
+.slot .body{padding:12px 16px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.slot ol{list-style-type:arabic-indic;margin:0;padding-inline-start:22px;font-weight:600}
 .slot ol li{margin:2px 0}
 .slot .st{margin-top:auto;font-weight:700;font-size:15px}
-.slot.ready{border-style:solid;border-color:var(--line);background:var(--surface);color:var(--ink);overflow:hidden;
-  transition:transform .12s,border-color .12s}
-.slot.ready::before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:6px;
-  background:repeating-linear-gradient(180deg,var(--olive) 0 10px,var(--red) 10px 20px)}
-.slot.ready .tag{color:var(--olive)}
-.slot.ready .st{color:var(--olive)}
-.slot.ready:hover{border-color:var(--olive);transform:translateY(-2px)}
+.slot:not(.ready) .art{filter:grayscale(1);opacity:.45}
+.slot.ready{border:2px solid color-mix(in srgb,var(--c) 40%,var(--line));background:var(--surface);color:var(--ink);transition:transform .12s,box-shadow .12s}
+.slot.ready .art{background:color-mix(in srgb,var(--c) 18%,var(--surface))}
+.slot.ready .st{color:var(--c);display:flex;align-items:center;gap:8px}
+.slot.ready .st i{font-style:normal;display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--c);color:#fff}
+.slot.ready:hover{transform:translateY(-3px);box-shadow:0 10px 24px -14px color-mix(in srgb,var(--c) 70%,transparent)}
 .slot.ready:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
-.slot.ready .name{font-family:var(--display);font-size:20px;line-height:1.3;color:var(--ink)}
-.extras{margin-top:36px;border-top:2px solid var(--line);padding-top:18px}
+.slot .name{font-family:var(--display);font-size:21px;line-height:1.3;color:var(--ink)}
+
+.extras{margin-top:38px;border-top:2px solid var(--line);padding-top:18px}
 .extras h2{font-family:var(--display);font-size:22px;margin:0 0 4px}
 .extras p{color:var(--muted);margin:0 0 12px;font-size:15px}
-.foot{margin-top:40px;color:var(--muted);font-size:14px}
-@media (prefers-reduced-motion:reduce){.slot.ready{transition:none}.slot.ready:hover{transform:none}}
+.foot{margin-top:40px;color:var(--muted);font-size:14px;text-align:center}
+@media (prefers-reduced-motion:reduce){.slot.ready,.tab{transition:none}.slot.ready:hover{transform:none}}
 </style>
 </head>
 <body>
 <div class="tatreez" aria-hidden="true"></div>
 <div class="wrap">
-  <h1>ألعاب المهارات الرقمية</h1>
-  <p class="sub">اختارا الصف، ثم الدرسين. كل لعبة فيها ثلاثة مستويات وتُلعب بثنائي على جهاز واحد.</p>
+
+  <header class="hero">
+    <div>
+      <h1>ألعاب <span>المهارات الرقمية</span></h1>
+      <p>اختارا الصف، ثم الدرسين. كل لعبة فيها ثلاثة مستويات، وتُلعب بثنائي على جهاز واحد.</p>
+    </div>
+    <svg viewBox="0 0 400 230" role="img" aria-label="حاسوب بين غصن زيتون وشجرة نارنج">
+      <defs>
+        <pattern id="tz" width="16" height="16" patternUnits="userSpaceOnUse">
+          <rect width="16" height="16" fill="#B23A2E"/><path d="M8 1 L15 8 L8 15 L1 8Z" fill="#FFF8F0"/><path d="M8 5 L11 8 L8 11 L5 8Z" fill="#3F6B3A"/>
+        </pattern>
+      </defs>
+      <circle cx="320" cy="52" r="30" fill="#FFBF3C" opacity=".85"/>
+      <path d="M0 200 Q100 168 200 186 T400 178 V230 H0Z" fill="#A9C98F"/>
+      <path d="M0 214 Q120 194 230 206 T400 200 V230 H0Z" fill="#7FAE68"/>
+      <!-- orange tree -->
+      <rect x="330" y="128" width="10" height="62" rx="4" fill="#7B5A3A"/>
+      <circle cx="335" cy="112" r="38" fill="#3F7A3A"/>
+      <circle cx="318" cy="104" r="7" fill="#F28A2E"/><circle cx="346" cy="96" r="7" fill="#F28A2E"/>
+      <circle cx="352" cy="124" r="7" fill="#F28A2E"/><circle cx="325" cy="128" r="6.5" fill="#F28A2E"/><circle cx="336" cy="86" r="6" fill="#F28A2E"/>
+      <!-- computer -->
+      <rect x="128" y="58" width="150" height="104" rx="12" fill="#2A2A2A"/>
+      <rect x="138" y="68" width="130" height="80" rx="6" fill="#CFE6F5"/>
+      <rect x="148" y="78" width="48" height="26" rx="5" fill="#E8732C"/>
+      <rect x="204" y="78" width="54" height="10" rx="5" fill="#1B6CA8"/>
+      <rect x="204" y="94" width="40" height="10" rx="5" fill="#3F8A3A"/>
+      <rect x="148" y="112" width="110" height="8" rx="4" fill="#FFFFFF"/>
+      <rect x="148" y="126" width="74" height="8" rx="4" fill="#FFFFFF"/>
+      <circle cx="243" cy="130" r="9" fill="#FFBF3C"/><path d="M239 130 l3 3 l6 -6" stroke="#2A2A2A" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      <rect x="186" y="162" width="34" height="16" fill="#4A4A4A"/>
+      <rect x="160" y="176" width="86" height="12" rx="5" fill="url(#tz)"/>
+      <!-- olive branch -->
+      <path d="M30 170 Q70 120 120 108" stroke="#5E7A3A" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <g fill="#6E8F4A">
+        <ellipse cx="52" cy="146" rx="13" ry="5" transform="rotate(-40 52 146)"/>
+        <ellipse cx="66" cy="150" rx="13" ry="5" transform="rotate(20 66 150)"/>
+        <ellipse cx="76" cy="126" rx="13" ry="5" transform="rotate(-35 76 126)"/>
+        <ellipse cx="92" cy="128" rx="13" ry="5" transform="rotate(25 92 128)"/>
+        <ellipse cx="102" cy="110" rx="12" ry="5" transform="rotate(-20 102 110)"/>
+      </g>
+      <circle cx="70" cy="136" r="5" fill="#3B3F2A"/><circle cx="96" cy="118" r="5" fill="#3B3F2A"/>
+    </svg>
+  </header>
 
   <div class="tabs" role="tablist" id="tabs"></div>
   <div id="panel" role="tabpanel"></div>
@@ -93,36 +157,82 @@ h1{font-family:var(--display);font-size:clamp(28px,5.4vw,44px);margin:0;line-hei
    أو للدرس المنفرد:                         g{الصف}/u{الوحدة}-l{أ}.html
    ارفعا ملفًا بهذا الاسم فتتفعّل خانته وحدها — لا حاجة لتعديل هذه الصفحة. */
 const GRADES=[
- {g:7,label:"السابع",units:[
-   {u:1,name:"أنظمة الحوسبة",en:"Computing Systems",lessons:["جهاز الحاسوب","مكونات الحاسوب المادية","مكونات الحاسوب البرمجية","أنظمة التشغيل","تفاعل الإنسان مع أجهزة الحاسوب"]},
-   {u:2,name:"شبكات الحاسوب",en:"Computer Networks",lessons:["مقدمة إلى شبكات الحاسوب","مكونات شبكات الحاسوب","نماذج الربط في الشبكات السلكية","أنواع شبكات الحاسوب","التواصل باستخدام الشبكات","أداء الشبكة"]}
+ {g:7,label:"السابع",place:"يافا",units:[
+   {u:1,art:"pc",name:"أنظمة الحوسبة",en:"Computing Systems",lessons:["جهاز الحاسوب","مكونات الحاسوب المادية","مكونات الحاسوب البرمجية","أنظمة التشغيل","تفاعل الإنسان مع أجهزة الحاسوب"]},
+   {u:2,art:"net",name:"شبكات الحاسوب",en:"Computer Networks",lessons:["مقدمة إلى شبكات الحاسوب","مكونات شبكات الحاسوب","نماذج الربط في الشبكات السلكية","أنواع شبكات الحاسوب","التواصل باستخدام الشبكات","أداء الشبكة"]}
  ]},
- {g:8,label:"الثامن",units:[
-   {u:1,name:"أنظمة الحوسبة",en:"Computing Systems",lessons:["إصلاح الأعطال","صيانة الأعطال المادية","صيانة الأعطال البرمجية","إصلاح الأعطال باستخدام أدوات نظام التشغيل"]},
-   {u:2,name:"الخوارزميات والبرمجة",en:"Algorithms & Programming",lessons:["مقدمة في برمجية سكراتش","عناصر التصميم في سكراتش","عناصر البرمجة في سكراتش: اللبنات البرمجية","المتغيرات في برمجية سكراتش","لبنات التحكم في برمجية سكراتش"]}
+ {g:8,label:"الثامن",place:"الزيتونة",units:[
+   {u:1,art:"tools",name:"أنظمة الحوسبة",en:"Computing Systems",lessons:["إصلاح الأعطال","صيانة الأعطال المادية","صيانة الأعطال البرمجية","إصلاح الأعطال باستخدام أدوات نظام التشغيل"]},
+   {u:2,art:"blocks",name:"الخوارزميات والبرمجة",en:"Algorithms & Programming",lessons:["مقدمة في برمجية سكراتش","عناصر التصميم في سكراتش","عناصر البرمجة في سكراتش: اللبنات البرمجية","المتغيرات في برمجية سكراتش","لبنات التحكم في برمجية سكراتش"]}
  ]},
- {g:9,label:"التاسع",units:[
-   {u:1,name:"أثر الحوسبة",en:"Impact of Computing",lessons:["وسائل التكنولوجيا الحديثة","التعلّم الإلكتروني: الأدوات والمنصات","الجريمة الإلكترونية","التنمّر الإلكتروني","الإعلام الرقمي"]},
-   {u:2,name:"الخوارزميات والبرمجة",en:"Algorithms & Programming",lessons:["المتغيرات البرمجية في برمجية سكراتش","الجمل الشرطية المركّبة","حلقات التكرار المتداخلة","الدوال البرمجية والروتين الفرعي"]}
+ {g:9,label:"التاسع",place:"الكرمل",units:[
+   {u:1,art:"world",name:"أثر الحوسبة",en:"Impact of Computing",lessons:["وسائل التكنولوجيا الحديثة","التعلّم الإلكتروني: الأدوات والمنصات","الجريمة الإلكترونية","التنمّر الإلكتروني","الإعلام الرقمي"]},
+   {u:2,art:"blocks",name:"الخوارزميات والبرمجة",en:"Algorithms & Programming",lessons:["المتغيرات البرمجية في برمجية سكراتش","الجمل الشرطية المركّبة","حلقات التكرار المتداخلة","الدوال البرمجية والروتين الفرعي"]}
  ]},
- {g:10,label:"العاشر",units:[
-   {u:1,name:"تحليل البيانات",en:"Data Analysis",lessons:["البيانات والمعلومات","أنواع البيانات وطرائق تنظيمها","التمثيل المرئي للبيانات","تحليل البيانات"]},
-   {u:2,name:"الخوارزميات والبرمجة",en:"Algorithms & Programming",lessons:["مقدمة إلى المواقع الإلكترونية","إنشاء الصفحات الإلكترونية","تنسيق النصوص","التعليقات والقوائم","الصور","الوسائط المتعددة والارتباطات التشعبية","الجداول"]}
+ {g:10,label:"العاشر",place:"الجليل",units:[
+   {u:1,art:"chart",name:"تحليل البيانات",en:"Data Analysis",lessons:["البيانات والمعلومات","أنواع البيانات وطرائق تنظيمها","التمثيل المرئي للبيانات","تحليل البيانات"]},
+   {u:2,art:"web",name:"الخوارزميات والبرمجة",en:"Algorithms & Programming",lessons:["مقدمة إلى المواقع الإلكترونية","إنشاء الصفحات الإلكترونية","تنسيق النصوص","التعليقات والقوائم","الصور","الوسائط المتعددة والارتباطات التشعبية","الجداول"]}
  ]}
 ];
 const EXTRAS=[
- {path:"extra/g8-jard.html",name:"مُحقِّقات الجرد",tag:"الصف الثامن · لعبة بحث"}
+ {path:"extra/g8-jard.html",name:"مُحقِّقات الجرد",tag:"الصف الثامن · لعبة بحث",g:8,art:"search"}
 ];
+
+/* ===== رسومات الوحدات (SVG أصلية) ===== */
+const C={ink:"#2A2A2A",cream:"#FFF8F0",gold:"#FFBF3C",orange:"#E8732C",sea:"#1B6CA8",green:"#3F8A3A",red:"#B23A2E",sky:"#CFE6F5"};
+const ART={
+ pc:`<rect x="58" y="20" width="84" height="56" rx="7" fill="${C.ink}"/><rect x="64" y="26" width="72" height="42" rx="4" fill="${C.sky}"/>
+   <rect x="70" y="32" width="26" height="14" rx="3" fill="${C.orange}"/><rect x="100" y="32" width="30" height="6" rx="3" fill="${C.sea}"/>
+   <rect x="100" y="42" width="22" height="6" rx="3" fill="${C.green}"/><rect x="70" y="52" width="60" height="5" rx="2.5" fill="#fff"/>
+   <rect x="92" y="76" width="16" height="8" fill="#555"/><rect x="78" y="84" width="44" height="6" rx="3" fill="#777"/>
+   <rect x="150" y="30" width="26" height="60" rx="5" fill="#525C66"/><circle cx="163" cy="78" r="4" fill="${C.gold}"/>
+   <rect x="22" y="70" width="30" height="20" rx="4" fill="#8C96A0"/><rect x="26" y="74" width="22" height="4" rx="2" fill="#C9CFD6"/>`,
+ net:`<g stroke="${C.ink}" stroke-width="3" stroke-linecap="round"><path d="M100 52 L48 26 M100 52 L152 26 M100 52 L48 82 M100 52 L152 82 M48 26 L48 82 M152 26 L152 82"/></g>
+   <circle cx="100" cy="52" r="15" fill="${C.gold}" stroke="${C.ink}" stroke-width="3"/>
+   ${[[48,26,C.sea],[152,26,C.orange],[48,82,C.green],[152,82,C.red]].map(([x,y,f])=>`<rect x="${x-13}" y="${y-10}" width="26" height="20" rx="4" fill="${f}" stroke="${C.ink}" stroke-width="2.5"/>`).join("")}`,
+ tools:`<rect x="46" y="22" width="108" height="66" rx="8" fill="#8C96A0" stroke="#5E6975" stroke-width="3"/>
+   <circle cx="100" cy="55" r="24" fill="#39414A"/><circle cx="100" cy="55" r="7" fill="#C9CFD6"/>
+   <path d="M128 30 L108 50" stroke="#C9CFD6" stroke-width="5" stroke-linecap="round"/>
+   <g transform="translate(160,74) rotate(-35)"><rect x="-4" y="-26" width="8" height="34" rx="3" fill="${C.orange}"/><path d="M-9 -34 a9 9 0 1 1 18 0 l-4 7 h-10z" fill="${C.gold}"/></g>
+   <g transform="translate(36,76) rotate(30)"><rect x="-3" y="-30" width="6" height="40" rx="2" fill="#C9CFD6"/><rect x="-6" y="6" width="12" height="16" rx="3" fill="${C.sea}"/></g>`,
+ blocks:`<path d="M30 22 h40 l5 5 h10 l5 -5 h60 v20 h-60 l-5 5 h-10 l-5 -5 h-40z" fill="${C.gold}" stroke="#C98E12" stroke-width="2"/>
+   <path d="M44 46 h26 l5 5 h10 l5 -5 h56 v20 h-56 l-5 5 h-10 l-5 -5 h-26z" fill="${C.sea}" stroke="#13507D" stroke-width="2"/>
+   <path d="M44 70 h26 l5 5 h10 l5 -5 h40 v20 h-40 l-5 5 h-10 l-5 -5 h-26z" fill="${C.orange}" stroke="#B9561C" stroke-width="2"/>
+   <rect x="30" y="42" width="14" height="52" fill="${C.gold}" stroke="#C98E12" stroke-width="2"/>
+   <path d="M164 30 l12 0 l-6 10z" fill="${C.green}"/><circle cx="170" cy="74" r="10" fill="${C.green}"/><path d="M166 74 l3 3 l6 -6" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round"/>`,
+ world:`<circle cx="82" cy="54" r="34" fill="${C.sky}" stroke="${C.sea}" stroke-width="3"/>
+   <path d="M60 40 q10 -8 20 0 q6 8 -4 14 q-8 6 -2 14 M92 30 q8 6 4 14 q-4 8 6 12 q8 4 4 14" fill="none" stroke="${C.green}" stroke-width="5" stroke-linecap="round"/>
+   <path d="M48 54 h68 M82 20 v68" stroke="${C.sea}" stroke-width="1.5" opacity=".5"/>
+   <rect x="124" y="28" width="40" height="66" rx="8" fill="${C.ink}"/><rect x="129" y="36" width="30" height="48" rx="3" fill="#fff"/>
+   <rect x="133" y="42" width="22" height="5" rx="2.5" fill="${C.orange}"/><rect x="133" y="52" width="16" height="5" rx="2.5" fill="${C.sea}"/>
+   <path d="M134 64 q10 -10 20 0 q-10 14 -20 0z" fill="${C.red}"/>`,
+ chart:`<path d="M34 90 H170 M34 90 V18" stroke="${C.ink}" stroke-width="3" stroke-linecap="round"/>
+   <rect x="46" y="58" width="20" height="32" rx="3" fill="${C.sea}"/><rect x="74" y="40" width="20" height="50" rx="3" fill="${C.orange}"/>
+   <rect x="102" y="66" width="20" height="24" rx="3" fill="${C.green}"/><rect x="130" y="28" width="20" height="62" rx="3" fill="${C.red}"/>
+   <path d="M50 50 L82 32 L112 56 L142 20" stroke="${C.gold}" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+   <circle cx="142" cy="20" r="5" fill="${C.gold}"/>`,
+ web:`<rect x="28" y="16" width="144" height="80" rx="8" fill="#fff" stroke="${C.ink}" stroke-width="3"/>
+   <path d="M28 32 H172" stroke="${C.ink}" stroke-width="3"/><circle cx="40" cy="24" r="3.5" fill="${C.red}"/><circle cx="51" cy="24" r="3.5" fill="${C.gold}"/><circle cx="62" cy="24" r="3.5" fill="${C.green}"/>
+   <text x="100" y="74" font-family="Consolas,monospace" font-size="30" font-weight="700" fill="${C.sea}" text-anchor="middle">&lt;/&gt;</text>
+   <rect x="40" y="82" width="40" height="6" rx="3" fill="${C.orange}"/><rect x="120" y="82" width="40" height="6" rx="3" fill="${C.green}"/>`,
+ search:`<rect x="40" y="18" width="90" height="74" rx="6" fill="#fff" stroke="${C.ink}" stroke-width="3"/>
+   ${[30,44,58,72].map(y=>`<rect x="50" y="${y}" width="70" height="6" rx="3" fill="${y===44?C.orange:"#C9CFD6"}"/>`).join("")}
+   <circle cx="138" cy="62" r="20" fill="none" stroke="${C.sea}" stroke-width="7"/><path d="M152 76 L170 94" stroke="${C.sea}" stroke-width="9" stroke-linecap="round"/>`
+};
+const svg=(k,extra="")=>`<svg viewBox="0 0 200 110" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${extra}${ART[k]}</svg>`;
+const icon=k=>`<svg viewBox="15 10 170 90" aria-hidden="true">${ART[k]}</svg>`;
+
 const AR="٠١٢٣٤٥٦٧٨٩", ar=n=>String(n).replace(/\d/g,d=>AR[d]);
 const ORD=["","الأول","الثاني","الثالث","الرابع","الخامس","السادس","السابع"];
 const ORDF=["","الأولى","الثانية","الثالثة","الرابعة"];
+const gColor=g=>`var(--g${g})`;
 
-function slotsOf(g,unit){
+function slotsOf(G,unit){
   const out=[];
   for(let i=0;i<unit.lessons.length;i+=2){
     const a=i+1, b=i+2<=unit.lessons.length?i+2:null;
-    out.push({a,b,names:unit.lessons.slice(i,i+2),
-      path:`g${g}/u${unit.u}-l${a}${b?"-"+b:""}.html`});
+    out.push({a,b,names:unit.lessons.slice(i,i+2),art:unit.art,g:G.g,
+      path:`g${G.g}/u${unit.u}-l${a}${b?"-"+b:""}.html`});
   }
   return out;
 }
@@ -135,16 +245,19 @@ async function exists(path){
   return cache[path];
 }
 
+function inner(s){
+  const tag=s.b?`الدرسان ${ar(s.a)} و${ar(s.b)}`:`الدرس ${ar(s.a)}`;
+  return `<div class="art">${svg(s.art)}<span class="badge">${tag}</span></div>
+   <div class="body"><ol start="${s.a}">${s.names.map(n=>`<li>${n}</li>`).join("")}</ol><span class="st">قريبًا</span></div>`;
+}
 function card(s){
   const el=document.createElement("div");
-  el.className="slot";
-  const tag=s.b?`الدرسان ${ORD[s.a]} و${ORD[s.b]}`:`الدرس ${ORD[s.a]}`;
-  el.innerHTML=`<span class="tag">${tag}</span><ol start="${s.a}">${s.names.map(n=>`<li>${n}</li>`).join("")}</ol><span class="st">قريبًا</span>`;
+  el.className="slot"; el.style.setProperty("--c",gColor(s.g)); el.innerHTML=inner(s);
   exists(s.path).then(ok=>{
     if(!ok) return;
     const a=document.createElement("a");
-    a.className="slot ready"; a.href=s.path; a.innerHTML=el.innerHTML;
-    a.querySelector(".st").textContent="ابدآ اللعب ←";
+    a.className="slot ready"; a.href=s.path; a.style.setProperty("--c",gColor(s.g)); a.innerHTML=el.innerHTML;
+    a.querySelector(".st").innerHTML=`<i>←</i> ابدآ اللعب`;
     el.replaceWith(a);
   });
   return el;
@@ -152,13 +265,12 @@ function card(s){
 
 function render(gi){
   const G=GRADES[gi], panel=document.getElementById("panel");
-  panel.innerHTML="";
-  panel.setAttribute("aria-labelledby","tab"+G.g);
+  panel.innerHTML=""; panel.setAttribute("aria-labelledby","tab"+G.g);
   G.units.forEach(U=>{
-    const sec=document.createElement("section"); sec.className="unit";
-    sec.innerHTML=`<h2>الوحدة ${ORDF[U.u]}: ${U.name} <small>${U.en}</small></h2>`;
+    const sec=document.createElement("section"); sec.className="unit"; sec.style.setProperty("--c",gColor(G.g));
+    sec.innerHTML=`<div class="unit-head"><span class="ic">${icon(U.art)}</span><h2>الوحدة ${ORDF[U.u]}: ${U.name}<small>${U.en}</small></h2></div>`;
     const grid=document.createElement("div"); grid.className="grid";
-    slotsOf(G.g,U).forEach(s=>grid.appendChild(card(s)));
+    slotsOf(G,U).forEach(s=>grid.appendChild(card(s)));
     sec.appendChild(grid); panel.appendChild(sec);
   });
   document.querySelectorAll(".tab").forEach((t,i)=>t.setAttribute("aria-selected",i===gi));
@@ -168,8 +280,8 @@ function render(gi){
 const tabs=document.getElementById("tabs");
 GRADES.forEach((G,i)=>{
   const b=document.createElement("button");
-  b.className="tab"; b.id="tab"+G.g; b.setAttribute("role","tab");
-  b.innerHTML=`الصف ${G.label}<span class="n">${ar(G.g)}</span>`;
+  b.className="tab"; b.id="tab"+G.g; b.setAttribute("role","tab"); b.style.setProperty("--c",gColor(G.g));
+  b.innerHTML=`<span class="num">${ar(G.g)}</span><span><b>الصف ${G.label}</b></span>`;
   b.onclick=()=>render(i);
   tabs.appendChild(b);
 });
@@ -184,8 +296,8 @@ render(start);
   for(const x of EXTRAS){
     if(!(await exists(x.path))) continue;
     any=true;
-    const a=document.createElement("a"); a.className="slot ready"; a.href=x.path;
-    a.innerHTML=`<span class="tag">${x.tag}</span><span class="name">${x.name}</span><span class="st">ابدآ اللعب ←</span>`;
+    const a=document.createElement("a"); a.className="slot ready"; a.href=x.path; a.style.setProperty("--c",gColor(x.g));
+    a.innerHTML=`<div class="art">${svg(x.art)}<span class="badge">${x.tag}</span></div><div class="body"><span class="name">${x.name}</span><span class="st"><i>←</i> ابدآ اللعب</span></div>`;
     grid.appendChild(a);
   }
   document.getElementById("extras").hidden=!any;
