@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ألعاب المهارات الرقمية — الثامن</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@600;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --ground:#FBF7F0; --surface:#FFFFFF; --ink:#211C17; --muted:#6B6055; --line:#E6DCCC;
+  --olive:#3F6B3A; --olive-soft:#E6EFE2; --red:#B23A2E; --red-soft:#F8E6E2;
+  --gold:#A9781B; --gold-soft:#FBF0D9; --night:#22303A;
+  --accent:var(--olive); --accent-ink:#FFFFFF;
+  --display:"Baloo Bhaijaan 2","IBM Plex Sans Arabic",Tahoma,sans-serif;
+  --body:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#14181A; --surface:#1C2326; --ink:#F0EAE0; --muted:#A99E90; --line:#2E3A3E;
+  --olive:#8FC486; --olive-soft:#1B2A1D; --red:#EE9385; --red-soft:#2E1C19;
+  --gold:#E3B860; --gold-soft:#2C2313; --accent-ink:#14181A;
+}}
+:root[data-theme="dark"]{
+  --ground:#14181A; --surface:#1C2326; --ink:#F0EAE0; --muted:#A99E90; --line:#2E3A3E;
+  --olive:#8FC486; --olive-soft:#1B2A1D; --red:#EE9385; --red-soft:#2E1C19;
+  --gold:#E3B860; --gold-soft:#2C2313; --accent-ink:#14181A;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--ground);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.65;margin:0}
+.tatreez{height:14px;background-image:
+  linear-gradient(45deg,var(--red) 25%,transparent 25%),
+  linear-gradient(-45deg,var(--red) 25%,transparent 25%),
+  linear-gradient(45deg,transparent 75%,var(--olive) 75%),
+  linear-gradient(-45deg,transparent 75%,var(--olive) 75%);
+  background-size:14px 14px;background-position:0 0,0 7px,7px -7px,-7px 0;opacity:.85}
+.wrap{max-width:980px;margin:0 auto;padding-inline:20px;padding-block:22px 60px}
+h1{font-family:var(--display);font-size:clamp(28px,5.4vw,46px);margin:0;line-height:1.15}
+h2{font-family:var(--display);font-size:clamp(20px,3.4vw,28px);margin:0 0 8px}
+.sub{color:var(--muted);margin:6px 0 0}
+button{font:inherit;font-family:var(--body);cursor:pointer;border-radius:14px;border:2px solid var(--line);background:var(--surface);color:var(--ink);padding:11px 18px;font-weight:600;transition:transform .08s,background .15s}
+button:active{transform:scale(.97)}
+button:focus-visible{outline:3px solid var(--olive);outline-offset:2px}
+button.primary{background:var(--olive);color:var(--accent-ink);border-color:var(--olive)}
+button.ghost{background:transparent}
+button:disabled{opacity:.6;cursor:default}
+.card{background:var(--surface);border:2px solid var(--line);border-radius:20px;padding:22px;position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:6px;background:
+  repeating-linear-gradient(180deg,var(--olive) 0 10px,var(--red) 10px 20px);opacity:.7}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.setup{display:grid;gap:18px}
+.opts{display:flex;flex-wrap:wrap;gap:10px}
+.opts button[aria-pressed="true"]{background:var(--olive);color:var(--accent-ink);border-color:var(--olive)}
+.players{display:grid;gap:8px}
+.players .prow{display:flex;gap:8px;align-items:center}
+.players .prow span{color:var(--muted);font-weight:700;min-width:22px}
+.players input{font:inherit;padding:9px 12px;border-radius:12px;border:2px solid var(--line);background:var(--ground);color:var(--ink);max-width:280px}
+
+.hud{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{background:var(--surface);border:2px solid var(--line);border-radius:999px;padding:4px 14px;font-weight:700;font-size:15px}
+.pill.turn{background:var(--olive);color:var(--accent-ink);border-color:var(--olive)}
+.pill.streak{background:var(--gold-soft);color:var(--gold);border-color:var(--gold)}
+.bar{height:10px;border-radius:999px;background:var(--line);overflow:hidden;margin-bottom:16px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--olive),var(--gold));width:0;transition:width .35s}
+
+.q{font-family:var(--display);font-size:clamp(20px,3.4vw,29px);line-height:1.45;margin:0 0 4px}
+.meta{color:var(--muted);font-size:15px;margin:0 0 14px;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
+.diff{border-radius:999px;padding:1px 10px;font-size:13px;font-weight:700;border:1.5px solid currentColor}
+.d1{color:var(--olive)} .d2{color:var(--gold)} .d3{color:var(--red)}
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.choice{text-align:start;padding:15px 16px;font-size:17.5px;line-height:1.5;border-radius:16px}
+.choice .k{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:9px;background:var(--olive-soft);color:var(--olive);font-weight:800;margin-inline-end:10px;font-size:15px}
+.choice.ok{background:var(--olive-soft);border-color:var(--olive);color:var(--olive)}
+.choice.bad{background:var(--red-soft);border-color:var(--red);color:var(--red)}
+
+.pairs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pairs h3{font-family:var(--display);font-size:16px;margin:0 0 6px;color:var(--muted)}
+.pcol{display:grid;gap:8px;align-content:start}
+.pitem{text-align:start;padding:12px 14px;border-radius:14px;font-size:16px;line-height:1.45}
+.pitem.sel{background:var(--gold-soft);border-color:var(--gold);color:var(--gold)}
+.pitem.done{background:var(--olive-soft);border-color:var(--olive);color:var(--olive);opacity:.85}
+.pitem.miss{background:var(--red-soft);border-color:var(--red);color:var(--red)}
+
+.slots{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:12px 0}
+.slot{min-width:150px;min-height:54px;border:2px dashed var(--line);border-radius:14px;display:grid;place-items:center;font-weight:700;background:var(--surface);padding:6px 10px;text-align:center;font-size:15px}
+.slot.filled{border-style:solid;border-color:var(--olive);background:var(--olive-soft);color:var(--olive)}
+.chipset{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border-radius:999px;padding:8px 14px;font-size:15px;font-weight:600;border:2px solid var(--line);background:var(--ground)}
+
+.fb{margin-top:16px;border-radius:16px;padding:14px 16px;font-weight:700;display:none}
+.fb.show{display:block;animation:pop .25s ease-out}
+.fb.ok{background:var(--olive-soft);color:var(--olive)}
+.fb.bad{background:var(--red-soft);color:var(--red)}
+.fb small{display:block;font-weight:500;margin-top:5px;font-size:15.5px}
+@keyframes pop{from{transform:translateY(6px);opacity:0}to{transform:none;opacity:1}}
+.hintbox .page{display:block;margin-top:6px;font-weight:700}
+.hintbtn.pulse{border-color:var(--gold);color:var(--gold);animation:pulse 1.2s ease-in-out 2}
+@keyframes pulse{50%{transform:scale(1.05)}}
+.hintbox{margin-top:12px;background:var(--gold-soft);color:var(--gold);border-radius:14px;padding:12px 14px;font-size:16px;font-weight:600;display:none}
+.hintbox.show{display:block}
+.foot{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;margin-top:18px}
+
+/* praise + badges */
+#praise{position:fixed;inset-inline:0;top:14px;display:grid;place-items:center;pointer-events:none;z-index:9}
+#praise div{background:var(--olive);color:var(--accent-ink);font-family:var(--display);font-size:20px;padding:8px 20px;border-radius:999px;box-shadow:0 8px 24px rgba(0,0,0,.18);animation:praise 1.6s ease-out forwards}
+@keyframes praise{0%{transform:translateY(-14px) scale(.9);opacity:0}15%{transform:none;opacity:1}75%{opacity:1}100%{transform:translateY(-10px);opacity:0}}
+.spark{position:fixed;width:12px;height:12px;pointer-events:none;z-index:8}
+.spark i{display:block;width:100%;height:100%;background:var(--red);clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.badge{border:2px solid var(--line);border-radius:14px;padding:8px 12px;font-size:14px;font-weight:700;color:var(--muted);background:var(--surface);opacity:.45}
+.badge.on{opacity:1;color:var(--gold);border-color:var(--gold);background:var(--gold-soft)}
+.score{font-family:var(--display);font-size:clamp(40px,9vw,70px);line-height:1;margin:4px 0}
+.tbl{width:100%;border-collapse:collapse;margin-top:10px}
+.tbl th,.tbl td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:start}
+.tbl th{color:var(--muted);font-size:15px}
+.miss{margin-top:16px;display:grid;gap:8px}
+.miss div{background:var(--red-soft);color:var(--red);border-radius:12px;padding:10px 14px;font-size:16px;font-weight:600}
+
+.levels{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.lvl{text-align:start;padding:16px;border-radius:18px;display:block}
+.lvl b{display:block;font-family:var(--display);font-size:19px;margin-bottom:4px}
+.lvl small{display:block;color:var(--muted);font-weight:500;line-height:1.5;font-size:14.5px}
+.lvl[aria-pressed="true"]{background:var(--olive);border-color:var(--olive);color:var(--accent-ink)}
+.lvl[aria-pressed="true"] small{color:var(--accent-ink);opacity:.85}
+.lvl .tick{float:inline-end;color:var(--gold);font-weight:800}
+
+.sendbtn{display:inline-block;background:var(--gold);color:#fff;border:2px solid var(--gold);
+  border-radius:14px;padding:11px 18px;font-weight:700;text-decoration:none;font-size:16.5px}
+.sendbtn:active{transform:scale(.97)}
+.home{display:inline-block;margin-top:10px;color:var(--muted);text-decoration:none;font-weight:600}
+.card2{background:var(--surface);border:3px solid var(--olive);border-radius:22px;padding:24px;margin-top:18px;position:relative}
+.card2 h3{font-family:var(--display);font-size:24px;margin:0 0 2px;color:var(--olive)}
+.card2 .when{color:var(--muted);font-size:14px;margin:0 0 14px}
+.card2 .tbl th,.card2 .tbl td{padding:7px 10px;font-size:16px}
+.card2 .grand{font-family:var(--display);font-size:34px;color:var(--olive);margin-top:10px}
+.shot{background:var(--gold-soft);color:var(--gold);border-radius:12px;padding:10px 14px;font-weight:700;font-size:15px;margin-top:12px}
+@media (max-width:620px){ .pairs{grid-template-columns:1fr} }
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+</head>
+<body style="margin:0">
+<div class="wrap" dir="rtl" lang="ar">
+  <div class="tatreez" style="margin-bottom:16px"></div>
+  <header style="margin-bottom:18px">
+    <h1>ألعاب المهارات الرقمية — الثامن</h1>
+    <p class="sub">الصف الثامن · ثلاثة مستويات · الدرس الأول والثاني</p>
+    <p style="margin:8px 0 0"><a href="u1-l3-4.html" style="font-weight:700;color:var(--ink)">الدرسان الثالث والرابع ← ورشة الإصلاح</a></p>
+  </header>
+
+  <section id="setup" class="card setup">
+    <div><h2>مين رح تلعب؟</h2>
+      <p class="sub">اكتبي اسمك، وإذا بتلعبوا أكتر من وحدة على نفس الجهاز ضيفي أسماءهن. الدور بيلف بينكن، وبآخر كل مستوى بتطلع بطاقة نتيجة بتقدري تصوّريها وتبعتيها للمعلمة.</p></div>
+    <div><p style="margin:0 0 8px;font-weight:700">اختاري المستوى</p>
+      <div class="levels" id="lvlPick"></div></div>
+    <div class="row"><label style="font-weight:700">الصف والشعبة:</label><input type="text" id="clsInput" placeholder="مثال: ٩ ب" style="font:inherit;padding:9px 12px;border-radius:12px;border:2px solid var(--line);background:var(--ground);color:var(--ink);max-width:160px"></div>
+    <div class="players" id="playerRows"></div>
+    <div class="row">
+      <button class="ghost" id="addP" type="button">+ أضيفي طالبة</button>
+      <button class="ghost" id="delP" type="button">حذف الأخيرة</button>
+    </div>
+    <div class="row">
+      <button class="primary" id="start" type="button">يلا نبدأ</button>
+      <button class="ghost" id="themeBtn" type="button">تبديل الإضاءة</button>
+    </div>
+    <p class="sub" id="setupNote" style="color:var(--red);font-weight:600" hidden>اكتبي اسم وحدة على الأقل.</p>
+  </section>
+
+  <section id="game" hidden>
+    <div class="hud">
+      <div class="pills" id="scorePills"></div>
+      <div class="pills"><span class="pill" id="qCount"></span></div>
+    </div>
+    <div class="bar"><i id="prog"></i></div>
+    <div class="card" id="stage"></div>
+    <div class="badges" id="badgeRow"></div>
+  </section>
+
+  <section id="results" class="card" hidden></section>
+  <div class="tatreez" style="margin-top:22px"></div>
+  <a class='home' href='/'>← كل الصفوف</a>
+</div>
+<div id="praise"></div>
+
+<script>
+/* ====== إعدادات الإرسال — تُعبّأ مرة واحدة ======
+   بعد ما تعملي نموذج Microsoft Forms، خذي رابط Get pre-filled URL
+   وحطّيه هنا، وحطّي أرقام الحقول (rXXXX) مكان الفراغات. */
+const SUBMIT={
+  url:"https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=QoWSx2QeIUimYh4GU_yQCXkPYNJN8CJDkPMMgh2Vy6tUODg0S1M1VFZINFczWVlRTThRQUNHRFhIMy4u",
+  f:{cls:"r43e5b2ed34e345e1ba30786b608224df",
+     level:"r637b4343d36345e19e3a438ac27566ff",
+     score:"r97c591a829f04904ae5e01e4870c0ba0",
+     name:"r7ab483cd2eeb4108a9207e81115eef5d"},
+  grade:"الثامن"
+};
+
+const LEVELS=[
+{id:"l1",name:"المستوى الأول — ورشة الزيتونة الرقمية",desc:"١٦ تحديًا · التلميح يعطي رقم الصفحة",hints:true,bank:(function(){ return [
+{t:"mcq",d:1,p:"ص ١٣",q:"الصيانة الوقائية للحاسوب معناها:",
+ c:["إجراءات دورية تمنع العطل قبل وقوعه","إصلاح العطل مباشرة بعد ظهوره على الجهاز","تغيير القطع التالفة بقطع جديدة أحدث منها","تحديث النظام بعد كل عطل يصيب الجهاز"],a:0,
+ why:"الوقائية إجراءات دورية مخطط لها تمنع العطل قبل ما يصير، مثل التنظيف والفحص الدوري."},
+{t:"mcq",d:2,p:"ص ١٣",q:"مختبر المدرسة صار فيه غبار كثير، فقررتي تنظيف الأجهزة كل شهر. أي نوع صيانة هاي؟",
+ c:["الصيانة الوقائية","الصيانة العلاجية","الصيانة التنبؤية","الصيانة التكيفية"],a:0,
+ hint:"ما في عطل صار لهلأ، إنتِ بتمنعي حدوثه.",
+ why:"التنظيف الدوري قبل وقوع العطل = صيانة وقائية."},
+{t:"mcq",d:3,p:"ص ١٧",q:"برنامج بيحلل بيانات أداء الجهاز ويتوقع عطل القرص قبل ما يصير. هاي صيانة:",
+ c:["تنبؤية","وقائية","علاجية","تكيفية"],a:0,
+ hint:"الكلمة مشتقة من «يتنبأ».",
+ why:"التنبؤية تعتمد على تحليل بيانات الأداء لتوقّع العطل قبل حدوثه."},
+{t:"mcq",d:3,p:"ص ١٧",q:"جهاز قديم ما عاد يشغّل برنامج جديد، فزدنا الذاكرة وحدّثنا النظام. هاي صيانة:",
+ c:["تكيفية","وقائية","تنبؤية","علاجية"],a:0,
+ hint:"الجهاز بدو «يتأقلم» مع شي جديد.",
+ why:"التكيفية بتخلي الجهاز يتوافق مع متطلبات وبرامج جديدة."},
+{t:"match",d:2,p:"ص ١٣–١٨",q:"وصّلي كل موقف بنوع الصيانة",
+ pairs:[["فحص دوري لأجهزة المختبر قبل بداية الفصل","وقائية"],
+        ["إصلاح جهاز توقف فجأة عن العمل","علاجية"],
+        ["تحليل أداء القرص لتوقّع تعطله قريبًا","تنبؤية"],
+        ["ترقية الذاكرة لتشغيل برنامج جديد","تكيفية"]],
+ why:"الوقائية قبل العطل، العلاجية بعده، التنبؤية توقّع، والتكيفية توافق مع الجديد."},
+{t:"mcq",d:2,p:"ص ٢٠",q:"قبل ما تفتحي صندوق الحاسوب لتنظيفه، أول إجراء أمان لازم تعمليه:",
+ c:["فصل الجهاز عن الكهرباء","إغلاق كل البرامج المفتوحة على الجهاز","أخذ نسخة احتياطية من ملفات الطالبات","تشغيل مضاد الفيروسات وفحص النظام"],a:0,
+ hint:"فكّري بالخطر الأكبر على جسمك.",
+ why:"فصل التيار أول خطوة، وبعدها تفريغ الشحنة الساكنة من جسمك (Electrostatic Discharge)."},
+{t:"mcq",d:3,p:"ص ٢٠",q:"تفريغ الشحنة الكهربائية الساكنة من الجسم قبل لمس القطع بيحمي:",
+ c:["المكونات الإلكترونية من التلف","شاشة الجهاز من الخدوش والغبار","الملفات المخزنة على القرص من الضياع","نظام التشغيل من الفيروسات والبرامج"],a:0,
+ hint:"الشحنة الساكنة بتمشي من إيدك للقطعة اللي بتلمسيها.",
+ why:"الشحنة الساكنة من الجسم بتتلف القطع الإلكترونية الحساسة مثل اللوحة الأم والذاكرة."},
+{t:"mcq",d:1,p:"ص ٢٥",q:"أي واحد من هدول <b>مكوّن داخلي</b> بجهاز الحاسوب؟",
+ c:["اللوحة الأم","الطابعة","الشاشة","لوحة المفاتيح"],a:0,
+ why:"اللوحة الأم، المعالج، الذاكرة، القرص، ومزود الطاقة مكونات داخلية."},
+{t:"match",d:3,p:"ص ٢٧ و٣٩",q:"وصّلي كل عطل بسببه الأرجح",
+ pairs:[["تعليق الجهاز باستمرار بعد التأكد أن الشاشة سليمة","عطل في الذاكرة RAM"],
+        ["حجم الذاكرة المدوّن على الشاشة غير صحيح","تركيب RAM غير صحيح"],
+        ["رسالة Insufficient Memory Space","تشغيل ملفات وبرامج كثيرة"],
+        ["تلف المكونات بعد تركها في مكان رطب وحار","ظروف بيئية سيئة"]],
+ hint:"ركّزي على الفرق بين عطل القطعة وسوء تركيبها.",
+ why:"جدول الكتاب: التعليق المستمر يعني عطل RAM ويُستبدل، أما الحجم غير الصحيح فسببه تركيب غير سليم ويُعاد تركيبه."},
+{t:"mcq",d:2,p:"ص ٣٩",q:"سمعتي صوت Beep طويل عند تشغيل الجهاز. الإجراء الصحيح:",
+ c:["إعادة تركيب الذاكرة RAM","تغيير كابل الشاشة الموصول بالجهاز","تنظيف لوحة المفاتيح من الغبار","إعادة تثبيت نظام التشغيل كاملًا"],a:0,
+ hint:"صافرة التنبيه الطويلة إلها علاقة بالذاكرة.",
+ why:"صوت Beep الطويل غالبًا سببه عدم تركيب RAM بشكل صحيح، فيُعاد تركيبها."},
+{t:"mcq",d:2,p:"ص ٢٩",q:"الفأرة ما بتستجيب. شو أول شي بتعمليه قبل ما تحكمي إنها خربانة؟",
+ c:["تفحصي توصيلها بالجهاز","تفتحيها وتنظفي دوائرها الداخلية","تشتري فأرة جديدة بدل القديمة","تعيدي تثبيت نظام التشغيل كاملًا"],a:0,
+ hint:"ابدأي بأبسط احتمال وأرخصه.",
+ why:"نبدأ بالأبسط: التوصيل، بعدين التنظيف، بعدين تجربتها على جهاز آخر، وبعدها التعريف."},
+{t:"order",d:2,p:"ص ٢٩–٣٠",q:"رتّبي خطوات التعامل مع فأرة لا تستجيب",
+ items:["فحص توصيل الفأرة بالجهاز","تنظيف الفأرة وحساسها","تجربتها على جهاز آخر","تحديث تعريف الفأرة أو استبدالها"],
+ why:"الترتيب من الأبسط للأصعب، وهيك بتوفري وقت وكلفة."},
+{t:"mcq",d:3,p:"ص ٣٣",q:"جهاز في المختبر شغّال بس الشاشة سوداء، والمروحة بتدور. الأقرب إنه العطل في:",
+ c:["كابل الشاشة أو بطاقة الرسوم","مزود الطاقة الرئيس في الجهاز","لوحة المفاتيح والفأرة الموصولتان","سماعات الجهاز الخارجية وكابلها"],a:0,
+ hint:"الجهاز شغّال، يعني الطاقة واصلة. المشكلة بطريق الصورة.",
+ why:"دوران المروحة يعني الطاقة سليمة، فالخلل غالبًا بمسار العرض: الكابل أو بطاقة الرسوم."},
+{t:"mcq",d:2,p:"ص ٣٠",q:"لإدارة أجهزة الحاسوب وتعريفاتها في نظام Windows نستخدم:",
+ c:["مدير الأجهزة Device Manager","مدير المهام Task Manager للبرامج","تنظيف القرص Disk Cleanup الدوري","لوحة الرسم Paint للصور"],a:0,
+ hint:"اسمه على مسماه: بيدير «الأجهزة».",
+ why:"Device Manager بيعرض الأجهزة وتعريفاتها ومنه بنحدّث التعريف أو نعيد تثبيته."},
+{t:"mcq",d:3,p:"ص ٢٧",q:"عطل تكرر بعد تنزيل تحديث للنظام، وما ظهر قبله. السبب الأرجح:",
+ c:["خلل في تعريف المكونات","انتهاء العمر الافتراضي","عيب تصنيعي في القطعة","ارتفاع الرطوبة في الغرفة"],a:0,
+ hint:"شو تغيّر قبل ما يبدأ العطل؟",
+ why:"التحديث ممكن يخلي التعريف غير متوافق، فبيصير خلل بالأداء أو توقف المكوّن."},
+{t:"mcq",d:1,p:"ص ١٨",q:"وظيفة الصيانة العلاجية هي:",
+ c:["إصلاح العطل بعد وقوعه","منع العطل قبل وقوعه","توقّع العطل قبل حدوثه","تطوير الجهاز لبرامج جديدة"],a:0,
+ why:"العلاجية بتيجي بعد ما يصير العطل، هدفها إرجاع الجهاز للعمل."}
+];})()},
+{id:"l2",name:"المستوى الثاني — مشغل النارنج",desc:"١٦ تحديًا · التلميح يعطي رقم الصفحة",hints:true,bank:(function(){ return [
+{t:"mcq",d:2,p:"ص ١٦",q:"أداة Disk Cleanup في نظام Windows وظيفتها:",
+ c:["تنظيف القرص من الملفات غير الضرورية","إلغاء تجزئة القرص وتحسين محركات الأقراص","فحص الذاكرة العشوائية والإبلاغ عن أعطالها","إدارة تعريفات الأجهزة وتحديثها في الجهاز"],a:0,
+ hint:"اسم الأداة بيدل على وظيفتها: تنظيف.",
+ why:"الكتاب: Disk Cleanup أداة تنظيف القرص، وحذف الملفات المؤقتة يقلل المساحة المهدورة على القرص الصلب."},
+{t:"match",d:3,p:"ص ١٦",q:"وصّلي كل أداة في Windows بوظيفتها كما وردت في الكتاب",
+ pairs:[["Disk Cleanup","تنظيف القرص من الملفات المؤقتة"],
+        ["Defragment and Optimize Drives","إلغاء التجزئة وتحسين محركات الأقراص"],
+        ["Windows Memory Diagnostic","تشخيص الذاكرة والكشف عن أعطالها"]],
+ hint:"ترجمة اسم كل أداة بتوصلك للجواب.",
+ why:"هذه الأدوات الثلاث وردت في الدرس الأول ضمن إصلاح الأعطال باستخدام أدوات نظام التشغيل."},
+{t:"mcq",d:2,p:"ص ١٦",q:"حسب الكتاب، تراكم البرامج غير المستخدمة والملفات المؤقتة يؤدي إلى:",
+ c:["إبطاء عمل القرص الصلب","ارتفاع حرارة الشاشة","تلف كابل لوحة المفاتيح","توقف مزود الطاقة فجأة"],a:0,
+ hint:"المساحة التخزينية إلها علاقة بالسرعة.",
+ why:"الكتاب: التطبيقات غير المستخدمة تشغل مساحة تخزينية على القرص الصلب وقد تؤدي إلى إبطاء عمله."},
+{t:"order",d:2,p:"ص ١٧",q:"رتّبي خطوات فتح مدير المهام Task Manager كما وردت في النشاط",
+ items:["الضغط على Ctrl+Alt+Delete معًا","اختيار مدير المهام Task Manager","استكشاف تبويبي Processes وPerformance"],
+ why:"الكتاب: نضغط Ctrl+Alt+Delete معًا، ثم نختار Task Manager، ثم نستكشف التبويبين Processes وPerformance."},
+{t:"mcq",d:3,p:"ص ٢٠",q:"عند صيانة حاسوب محمول، الكتاب طلب إضافة إجراء أمان خاص فيه:",
+ c:["إخراج البطارية الأساسية منه","تبريد الجهاز بمروحة خارجية قوية","فصل الشاشة عن لوحة المفاتيح تمامًا","تفريغ ذاكرته المؤقتة قبل الصيانة"],a:0,
+ hint:"الحاسوب المحمول إله مصدر طاقة إضافي غير الكهرباء.",
+ why:"الكتاب: يُغلق الجهاز بالطريقة الصحيحة ويُفصل التيار الكهربائي، أما الحاسوب المحمول فتُخرَج بطاريته الأساسية."},
+{t:"mcq",d:2,p:"ص ٢٠",q:"أساور تفريغ الشحنات Wrist Straps تُستخدم من أجل:",
+ c:["تفريغ الشحنة الكهربائية من الجسم","تثبيت الكابلات داخل الجهاز","قياس حرارة المكونات الداخلية","تنظيف الغبار من اللوحة الأم"],a:0,
+ hint:"اسمها مرتبط بالشحنة الساكنة.",
+ why:"الكتاب: يُستخدم أسوار تفريغ الشحنات Wrist Straps لتفريغ الشحنة الكهربائية الموجودة في الجسم."},
+{t:"mcq",d:3,p:"ص ٢١",q:"حسب إرشادات الأمان، جهاز ضاغط الهواء عند التنظيف:",
+ c:["لا يُقرَّب أكثر من اللازم من اللوحة الأم","يُستعمل ملاصقًا للوحة الأم لإزالة كل الغبار","يُستبدل دائمًا بمنظف سائل قابل للاشتعال","يُستعمل بعد لمس الدوائر الإلكترونية باليد"],a:0,
+ hint:"في بند بيحذر من التقريب الزائد.",
+ why:"الكتاب: عدم تقريب جهاز ضاغط الهواء أكثر من اللازم من الدوائر الإلكترونية واللوحة الأم والبطاقات."},
+{t:"mcq",d:2,p:"ص ٢١",q:"عند فك الجهاز، الكتاب نصح باستعمال:",
+ c:["مفكات ومفاتيح ذات أيدٍ عازلة","أي مفك متوفر في مختبر المدرسة","أدوات معدنية بالكامل ورفيعة الرأس","سكين حادة لفتح الغطاء بسرعة"],a:0,
+ why:"الكتاب: استعمال المفكات والمفاتيح ذات الأيدي العازلة ضمن إرشادات الأمان العامة."},
+{t:"mcq",d:2,p:"ص ٣١",q:"ظهرت رسالة Keyboard Error or no Keyboard Present عند تشغيل الجهاز. من أسبابها في الكتاب:",
+ c:["كابل لوحة المفاتيح غير موصول","تراكم الغبار بين مفاتيح اللوحة","انحشار الورق داخل الطابعة","تلف بطاقة معالجة الصوت"],a:0,
+ hint:"الرسالة بتظهر لما الجهاز ما يشوف لوحة المفاتيح أصلًا.",
+ why:"جدول (2-2): أسباب الرسالة هي كابل غير موصول، أو خلل في التعريف، أو عطل في لوحة المفاتيح."},
+{t:"mcq",d:2,p:"ص ٣١",q:"بعض مفاتيح لوحة المفاتيح ما بتستجيب عند الضغط. الإجراء في الكتاب:",
+ c:["استخدام نافخ هواء لتنظيف الفراغات","استبدال لوحة المفاتيح مباشرة بجديدة","إعادة تثبيت نظام التشغيل كاملًا","تغيير كابل الشاشة وكابل الطاقة"],a:0,
+ hint:"السبب تراكم الغبار والأوساخ.",
+ why:"جدول (2-2): السبب تراكم الغبار والأوساخ بين الفراغات، والإجراء استخدام نافخ هواء لتنظيفها."},
+{t:"match",d:3,p:"ص ٣٣",q:"وصّلي كل عطل في الشاشة بإجراء الصيانة المناسب",
+ pairs:[["الشاشة مطفأة ولا تعمل","وصل كابل الطاقة بشكل صحيح"],
+        ["توقف عمل الشاشة وهي سليمة ظاهريًا","استبدال كابل البيانات"],
+        ["لا تعمل بعض الألعاب والبرامج الحديثة","تغيير بطاقة الشاشة بأخرى أكبر"]],
+ hint:"فرّقي بين مشكلة الطاقة، ومشكلة البيانات، ومشكلة قدرة البطاقة.",
+ why:"جدول (2-3): كل عطل من أعطال الشاشة وبطاقة الشاشة له سببه وإجراء صيانته."},
+{t:"mcq",d:3,p:"ص ٣٣",q:"حسب الكتاب، سرعة أداء بطاقة الشاشة تعتمد بشكل كبير على:",
+ c:["الذاكرة","حجم الشاشة","طول الكابل","سرعة الطابعة"],a:0,
+ hint:"في عنصر داخل البطاقة نفسها بيحدد أداءها.",
+ why:"الكتاب: بطاقة الشاشة توضع في أحد شقوق اللوحة الأم، وتعتمد سرعة أدائها على الذاكرة بشكل كبير."},
+{t:"match",d:2,p:"ص ٣٧",q:"صنّفي مشكلات الطابعة حسب سببها في الكتاب",
+ pairs:[["الطابعة لا تعمل وضوء LED برتقالي","انحشار الورق أو خلل ميكانيكي"],
+        ["الألوان باهتة جدًا","نفاد الحبر"],
+        ["استمرار طباعة نسخ زائدة","بقاء الأمر السابق في الذاكرة"]],
+ why:"جدول (2-5): أعطال الطابعة وأسبابها وإجراءات الصيانة اللازمة لكل منها."},
+{t:"mcq",d:3,p:"ص ٣٧",q:"الطابعة بتسحب أكثر من ورقة باللحظة نفسها. السبب في الكتاب:",
+ c:["وجود رطوبة على الورق","ارتفاع حرارة الطابعة","نفاد الحبر من الخزان","خلل في كابل الطاقة"],a:0,
+ hint:"شو بيخلي الورق يلتصق ببعضه؟",
+ why:"الكتاب: سبب ذلك وجود رطوبة على الورق تؤدي إلى التصاقها معًا، لذا يجب استبدال الورق."},
+{t:"order",d:3,p:"ص ٤١",q:"جهاز ما بيقرأ القرص. رتّبي خطوات الفحص حسب مخطط الكتاب",
+ items:["التحقق من نوع القرص ومطابقته للمشغّل","إعادة تركيب مشغل الأقراص بطريقة صحيحة","استبدال القرص إذا كان تالفًا","استبدال مشغل الأقراص أو الاستعانة بفني الصيانة"],
+ hint:"المخطط بيبدأ بالأسهل: نوع القرص.",
+ why:"مخطط الدرس: نتحقق من نوع القرص، ثم من تركيب المشغّل، ثم من تلف القرص، وأخيرًا استبدال المشغّل."},
+{t:"mcq",d:2,p:"ص ٢١",q:"من إرشادات المواطنة الرقمية في الدرس:",
+ c:["استخدام برامج صيانة رسمية وفحصها بمضاد الفيروسات","تحميل أي برنامج صيانة مجاني من أي موقع على الإنترنت","مشاركة كلمات مرور الأجهزة مع الزميلات في المختبر","إهمال إرشادات الأمان العامة لتوفير وقت الحصة"],a:0,
+ why:"الكتاب: أحافظ على أمان أجهزتي وبياناتي عن طريق استخدام برامج صيانة رسمية وفحصها بمضاد الفيروسات قبل التثبيت."}
+];})()},
+{id:"ch",name:"مستوى التحدي — عيادة الأجهزة",desc:"١٠ تحديات تشخيص · بلا تلميحات",hints:false,bank:(function(){ return [
+{t:"mcq",d:3,q:"ميزانية المختبر تكفي إجراء واحد قبل بداية الفصل. أي إجراء يمنع أكبر عدد من الأعطال المستقبلية؟",
+ c:["جدولة تنظيف وفحص دوري لكل الأجهزة","إصلاح الجهازين المعطّلين حاليًا في المختبر","شراء فأرة ولوحة مفاتيح احتياطية للطوارئ","تحديث نظام التشغيل على الأجهزة كلها فورًا"],
+ a:0,
+ probe:"الأنواع الأربعة للصيانة: وحدة بتيجي قبل العطل، ووحدة بعده. أي وحدة بتمنع؟",
+ why:"الصيانة الوقائية إجراءات دورية مخطّط لها تمنع العطل قبل وقوعه، مثل التنظيف والفحص الدوري. أما إصلاح المعطّل فهو صيانة علاجية تأتي بعد وقوع العطل، فلا تمنع أعطالًا جديدة."},
+{t:"mcq",d:3,q:"زميلتك فتحت صندوق الحاسوب والجهاز موصول بالكهرباء، عشان تتأكد إن المروحة بتدور. وين الخطأ ولماذا؟",
+ c:["فصل التيار أول إجراء أمان قبل فتح الصندوق","كان لازم تلبس أسورة تفريغ الشحنات وهذا يكفي","كان لازم تستعمل ضاغط الهواء قبل فتح الصندوق","لا خطأ، فالمروحة لا تدور إلا والجهاز يعمل فعلًا"],a:0,
+ probe:"قبل ما تلمسي أي قطعة جوّا الصندوق، شو الخطوتان اللي رتّبهم الكتاب؟ وأيّهما أولًا؟",
+ why:"الكتاب: يُغلق الجهاز بالطريقة الصحيحة ويُفصل التيار الكهربائي، وفي الحاسوب المحمول تُخرج البطارية الأساسية، ثم تُفرَّغ الشحنة الساكنة من الجسم. فصل التيار أولًا، والأسورة لا تغني عنه."},
+{t:"mcq",d:3,q:"فنّي نظّف اللوحة الأم بضاغط الهواء وهو يقرّبه جدًا منها بضغط عالٍ. ما الخطر الذي حذّر منه الكتاب؟",
+ c:["تقريب الضاغط من الدوائر الإلكترونية واللوحة والبطاقات","أن ضاغط الهواء يسبّب شحنة ساكنة تُتلف الذاكرة والمعالج","أن الهواء المضغوط يرفع حرارة اللوحة الأم بشكل مفاجئ","أن الغبار يعود مرة أخرى إذا لم يُستخدم مضاد الفيروسات"],a:0,
+ probe:"الكتاب حكى جملة محددة عن المسافة بين الضاغط وقطع الجهاز. شو هي؟",
+ why:"الكتاب ضمن إرشادات الأمان: عدم تقريب جهاز ضاغط الهواء أكثر من اللازم من الدوائر الإلكترونية واللوحة الأم والبطاقات."},
+{t:"mcq",d:3,q:"جهاز صار بطيء، والقرص الصلب شبه ممتلئ ببرامج ما بتنستعمل وملفات مؤقتة. الأداة الأنسب ولماذا؟",
+ c:["Disk Cleanup، لأنها تحذف الملفات غير الضرورية من القرص","Task Manager، لأنه يعرض العمليات وأداء الجهاز لحظيًا","Device Manager، لأنه يدير الأجهزة ويحدّث تعريفاتها كلها","نافخ الهواء، لأنه ينظّف الغبار المتراكم داخل الصندوق"],a:0,
+ probe:"المشكلة في مساحة القرص لا في البرامج الشغّالة الآن. أي أداة بتشتغل على القرص؟",
+ why:"الكتاب: Disk Cleanup أداة تنظيف القرص من الملفات غير الضرورية، والتطبيقات غير المستخدمة تشغل مساحة على القرص الصلب وقد تؤدي إلى إبطاء عمله. أما Task Manager فيعرض العمليات والأداء، وDevice Manager يدير التعريفات."},
+{t:"mcq",d:3,q:"جهاز اشتغل عادي لشهور، وبعد تنزيل تحديث للنظام مباشرة بطّلت الطابعة تستجيب. السبب الأرجح وأول خطوة:",
+ c:["خلل في تعريف المكوّن، والفحص يبدأ من مدير الأجهزة","عطل مادي في الطابعة، والحل استبدالها بأخرى جديدة تمامًا","امتلاء القرص الصلب، والحل تشغيل أداة تنظيف القرص","رطوبة على الورق، والحل استبدال الورق بآخر جاف"],a:0,
+ probe:"شو الإشي الوحيد اللي تغيّر قبل ما يظهر العطل؟ وشو اللي بيتأثر بالتحديث عادة؟",
+ why:"الكتاب: العطل الذي يتكرّر بعد تنزيل تحديث للنظام سببه الأرجح خلل في تعريف المكونات؛ إذ قد يصير التعريف غير متوافق. ولإدارة الأجهزة وتعريفاتها في نظام Windows نستخدم مدير الأجهزة Device Manager."},
+{t:"mcq",d:3,q:"مديرة المختبر قالت: «الفأرة ما بتستجيب، اشتروا وحدة جديدة». وين الخلل في قرارها؟",
+ c:["قفزت لأغلى حل قبل فحص التوصيل والتنظيف والتعريف","الفأرة لا تُستبدل أصلًا، بل تُصلَّح دائمًا داخل المختبر","كان لازم تفحص الشاشة أولًا لأن العطل غالبًا في العرض","كان لازم تشغّل أداة تنظيف القرص قبل شراء أي قطعة"],a:0,
+ probe:"الترتيب اللي علّمه الكتاب: من أرخص وأبسط احتمال لأصعبه. هي وين بدأت؟",
+ why:"الكتاب يرتّب خطوات التعامل مع فأرة لا تستجيب من الأبسط إلى الأصعب: فحص التوصيل، ثم التنظيف، ثم تجربتها على جهاز آخر، ثم التعريف — وهكذا يُوفَّر الوقت والكلفة قبل الاستبدال."},
+{t:"mcq",d:3,q:"جهاز يعمل والمروحة تدور والأضواء شغّالة، لكن الشاشة سوداء تمامًا. الاستنتاج الصحيح:",
+ c:["الطاقة سليمة، فالخلل في كابل الشاشة أو بطاقة الرسوم","الطاقة معطّلة، فالخلل الأرجح في مزوّد الطاقة الكهربائية","الذاكرة RAM غير مركّبة، والحل إعادة تركيبها في مكانها","القرص الصلب تالف، والحل استبدال المشغّل بآخر جديد"],a:0,
+ probe:"دوران المروحة شو بيثبت لك؟ وشو المسار اللي ضايل مشكوك فيه؟",
+ why:"دوران المروحة دليل على وصول الطاقة، فيُستبعد مزوّد الطاقة، ويبقى الخلل الأرجح في مسار العرض: كابل الشاشة أو بطاقة الرسوم."},
+{t:"mcq",d:3,q:"طابعة المدرسة بتسحب أكثر من ورقة مع بعض. زميلك قال: «الطابعة خربانة». الأدق حسب الكتاب:",
+ c:["رطوبة على الورق تجعله يلتصق، والحل استبدال الورق","تراكم الغبار في الفراغات، والحل استخدام نافخ هواء","خلل في تعريف الطابعة، والحل إعادة تثبيت التعريف","عطل في بطاقة الشاشة، لأن سرعتها تعتمد على الذاكرة"],a:0,
+ probe:"السبب مش دايمًا في الجهاز. شو حالة الورق نفسه؟",
+ why:"الكتاب في جدول أعطال الطابعة: سحب أكثر من ورقة في اللحظة نفسها سببه وجود رطوبة على الورق تؤدي إلى التصاقها معًا، لذا يجب استبدال الورق."},
+{t:"order",d:3,q:"جهاز ما بيقرأ القرص. رتّبي خطوات الفحص من الأقل كلفة إلى الأعلى كما في مخطط الكتاب",
+ items:["التحقق من نوع القرص","التحقق من تركيب المشغّل","التحقق من تلف القرص","استبدال المشغّل"],
+ probe:"أي خطوة ما بتكلّف ولا قرش؟ وأي خطوة بتكلّف قطعة جديدة؟ رتّبي اللي بينهم.",
+ why:"مخطط الدرس: نتحقق من نوع القرص، ثم من تركيب المشغّل، ثم من تلف القرص، وأخيرًا استبدال المشغّل — ترتيب يبدأ بالأبسط والأقل كلفة."},
+{t:"mcq",d:3,q:"معلمة نزّلت برنامج صيانة من موقع غير معروف لتسريع أجهزة المختبر. أي إرشاد من المواطنة الرقمية خالفته؟",
+ c:["استخدام برامج صيانة رسمية وفحصها بمضاد الفيروسات","تسجيل الخروج من الحسابات قبل مغادرة الجهاز المشترك","عدم إطلاع الآخرين على كلمات المرور الخاصة بها","التحقق من مصدر المعلومة قبل استخدامها في الدرس"],a:0,
+ probe:"الإرشاد اللي بالدرس بيحكي عن شرطين للبرنامج قبل ما تثبّتيه. شو هنّ؟",
+ why:"الكتاب: أحافظ على أمان أجهزتي وبياناتي عن طريق استخدام برامج صيانة رسمية وفحصها بمضاد الفيروسات قبل التثبيت."}
+];})()}
+];
+let BANK=[];
+let CUR=LEVELS[0];
+
+
+</script>
+
+<script>
+const LET=["أ","ب","ج","د"];
+const PRAISE=["أحسنتِ!","ممتاز!","يا سلام!","إجابة دقيقة!","صح تمامًا!","شغل مهندسة!"];
+const RETRY=["قريبة! جرّبي مرة ثانية","مش هيك، فكّري مرة كمان","ما زال في محاولة، ركّزي بالسؤال"];
+const BADGES=[
+ {id:"seed",n:"بذرة زيتون",need:s=>s.firstTry>=3,hint:"٣ إجابات صحيحة من أول محاولة"},
+ {id:"branch",n:"غصن زيتون",need:s=>s.best>=3,hint:"٣ إجابات متتالية من أول محاولة"},
+ {id:"stitch",n:"قطبة تطريز",need:s=>s.noHint>=5,hint:"٥ إجابات صحيحة بدون تلميح"},
+ {id:"iris",n:"سوسنة سوداء",need:s=>s.done>=10,hint:"إنهاء ١٠ تحديات"},
+ {id:"bird",n:"طائر الشنّار",need:s=>s.best>=6,hint:"٦ إجابات متتالية من أول محاولة"}
+];
+const S={players:[""],pstats:[],turn:0,i:0,scores:[0],review:[],
+         streak:0,best:0,firstTry:0,done:0,noHint:0,usedHint:false,tries:0,earned:[],locked:false};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const shuffle=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1]);
+
+let PLAYERS=[""];
+function drawPlayers(){
+  $("playerRows").innerHTML=PLAYERS.map((p,i)=>`<div class="prow"><span>${i+1}</span><input type="text" id="pn${i}" value="${esc(p)}" placeholder="اسم الطالبة" aria-label="اسم الطالبة ${i+1}"></div>`).join("");
+  $("delP").disabled=PLAYERS.length<=1; $("addP").disabled=PLAYERS.length>=6;
+}
+function readPlayers(){ PLAYERS=PLAYERS.map((p,i)=>($("pn"+i)?$("pn"+i).value:p)); }
+$("addP").addEventListener("click",()=>{readPlayers();PLAYERS.push("");drawPlayers();const n=$("pn"+(PLAYERS.length-1));if(n)n.focus();});
+$("delP").addEventListener("click",()=>{readPlayers();PLAYERS.pop();drawPlayers();});
+drawPlayers();
+$("themeBtn").addEventListener("click",()=>{const r=document.documentElement,c=r.getAttribute("data-theme");
+  const dark=c?c==="dark":matchMedia("(prefers-color-scheme: dark)").matches;r.setAttribute("data-theme",dark?"light":"dark");});
+$("start").addEventListener("click",()=>{
+  readPlayers();
+  const names=PLAYERS.map(p=>p.trim()).filter(Boolean);
+  if(!names.length){$("setupNote").hidden=false;const n=$("pn0");if(n)n.focus();return;}
+  $("setupNote").hidden=true;
+  CUR=LEVELS[LIDX]; BANK=CUR.bank;
+  const st=saved(); st.players=names; st.cls=($("clsInput")&&$("clsInput").value||"").trim(); save(st);
+  S.players=names; S.scores=names.map(()=>0); S.pstats=names.map(()=>({first:0,done:0}));
+  Object.assign(S,{i:0,turn:0,review:[],streak:0,best:0,firstTry:0,done:0,noHint:0,earned:[]});
+  $("setup").hidden=true;$("results").hidden=true;$("game").hidden=false;drawBadges();render();});
+
+
+/* ===== اختيار المستوى ===== */
+let LIDX=0;
+const KEY="dsg:"+document.title;
+function saved(){try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return{}}}
+function save(o){try{localStorage.setItem(KEY,JSON.stringify(o))}catch(e){}}
+function drawLevels(){
+  const done=saved().levels||{};
+  $("lvlPick").innerHTML=LEVELS.map((l,i)=>
+    `<button class="ghost lvl" type="button" data-i="${i}" aria-pressed="${i===LIDX}">
+       <b>${l.name}${done[l.id]?`<span class="tick">✓ ${done[l.id].total}</span>`:""}</b>
+       <small>${l.desc}</small></button>`).join("");
+}
+$("lvlPick").addEventListener("click",e=>{const b=e.target.closest(".lvl");if(!b)return;
+  LIDX=+b.dataset.i;drawLevels();});
+drawLevels();
+const prev=saved();
+if(prev.players&&prev.players.length){PLAYERS=prev.players.slice();drawPlayers();}
+if(prev.cls&&$("clsInput"))$("clsInput").value=prev.cls;
+
+/* ===== بطاقة النتيجة ===== */
+
+function submitUI(total,max){
+  if(!SUBMIT.url||!SUBMIT.f.level)return "";
+  const cls=(($("clsInput")&&$("clsInput").value)||saved().cls||"").trim();
+  return `<div class="row" style="margin-top:14px">`+S.players.map((t,i)=>{
+    const u=new URL(SUBMIT.url);
+    if(SUBMIT.f.name)u.searchParams.set(SUBMIT.f.name,t);
+    if(SUBMIT.f.cls)u.searchParams.set(SUBMIT.f.cls,SUBMIT.grade+(cls?" "+cls:""));
+    if(SUBMIT.f.level)u.searchParams.set(SUBMIT.f.level,CUR.name);
+    if(SUBMIT.f.score)u.searchParams.set(SUBMIT.f.score,String(S.scores[i]));
+    return `<a class="sendbtn" target="_blank" rel="noopener" href="${u.toString()}">📤 أرسلي نتيجة ${esc(t)}</a>`;
+  }).join("")+`</div>
+  <p class="sub" style="font-size:14.5px">بيفتح النموذج معبّى — اضغطي «إرسال» وبس.</p>`;
+}
+
+function resultCard(total,max){
+  const d=new Date(), two=n=>String(n).padStart(2,"0");
+  const when=`${d.getFullYear()}/${two(d.getMonth()+1)}/${two(d.getDate())}`;
+  const st=saved().levels||{};
+  const rows=S.players.map((t,i)=>`<tr><td>${esc(t)}</td><td><b>${S.scores[i]}</b></td><td>${S.pstats[i].first}</td></tr>`).join("");
+  const others=LEVELS.filter(l=>l.id!==CUR.id&&st[l.id]).map(l=>
+    `<tr><td>${l.name.split(" — ")[0]}</td><td><b>${st[l.id].total}</b></td><td>—</td></tr>`).join("");
+  const grand=total+LEVELS.filter(l=>l.id!==CUR.id&&st[l.id]).reduce((a,l)=>a+st[l.id].total,0);
+  return `<div class="card2" id="shotCard">
+    <h3>بطاقة النتيجة</h3>
+    <p class="when">${document.title} · ${CUR.name} · ${when}</p>
+    <table class="tbl"><thead><tr><th>الطالبة</th><th>النقاط</th><th>صح من أول محاولة</th></tr></thead>
+      <tbody>${rows}<tr><td><b>مجموع هذا المستوى</b></td><td><b>${total}</b> من ${max}</td><td><b>${S.firstTry}</b> من ${BANK.length}</td></tr>${others}</tbody></table>
+    ${others?`<div class="grand">المجموع عبر المستويات: ${grand}</div>`:""}
+    <div class="shot">📸 صوّري هذه البطاقة وابعتيها للمعلمة.</div>
+  </div>`;
+}
+
+function praise(t){const p=$("praise");p.innerHTML=`<div>${t}</div>`;setTimeout(()=>p.innerHTML="",1600);}
+function sparks(){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  const colors=["var(--red)","var(--olive)","var(--gold)"];
+  for(let i=0;i<18;i++){const s=document.createElement("div");s.className="spark";
+    s.style.cssText=`left:${innerWidth/2+(Math.random()-.5)*160}px;top:${innerHeight/2}px`;
+    s.innerHTML=`<i style="background:${colors[i%3]}"></i>`;document.body.appendChild(s);
+    s.animate([{transform:"translate(0,0)",opacity:1},{transform:`translate(${(Math.random()-.5)*420}px,${-140-Math.random()*260}px) rotate(${(Math.random()-.5)*720}deg)`,opacity:0}],
+      {duration:1100+Math.random()*500,easing:"cubic-bezier(.2,.7,.4,1)"}).onfinish=()=>s.remove();}
+}
+function drawBadges(){$("badgeRow").innerHTML=BADGES.map(b=>`<span class="badge ${S.earned.includes(b.id)?"on":""}" title="${b.hint}">${S.earned.includes(b.id)?"✦ ":""}${b.n}</span>`).join("");}
+function checkBadges(){BADGES.forEach(b=>{if(!S.earned.includes(b.id)&&b.need(S)){S.earned.push(b.id);praise("وسام جديد: "+b.n);sparks();}});drawBadges();}
+function hud(){
+  $("scorePills").innerHTML = S.players.map((t,i)=>`<span class="pill ${i===S.turn&&S.players.length>1?"turn":(S.players.length===1?"turn":"")}">${esc(t)}: ${S.scores[i]}</span>`).join("")
+    + (S.streak>1?`<span class="pill streak">سلسلة ${S.streak} ✦</span>`:"");
+  $("qCount").textContent=`تحدٍ ${S.i+1} من ${BANK.length}`;
+  $("prog").style.width=(S.i/BANK.length*100)+"%";
+}
+function pointsFor(base){const f=CUR.hints?[1,.6,.3]:[1,.75,.5,.35,.25];let p=Math.round(base*f[Math.min(S.tries,f.length-1)]);if(S.usedHint)p=Math.max(p-2,1);return Math.max(p,1);}
+function succeed(base,q,st,extra){
+  const first=S.tries===0;
+  S.done++; if(first){S.firstTry++;S.streak++;S.best=Math.max(S.best,S.streak);} else {S.streak=0;S.review.push(q.q.replace(/<[^>]+>/g,""));}
+  if(!S.usedHint&&first)S.noHint++;
+  S.scores[S.turn]+=pointsFor(base); S.pstats[S.turn].done++; if(first)S.pstats[S.turn].first++;
+  praise(first&&S.streak>=3?`سلسلة ${S.streak}! ${PRAISE[S.i%PRAISE.length]}`:PRAISE[S.i%PRAISE.length]);sparks();
+  const f=document.createElement("div");f.className="fb show ok";
+  f.innerHTML=`✔ صحيح${first?"":" – بعد التصحيح"}${extra?" – "+extra:""}<small>${q.why}</small>`;
+  st.appendChild(f);st.appendChild(nextBtn());hud();checkBadges();
+}
+function retry(q,st,msg){
+  S.tries++;S.streak=0;
+  let f=st.querySelector(".fb.bad");
+  if(!f){f=document.createElement("div");f.className="fb show bad";st.appendChild(f);}
+  f.innerHTML=`✖ ${RETRY[Math.min(S.tries-1,RETRY.length-1)]}${msg?" – "+msg:""}<small>ما في انتقال للتحدي اللي بعده إلا بالإجابة الصحيحة. صححي وكمّلي.</small>`;
+  const hb=st.querySelector(".hintbtn");if(hb&&!hb.disabled){hb.classList.add("pulse");}
+  if(S.tries>=3)probeUI(q,st);
+  hud();
+}
+function nextBtn(){
+  const d=document.createElement("div");d.className="foot";
+  const b=document.createElement("button");b.className="primary";
+  b.textContent=S.i===BANK.length-1?"النتيجة":"التحدي التالي";
+  b.addEventListener("click",()=>{S.i++;S.turn=(S.turn+1)%S.players.length;S.i<BANK.length?render():results();});
+  d.appendChild(b);return d;
+}
+function head(q){
+  const lv=["","سهل","متوسط","تحدٍ"][q.d||1];
+  return `<p class="q">${q.q}</p><div class="meta"><span class="diff d${q.d||1}">${lv}</span>${S.players.length>1?`<span>الدور على: <b>${esc(S.players[S.turn])}</b></span>`:""}${CUR.hints?((q.hint||q.p)?`<span>التلميح بيخصم نقطتين</span>`:""):`<span>بلا تلميحات — فكّري بالجواب</span>`}</div>`;
+}
+function probeUI(q,st){
+  if(!q.probe||st.querySelector(".probebox"))return;
+  const b=document.createElement("div");b.className="hintbox probebox show";
+  b.innerHTML=`<b>سؤال يساعدك تفكّري:</b><br>${q.probe}`;st.appendChild(b);
+}
+function hintUI(q,st){
+  if(!CUR.hints||(!q.hint&&!q.p))return;
+  const box=document.createElement("div");box.className="hintbox";
+  box.innerHTML=(q.hint?"✦ "+q.hint:"")+(q.p?`<span class="page">📖 الجواب موجود في ${q.p}</span>`:"");
+  const b=document.createElement("button");b.className="ghost hintbtn";b.type="button";
+  b.textContent=q.hint?"أعطيني تلميح":"بأي درس ألاقي الجواب؟";b.style.marginTop="12px";
+  b.addEventListener("click",()=>{S.usedHint=true;box.classList.add("show");b.disabled=true;b.classList.remove("pulse");});
+  st.appendChild(b);st.appendChild(box);
+}
+function render(){
+  hud();const q=BANK[S.i],st=$("stage");st.innerHTML=head(q);S.usedHint=false;S.tries=0;
+  ({mcq:mcq,match:match,order:order}[q.t])(q,st);
+  hintUI(q,st);
+}
+function mcq(q,st){
+  const order=shuffle(q.c.map((c,i)=>({c,i})));
+  const wrap=document.createElement("div");wrap.className="choices";
+  order.forEach((o,idx)=>{
+    const b=document.createElement("button");b.className="choice";b.type="button";
+    b.innerHTML=`<span class="k">${LET[idx]}</span>${o.c}`;
+    b.addEventListener("click",()=>{
+      if(b.disabled||st.querySelector(".fb.ok"))return;
+      if(o.i===q.a){b.classList.add("ok");[...wrap.children].forEach(x=>x.disabled=true);
+        const f=st.querySelector(".fb.bad");if(f)f.remove();
+        succeed(10,q,st);
+      } else {b.classList.add("bad");b.disabled=true;retry(q,st,"هاي الإجابة مش صحيحة، ضلّ عندك خيارات");}
+    });
+    wrap.appendChild(b);
+  });
+  st.appendChild(wrap);
+}
+function match(q,st){
+  const left=shuffle(q.pairs.map((p,i)=>({t:p[0],i}))),right=shuffle(q.pairs.map((p,i)=>({t:p[1],i})));
+  let sel=null,ok=0;
+  const box=document.createElement("div");box.className="pairs";
+  const cl=document.createElement("div");cl.className="pcol";cl.innerHTML='<h3>العمود الأول</h3>';
+  const cr=document.createElement("div");cr.className="pcol";cr.innerHTML='<h3>العمود الثاني</h3>';
+  const mk=(o,side)=>{const b=document.createElement("button");b.type="button";b.className="pitem";b.textContent=o.t;b.dataset.i=o.i;b.dataset.k=q.pairs[o.i][1];b.dataset.side=side;
+    b.addEventListener("click",()=>{
+      if(b.disabled||st.querySelector(".fb.ok"))return;
+      if(!sel||sel.dataset.side===side){if(sel)sel.classList.remove("sel");sel=b;b.classList.add("sel");return;}
+      const good=sel.dataset.k===b.dataset.k,a=sel;sel=null;a.classList.remove("sel");
+      if(good){[a,b].forEach(x=>{x.disabled=true;x.classList.add("done");});ok++;
+        if(ok===q.pairs.length){const f=st.querySelector(".fb.bad");if(f)f.remove();succeed(q.pairs.length*4,q,st);}
+      } else {
+        [a,b].forEach(x=>x.classList.add("miss"));
+        retry(q,st,"التوصيلة غلط، بتقدري تعيديها");
+        setTimeout(()=>[a,b].forEach(x=>x.classList.remove("miss")),700);
+      }
+    });return b;};
+  left.forEach(o=>cl.appendChild(mk(o,"L")));right.forEach(o=>cr.appendChild(mk(o,"R")));
+  box.appendChild(cl);box.appendChild(cr);st.appendChild(box);
+}
+function order(q,st){
+  const target=q.items;let pool=shuffle([...target]),picked=[];
+  const slots=document.createElement("div");slots.className="slots";
+  const chips=document.createElement("div");chips.className="chipset";
+  const undo=document.createElement("button");undo.type="button";undo.className="ghost";undo.textContent="تراجع عن آخر خطوة";undo.style.marginTop="10px";
+  undo.addEventListener("click",()=>{if(st.querySelector(".fb.ok"))return;picked.pop();draw();});
+  function draw(){
+    slots.innerHTML="";
+    target.forEach((_,i)=>{const s=document.createElement("div");s.className="slot"+(picked[i]?" filled":"");
+      s.textContent=picked[i]||`الخطوة ${i+1}`;slots.appendChild(s);});
+    chips.innerHTML="";
+    pool.forEach(p=>{const b=document.createElement("button");b.type="button";b.className="chip";b.textContent=p;
+      b.disabled=picked.includes(p)||!!st.querySelector(".fb.ok");
+      b.addEventListener("click",()=>{picked.push(p);draw();if(picked.length===target.length)check();});
+      chips.appendChild(b);});
+    undo.disabled=picked.length===0||!!st.querySelector(".fb.ok");
+  }
+  function check(){
+    if(picked.every((p,i)=>p===target[i])){const f=st.querySelector(".fb.bad");if(f)f.remove();draw();succeed(14,q,st);}
+    else{retry(q,st,"الترتيب مش مظبوط، رجّعي ورتّبي من جديد");picked=[];draw();}
+  }
+  st.appendChild(slots);st.appendChild(chips);st.appendChild(undo);draw();
+}
+function results(){
+  $("game").hidden=true;const r=$("results");r.hidden=false;
+  const max=BANK.reduce((a,q)=>a+(q.t==="mcq"?10:q.t==="order"?14:q.pairs.length*4),0);
+  const total=S.scores.reduce((a,b)=>a+b,0);
+  const solo=S.players.length===1;
+  const pct=Math.round(total/max*100);
+  let body=`<h2>${pct>=85?"إتقان كامل للدرسين":pct>=60?"كويس، وفي مجال نصير أسرع":"خلصتي التحديات، وبدنا نراجع سوا"}</h2>`;
+  if(solo){
+    body+=`<div class="score">${total} <span style="font-size:22px;color:var(--muted)">من ${max}</span></div>
+      <p class="sub">${esc(S.players[0])} · صح من أول محاولة: <b>${S.firstTry}</b> من ${BANK.length} · أطول سلسلة: <b>${S.best}</b></p>`;
+  } else {
+    body+=`<table class="tbl"><thead><tr><th>الطالبة</th><th>النقاط</th><th>تحديات حلّتها</th><th>صح من أول محاولة</th></tr></thead><tbody>
+      ${S.players.map((t,i)=>`<tr><td>${esc(t)}</td><td>${S.scores[i]}</td><td>${S.pstats[i].done}</td><td>${S.pstats[i].first}</td></tr>`).join("")}
+      <tr><td><b>المجموع</b></td><td><b>${total}</b></td><td><b>${BANK.length}</b></td><td><b>${S.firstTry}</b></td></tr>
+      </tbody></table><p class="sub">المجموع من ${max} نقطة.</p>`;
+  }
+  const st0=saved(); st0.levels=st0.levels||{}; st0.levels[CUR.id]={total:total,max:max,first:S.firstTry,n:BANK.length}; save(st0);
+  body+=resultCard(total,max)+submitUI(total,max);
+  const got=BADGES.filter(b=>S.earned.includes(b.id)),rev=[...new Set(S.review)];
+  r.innerHTML=body
+    +`<div class="badges">${BADGES.map(b=>`<span class="badge ${S.earned.includes(b.id)?"on":""}">${S.earned.includes(b.id)?"✦ ":""}${b.n}</span>`).join("")}</div>`
+    +(got.length?`<p class="sub">وسام الجولة: ${got.map(b=>b.n).join("، ")}</p>`:"")
+    +(rev.length?`<div class="miss"><b>تحديات احتاجت أكثر من محاولة، راجعيها من الكتاب:</b>${rev.map(m=>`<div>${m}</div>`).join("")}</div>`
+                :`<p class="sub">كل التحديات انحلّت من أول محاولة.</p>`)
+    +`<div class="foot"><div class="row">${LIDX<LEVELS.length-1?`<button class="primary" id="nextlvl" type="button">المستوى التالي ←</button>`:""}<button class="ghost" id="again" type="button">أعيدي هذا المستوى</button></div><button class="ghost" id="back" type="button">تغيير الأسماء أو المستوى</button></div>`;
+  if(!rev.length)sparks();
+  $("again").addEventListener("click",()=>{Object.assign(S,{i:0,turn:0,review:[],streak:0,best:0,firstTry:0,done:0,noHint:0,earned:[]});
+    S.scores=S.scores.map(()=>0);S.pstats=S.players.map(()=>({first:0,done:0}));r.hidden=true;$("game").hidden=false;drawBadges();render();});
+  $("back").addEventListener("click",()=>{r.hidden=true;drawLevels();$("setup").hidden=false;});
+  const nx=$("nextlvl"); if(nx) nx.addEventListener("click",()=>{
+    LIDX++; CUR=LEVELS[LIDX]; BANK=CUR.bank; drawLevels();
+    S.scores=S.players.map(()=>0); S.pstats=S.players.map(()=>({first:0,done:0}));
+    Object.assign(S,{i:0,turn:0,review:[],streak:0,best:0,firstTry:0,done:0,noHint:0,earned:[]});
+    r.hidden=true;$("game").hidden=false;drawBadges();render();window.scrollTo(0,0);});
+  r.scrollIntoView({block:"start"});
+}
+</script>
+
+</body></html>
