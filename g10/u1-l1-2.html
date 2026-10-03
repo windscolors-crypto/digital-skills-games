@@ -1,0 +1,686 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ألعاب المهارات الرقمية — العاشر</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@600;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --ground:#FBF7F0; --surface:#FFFFFF; --ink:#211C17; --muted:#6B6055; --line:#E6DCCC;
+  --olive:#3F6B3A; --olive-soft:#E6EFE2; --red:#B23A2E; --red-soft:#F8E6E2;
+  --gold:#A9781B; --gold-soft:#FBF0D9; --night:#22303A;
+  --accent:var(--olive); --accent-ink:#FFFFFF;
+  --display:"Baloo Bhaijaan 2","IBM Plex Sans Arabic",Tahoma,sans-serif;
+  --body:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#14181A; --surface:#1C2326; --ink:#F0EAE0; --muted:#A99E90; --line:#2E3A3E;
+  --olive:#8FC486; --olive-soft:#1B2A1D; --red:#EE9385; --red-soft:#2E1C19;
+  --gold:#E3B860; --gold-soft:#2C2313; --accent-ink:#14181A;
+}}
+:root[data-theme="dark"]{
+  --ground:#14181A; --surface:#1C2326; --ink:#F0EAE0; --muted:#A99E90; --line:#2E3A3E;
+  --olive:#8FC486; --olive-soft:#1B2A1D; --red:#EE9385; --red-soft:#2E1C19;
+  --gold:#E3B860; --gold-soft:#2C2313; --accent-ink:#14181A;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--ground);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.65;margin:0}
+.tatreez{height:14px;background-image:
+  linear-gradient(45deg,var(--red) 25%,transparent 25%),
+  linear-gradient(-45deg,var(--red) 25%,transparent 25%),
+  linear-gradient(45deg,transparent 75%,var(--olive) 75%),
+  linear-gradient(-45deg,transparent 75%,var(--olive) 75%);
+  background-size:14px 14px;background-position:0 0,0 7px,7px -7px,-7px 0;opacity:.85}
+.wrap{max-width:980px;margin:0 auto;padding-inline:20px;padding-block:22px 60px}
+h1{font-family:var(--display);font-size:clamp(28px,5.4vw,46px);margin:0;line-height:1.15}
+h2{font-family:var(--display);font-size:clamp(20px,3.4vw,28px);margin:0 0 8px}
+.sub{color:var(--muted);margin:6px 0 0}
+button{font:inherit;font-family:var(--body);cursor:pointer;border-radius:14px;border:2px solid var(--line);background:var(--surface);color:var(--ink);padding:11px 18px;font-weight:600;transition:transform .08s,background .15s}
+button:active{transform:scale(.97)}
+button:focus-visible{outline:3px solid var(--olive);outline-offset:2px}
+button.primary{background:var(--olive);color:var(--accent-ink);border-color:var(--olive)}
+button.ghost{background:transparent}
+button:disabled{opacity:.6;cursor:default}
+.card{background:var(--surface);border:2px solid var(--line);border-radius:20px;padding:22px;position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:6px;background:
+  repeating-linear-gradient(180deg,var(--olive) 0 10px,var(--red) 10px 20px);opacity:.7}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.setup{display:grid;gap:18px}
+.opts{display:flex;flex-wrap:wrap;gap:10px}
+.opts button[aria-pressed="true"]{background:var(--olive);color:var(--accent-ink);border-color:var(--olive)}
+.players{display:grid;gap:8px}
+.players .prow{display:flex;gap:8px;align-items:center}
+.players .prow span{color:var(--muted);font-weight:700;min-width:22px}
+.players input{font:inherit;padding:9px 12px;border-radius:12px;border:2px solid var(--line);background:var(--ground);color:var(--ink);max-width:280px}
+
+.hud{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{background:var(--surface);border:2px solid var(--line);border-radius:999px;padding:4px 14px;font-weight:700;font-size:15px}
+.pill.turn{background:var(--olive);color:var(--accent-ink);border-color:var(--olive)}
+.pill.streak{background:var(--gold-soft);color:var(--gold);border-color:var(--gold)}
+.bar{height:10px;border-radius:999px;background:var(--line);overflow:hidden;margin-bottom:16px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--olive),var(--gold));width:0;transition:width .35s}
+
+.q{font-family:var(--display);font-size:clamp(20px,3.4vw,29px);line-height:1.45;margin:0 0 4px}
+.meta{color:var(--muted);font-size:15px;margin:0 0 14px;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
+.diff{border-radius:999px;padding:1px 10px;font-size:13px;font-weight:700;border:1.5px solid currentColor}
+.d1{color:var(--olive)} .d2{color:var(--gold)} .d3{color:var(--red)}
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.choice{text-align:start;padding:15px 16px;font-size:17.5px;line-height:1.5;border-radius:16px}
+.choice .k{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:9px;background:var(--olive-soft);color:var(--olive);font-weight:800;margin-inline-end:10px;font-size:15px}
+.choice.ok{background:var(--olive-soft);border-color:var(--olive);color:var(--olive)}
+.choice.bad{background:var(--red-soft);border-color:var(--red);color:var(--red)}
+
+.pairs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pairs h3{font-family:var(--display);font-size:16px;margin:0 0 6px;color:var(--muted)}
+.pcol{display:grid;gap:8px;align-content:start}
+.pitem{text-align:start;padding:12px 14px;border-radius:14px;font-size:16px;line-height:1.45}
+.pitem.sel{background:var(--gold-soft);border-color:var(--gold);color:var(--gold)}
+.pitem.done{background:var(--olive-soft);border-color:var(--olive);color:var(--olive);opacity:.85}
+.pitem.miss{background:var(--red-soft);border-color:var(--red);color:var(--red)}
+
+.slots{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:12px 0}
+.slot{min-width:150px;min-height:54px;border:2px dashed var(--line);border-radius:14px;display:grid;place-items:center;font-weight:700;background:var(--surface);padding:6px 10px;text-align:center;font-size:15px}
+.slot.filled{border-style:solid;border-color:var(--olive);background:var(--olive-soft);color:var(--olive)}
+.chipset{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border-radius:999px;padding:8px 14px;font-size:15px;font-weight:600;border:2px solid var(--line);background:var(--ground)}
+
+.fb{margin-top:16px;border-radius:16px;padding:14px 16px;font-weight:700;display:none}
+.fb.show{display:block;animation:pop .25s ease-out}
+.fb.ok{background:var(--olive-soft);color:var(--olive)}
+.fb.bad{background:var(--red-soft);color:var(--red)}
+.fb small{display:block;font-weight:500;margin-top:5px;font-size:15.5px}
+@keyframes pop{from{transform:translateY(6px);opacity:0}to{transform:none;opacity:1}}
+.hintbox .page{display:block;margin-top:6px;font-weight:700}
+.hintbtn.pulse{border-color:var(--gold);color:var(--gold);animation:pulse 1.2s ease-in-out 2}
+@keyframes pulse{50%{transform:scale(1.05)}}
+.hintbox{margin-top:12px;background:var(--gold-soft);color:var(--gold);border-radius:14px;padding:12px 14px;font-size:16px;font-weight:600;display:none}
+.hintbox.show{display:block}
+.foot{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;margin-top:18px}
+
+/* praise + badges */
+#praise{position:fixed;inset-inline:0;top:14px;display:grid;place-items:center;pointer-events:none;z-index:9}
+#praise div{background:var(--olive);color:var(--accent-ink);font-family:var(--display);font-size:20px;padding:8px 20px;border-radius:999px;box-shadow:0 8px 24px rgba(0,0,0,.18);animation:praise 1.6s ease-out forwards}
+@keyframes praise{0%{transform:translateY(-14px) scale(.9);opacity:0}15%{transform:none;opacity:1}75%{opacity:1}100%{transform:translateY(-10px);opacity:0}}
+.spark{position:fixed;width:12px;height:12px;pointer-events:none;z-index:8}
+.spark i{display:block;width:100%;height:100%;background:var(--red);clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.badge{border:2px solid var(--line);border-radius:14px;padding:8px 12px;font-size:14px;font-weight:700;color:var(--muted);background:var(--surface);opacity:.45}
+.badge.on{opacity:1;color:var(--gold);border-color:var(--gold);background:var(--gold-soft)}
+.score{font-family:var(--display);font-size:clamp(40px,9vw,70px);line-height:1;margin:4px 0}
+.tbl{width:100%;border-collapse:collapse;margin-top:10px}
+.tbl th,.tbl td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:start}
+.tbl th{color:var(--muted);font-size:15px}
+.miss{margin-top:16px;display:grid;gap:8px}
+.miss div{background:var(--red-soft);color:var(--red);border-radius:12px;padding:10px 14px;font-size:16px;font-weight:600}
+
+.levels{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.lvl{text-align:start;padding:16px;border-radius:18px;display:block}
+.lvl b{display:block;font-family:var(--display);font-size:19px;margin-bottom:4px}
+.lvl small{display:block;color:var(--muted);font-weight:500;line-height:1.5;font-size:14.5px}
+.lvl[aria-pressed="true"]{background:var(--olive);border-color:var(--olive);color:var(--accent-ink)}
+.lvl[aria-pressed="true"] small{color:var(--accent-ink);opacity:.85}
+.lvl .tick{float:inline-end;color:var(--gold);font-weight:800}
+
+.sendbtn{display:inline-block;background:var(--gold);color:#fff;border:2px solid var(--gold);
+  border-radius:14px;padding:11px 18px;font-weight:700;text-decoration:none;font-size:16.5px}
+.sendbtn:active{transform:scale(.97)}
+.home{display:inline-block;margin-top:10px;color:var(--muted);text-decoration:none;font-weight:600}
+.card2{background:var(--surface);border:3px solid var(--olive);border-radius:22px;padding:24px;margin-top:18px;position:relative}
+.card2 h3{font-family:var(--display);font-size:24px;margin:0 0 2px;color:var(--olive)}
+.card2 .when{color:var(--muted);font-size:14px;margin:0 0 14px}
+.card2 .tbl th,.card2 .tbl td{padding:7px 10px;font-size:16px}
+.card2 .grand{font-family:var(--display);font-size:34px;color:var(--olive);margin-top:10px}
+.shot{background:var(--gold-soft);color:var(--gold);border-radius:12px;padding:10px 14px;font-weight:700;font-size:15px;margin-top:12px}
+@media (max-width:620px){ .pairs{grid-template-columns:1fr} }
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+</head>
+<body style="margin:0">
+<div class="wrap" dir="rtl" lang="ar">
+  <div class="tatreez" style="margin-bottom:16px"></div>
+  <header style="margin-bottom:18px">
+    <h1>ألعاب المهارات الرقمية — العاشر</h1>
+    <p class="sub">الصف العاشر · ثلاثة مستويات · الدرس الأول والثاني</p>
+  </header>
+
+  <section id="setup" class="card setup">
+    <div><h2>مين رح تلعب؟</h2>
+      <p class="sub">اكتبي اسمك، وإذا بتلعبوا أكتر من وحدة على نفس الجهاز ضيفي أسماءهن. الدور بيلف بينكن، وبآخر كل مستوى بتطلع بطاقة نتيجة بتقدري تصوّريها وتبعتيها للمعلمة.</p></div>
+    <div><p style="margin:0 0 8px;font-weight:700">اختاري المستوى</p>
+      <div class="levels" id="lvlPick"></div></div>
+    <div class="row"><label style="font-weight:700">الصف والشعبة:</label><input type="text" id="clsInput" placeholder="مثال: ٩ ب" style="font:inherit;padding:9px 12px;border-radius:12px;border:2px solid var(--line);background:var(--ground);color:var(--ink);max-width:160px"></div>
+    <div class="players" id="playerRows"></div>
+    <div class="row">
+      <button class="ghost" id="addP" type="button">+ أضيفي طالبة</button>
+      <button class="ghost" id="delP" type="button">حذف الأخيرة</button>
+    </div>
+    <div class="row">
+      <button class="primary" id="start" type="button">يلا نبدأ</button>
+      <button class="ghost" id="themeBtn" type="button">تبديل الإضاءة</button>
+    </div>
+    <p class="sub" id="setupNote" style="color:var(--red);font-weight:600" hidden>اكتبي اسم وحدة على الأقل.</p>
+  </section>
+
+  <section id="game" hidden>
+    <div class="hud">
+      <div class="pills" id="scorePills"></div>
+      <div class="pills"><span class="pill" id="qCount"></span></div>
+    </div>
+    <div class="bar"><i id="prog"></i></div>
+    <div class="card" id="stage"></div>
+    <div class="badges" id="badgeRow"></div>
+  </section>
+
+  <section id="results" class="card" hidden></section>
+  <div class="tatreez" style="margin-top:22px"></div>
+  <a class='home' href='/'>← كل الصفوف</a>
+</div>
+<div id="praise"></div>
+
+<script>
+/* ====== إعدادات الإرسال — تُعبّأ مرة واحدة ======
+   بعد ما تعملي نموذج Microsoft Forms، خذي رابط Get pre-filled URL
+   وحطّيه هنا، وحطّي أرقام الحقول (rXXXX) مكان الفراغات. */
+const SUBMIT={
+  url:"https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=QoWSx2QeIUimYh4GU_yQCXkPYNJN8CJDkPMMgh2Vy6tUODg0S1M1VFZINFczWVlRTThRQUNHRFhIMy4u",
+  f:{cls:"r43e5b2ed34e345e1ba30786b608224df",
+     level:"r637b4343d36345e19e3a438ac27566ff",
+     score:"r97c591a829f04904ae5e01e4870c0ba0",
+     name:"r7ab483cd2eeb4108a9207e81115eef5d"},
+  grade:"العاشر"
+};
+
+const LEVELS=[
+{id:"l1",name:"المستوى الأول — مفاتيح البيانات",desc:"١٥ تحديًا · التلميح يعطي الصفحة واسم الدرس",hints:true,bank:(function(){const L1="الدرس الأول: البيانات والمعلومات", L2="الدرس الثاني: أنواع البيانات وطرائق تنظيمها"; return [
+{t:"mcq",d:1,p:"ص ١١ · "+L1,q:"البيانات حسب تعريف الكتاب هي:",
+ c:["حقائق أولية خام لا تحمل معنى بحد ذاتها","نتائج نهائية جاهزة لاتخاذ القرار المناسب","تقارير منظمة يستخدمها المدير في عمله اليومي","رسوم بيانية توضح أداء الطالبات في الاختبارات"],a:0,
+ why:"الكتاب: البيانات مجموعة من الحقائق الأولية (الخام) التي لا تحمل أي معنى بحد ذاتها، وتحتاج إلى تنظيم أو معالجة لتصبح ذات قيمة."},
+{t:"mcq",d:2,p:"ص ١١ · "+L1,q:"المعلومات كما عرّفها الكتاب:",
+ c:["ناتج معالجة البيانات وتنظيمها","أرقام ورموز غير مرتبة ولا مفهومة","صور وأصوات مخزنة على الجهاز","حقائق خام تحتاج إلى تنظيم ومعالجة"],a:0,
+ hint:"شو بيصير للبيانات بعد المعالجة؟",
+ why:"الكتاب: المعلومات هي ناتج معالجة البيانات وتنظيمها بحيث تصبح ذات معنى وقيمة."},
+{t:"order",d:2,p:"ص ١١ · "+L1,q:"رتّبي مسار تحوّل البيانات إلى معلومات",
+ items:["حقائق أولية خام","تنظيم البيانات ومعالجتها","معلومات ذات معنى وقيمة"],
+ why:"الكتاب: البيانات تحتاج إلى تنظيم أو معالجة أو وضعها في سياق محدد لتصبح معلومات ذات معنى وقيمة."},
+{t:"mcq",d:2,p:"ص ١٤ · "+L1,q:"النظام الذي يستخدمه الحاسوب لتمثيل البيانات داخله:",
+ c:["النظام الثنائي Binary System","النظام العشري Decimal System","النظام الست عشري فقط لا غير","نظام الترميز اللوني للصور"],a:0,
+ hint:"صفر وواحد.",
+ why:"الكتاب: يتم تمثيل جميع أنواع البيانات داخل أجهزة الحاسوب باستخدام النظام الثنائي الذي يستخدم نمطي الأرقام الثنائية (0 و1)."},
+{t:"mcq",d:2,p:"ص ١٤ · "+L1,q:"البِت Bit حسب الكتاب:",
+ c:["أصغر وحدة تخزين في العالم الرقمي","وحدة القياس الأساس لحجم البيانات","يساوي 1024 بايت من البيانات","يمثل ثماني حالات مختلفة معًا"],a:0,
+ hint:"أصغر إشي بيمثّل حالتين بس.",
+ why:"الكتاب: البِت أصغر وحدة تخزين في العالم الرقمي، ويمكن أن يمثل حالتين فقط: 0 التي تشير إلى إيقاف أو خطأ، و1 التي تشير إلى تشغيل أو صواب."},
+{t:"mcq",d:2,p:"ص ١٤ · "+L1,q:"البايت Byte يتكوّن من:",
+ c:["ثمانية بتات","أربعة بتات","1024 بت","اثني عشر بت"],a:0,
+ why:"الكتاب: تُعد وحدة البايت وحدة القياس الأساس لحجم البيانات، ويتكون البايت من ثمانية بتات."},
+{t:"order",d:3,p:"ص ١٤ · "+L1,q:"رتّبي وحدات القياس من الأصغر إلى الأكبر كما في الكتاب",
+ items:["بِت","بايت","كيلوبايت","ميجابايت","جيجابايت"],
+ hint:"كل وحدة بتساوي 1024 من اللي قبلها، إلا البايت.",
+ why:"الشكل (1-2) في الكتاب: بِت، ثم بايت (8 بتات)، ثم كيلوبايت (1024 بايت)، ثم ميجابايت (1024 كيلوبايت)، ثم جيجابايت (1024 ميجابايت)."},
+{t:"mcq",d:3,p:"ص ١٤ · "+L1,q:"الرقم 1 في النظام الثنائي يشير إلى:",
+ c:["التشغيل أو صواب","الإيقاف أو خطأ","نهاية الملف المخزن","بداية الأمر البرمجي"],a:0,
+ hint:"مقابل الصفر اللي معناه إيقاف.",
+ why:"الكتاب: البِت يمثل حالتين فقط؛ 0 يشير إلى إيقاف أو خطأ، والحالة الثانية 1 تشير إلى تشغيل أو صواب."},
+{t:"mcq",d:1,p:"ص ٢٨ · "+L2,q:"تنقسم البيانات حسب الكتاب إلى نوعين رئيسين هما:",
+ c:["الكمية والنوعية","المتصلة والاسمية","الرقمية والورقية","الداخلية والخارجية"],a:0,
+ why:"الشكل (2-1) في الكتاب: تُقسَّم البيانات إلى نوعين بناءً على طبيعتها: البيانات الكمية والبيانات النوعية."},
+{t:"mcq",d:3,p:"ص ٢٨ · "+L2,q:"أيّ زوج من الأنواع الفرعية يتبع البيانات الكمية حسب الشكل في الكتاب؟",
+ c:["المتصلة والمنفصلة","الاسمية والترتيبية","المتصلة والاسمية","المنفصلة والترتيبية"],a:0,
+ hint:"الكمية بتتقاس بالأرقام، والنوعية بتوصف صفة.",
+ why:"الشكل (2-1): البيانات الكمية تشمل البيانات المتصلة (المستمرة) والبيانات المنفصلة، أما البيانات النوعية فتشمل البيانات الاسمية والبيانات الترتيبية."},
+{t:"mcq",d:2,p:"ص ٣١ · "+L2,q:"طرائق جمع البيانات النوعية تركّز على الإجابة عن سؤالي:",
+ c:["لماذا وكيف","كم ومتى بالضبط","أين وكم مرة","من ومتى وأين"],a:0,
+ hint:"مش أرقام، فهم معمّق.",
+ why:"الكتاب: تركّز الطرائق النوعية على الإجابة عن لماذا وكيف من خلال استكشاف التجارب الإنسانية والآراء بشكل معمّق."},
+{t:"mcq",d:3,p:"ص ٣١ · "+L2,q:"من خصائص البيانات النوعية كما وردت في الكتاب:",
+ c:["نتائجها غير قابلة للتعميم","نتائجها دقيقة رقميًا دائمًا","تُجمع بالاختبارات المحوسبة","تصلح لقياس السرعة والزمن"],a:0,
+ hint:"إلها علاقة بالسياق والتجارب الفردية.",
+ why:"الكتاب: النتائج غير قابلة للتعميم؛ لأنها تعتمد على السياق والتجارب الفردية."},
+{t:"match",d:2,p:"ص ٣١ · "+L2,q:"طابقي كل طريقة نوعية مع وصفها في الكتاب",
+ pairs:[["الاستبانات المفتوحة","أسئلة مفتوحة تتيح التعبير بحرية"],["المقابلات","جلسات تُطرح فيها أسئلة استكشافية"],["المجموعات المركزة","نقاش مجموعة صغيرة حول موضوع واحد"],["دراسات الحالة","دراسة معمقة لحالة أو نشاط معين"]],
+ why:"الكتاب يعرض هذه الطرائق الأربع الشائعة لجمع البيانات النوعية."},
+{t:"mcq",d:3,p:"ص ٣١ · "+L2,q:"المجموعات المركزة Focus Groups تتكوّن حسب الكتاب من:",
+ c:["مجموعة صغيرة من 6 إلى 12 شخصًا","صف كامل من الطالبات والمعلمات معًا","شخصين اثنين فقط في الجلسة الواحدة","عينة عشوائية من مئة مشارك ومشاركة"],a:0,
+ hint:"عدد صغير محدد بالكتاب.",
+ why:"الكتاب: المجموعات المركزة جلسات نقاش تُجرى مع مجموعة صغيرة (6-12 شخصًا) حول موضوع محدد."},
+{t:"mcq",d:2,p:"ص ٣١ · "+L2,q:"لماذا يؤكد الكتاب أهمية معرفة مصادر البيانات وطرائق جمعها؟",
+ c:["لضمان أن تكون المعلومات دقيقة وموثوقة","لتقليل حجم الملفات المخزنة على القرص الصلب","لتسريع عمل المعالج أثناء عمليات التحليل","لتسهيل طباعة النتائج النهائية على الورق"],a:0,
+ why:"الكتاب: إن فهم مصادر البيانات وطرائق جمعها أمر ضروري لضمان أن تكون المعلومات دقيقة وموثوقة وذات صلة بالمشكلات التي نعمل على حلّها."}
+];})()},
+{id:"l2",name:"المستوى الثاني — شيفرة الجليل",desc:"٣٠ تحديًا · تحويل ثنائي وترميز",hints:true,bank:(function(){const L1="الدرس الأول: البيانات والمعلومات", L2="الدرس الثاني: أنواع البيانات وطرائق تنظيمها"; return [
+{t:"mcq",d:3,p:L1,q:"المعادلة التي وضعها الكتاب للمعلومات هي:",
+ c:["البيانات + السياق أو المعنى","البيانات + التطبيق والاستخدام","المعرفة + الخبرة والتحليل","المعرفة + التنظيم والمعالجة"],a:0,
+ hint:"شو اللي بيتضاف للبيانات عشان تصير معلومات؟",
+ why:"الكتاب: البياناتُ + السياقِ أو المَعنى = المعلوماتُ."},
+{t:"mcq",d:3,p:L1,q:"المعادلة التي وضعها الكتاب للمعرفة هي:",
+ c:["المعلومات + التطبيق والاستخدام","البيانات + السياق أو المعنى","المعلومات + التخزين والنقل السهل","البيانات + التنظيم والترتيب"],a:0,
+ hint:"المعرفة بتيجي بعد المعلومات، مش بعد البيانات.",
+ why:"الكتاب: المعلوماتُ + التطبيقِ والاستخدامِ = المعرفةُ."},
+{t:"mcq",d:3,p:L1,q:"المعرفة الصريحة حسب الكتاب هي:",
+ c:["حقائق يمكن كتابتها أو تخزينها ونقلها بسهولة","خبرة عملية يصعب نقلها إلى شخص آخر بالكتابة","حقائق أولية خام لا تحمل أيّ معنًى بحدّ ذاتها","أعداد ورموز غير منظمة تحتاج إلى معالجة"],a:0,
+ hint:"صريحة يعني مكتوبة وواضحة وسهلة النقل.",
+ why:"الكتاب: المعرفة الصريحة هي حقائق يمكن كتابتها أو تخزينها ونقلها بسهولة (مثال: المعلومات الموجودة في الموسوعات والكتب المدرسية، الحقائق مثل: «عمّان عاصمة الأردن»)."},
+{t:"mcq",d:3,p:L1,q:"«القدرة على قيادة السيارة أو التحدّث باللغة الفرنسية» مثال ذكره الكتاب على:",
+ c:["المعرفة الضمنية","المعرفة الصريحة","المعلومات المنظمة","البيانات الأولية"],a:0,
+ hint:"إشي بتتعلميه بالممارسة، وصعب تكتبيه لحدا.",
+ why:"الكتاب: المعرفة الضمنية هي استخدام المعلومات والخبرة بطريقة يصعب كتابتها أو نقلها لشخص آخر بسهولة بمجرّد كتابتها (مثال: «القدرة على قيادة السيارة أو التحدّث باللغة الفرنسية»)."},
+{t:"match",d:3,p:L1,q:"صنّفي كل مثال من أمثلة الكتاب في مكانه الصحيح",
+ pairs:[["«قطّ، كلب، أرنب»","بيانات"],["«متوسّط الدرجات هو 83»","معلومات"],["«عمّان عاصمة الأردن»","معرفة صريحة"],["القدرة على قيادة السيارة","معرفة ضمنية"]],
+ hint:"الكلمات والأرقام لحالها بيانات، ولمّا نحطها بسياق بتصير معلومات.",
+ why:"الكتاب في مثال (1): «قطّ، كلب، أرنب» مجرّد كلمات خام. وفي مثال (2): «متوسّط الدرجات هو 83» معلومات ناتجة عن تنظيم الدرجات. والمعرفة الصريحة مثل «عمّان عاصمة الأردن»، والمعرفة الضمنية مثل القدرة على قيادة السيارة."},
+{t:"mcq",d:3,p:L1,q:"في مثال (2) بالكتاب: الدرجات «75، 90، 85» — متوسّط الدرجات هو:",
+ c:["83","85","80","90"],a:0,
+ hint:"اجمعي الثلاثة واقسمي على ثلاثة.",
+ why:"الكتاب: «75، 90، 85» هي درجات الطلبة في الامتحان الأول، و«متوسّط الدرجات هو 83»."},
+{t:"mcq",d:3,p:L1,q:"في النظام العشري، خانة المئات تُمثَّل بـ:",
+ c:["10 أُس 2","10 أُس 3","10 أُس 1","10 أُس 0"],a:0,
+ hint:"الآحاد أُس صفر، فشو بتكون المئات؟",
+ why:"الكتاب: خانة الآحاد 10 أُس 0 = 1، وخانة العشرات 10 أُس 1 = 10، وخانة المئات 10 أُس 2 = 100، وهكذا."},
+{t:"mcq",d:3,p:L1,q:"العدد العشري 13 يُمثَّل في النظام الثنائي بـ:",
+ c:["1101","1011","1110","1001"],a:0,
+ hint:"اقسمي 13 على 2 وخُذي البواقي بالعكس.",
+ why:"الكتاب في الشكل (1-3): 13÷2=6 والباقي 1، و6÷2=3 والباقي 0، و3÷2=1 والباقي 1، و1÷2=0 والباقي 1، فيكون الناتج 1101."},
+{t:"mcq",d:3,p:L1,q:"حوّلي 25 من النظام العشري إلى ما يقابله ثنائيًّا:",
+ c:["11001","10011","11010","10110"],a:0,
+ hint:"نفس الخطوات: قسمة متكررة على 2 وبواقي بالعكس.",
+ why:"الكتاب في الشكل (1-4): 25÷2=12 والباقي 1، و12÷2=6 والباقي 0، و6÷2=3 والباقي 0، و3÷2=1 والباقي 1، و1÷2=0 والباقي 1، فيكون الناتج 11001."},
+{t:"mcq",d:3,p:L1,q:"لتمثيل الرقم 13 داخل بايت واحد، يكون التمثيل النهائي:",
+ c:["00001101","11010000","00011010","10110000"],a:0,
+ hint:"البايت 8 خانات، فبنكمّل الباقي أصفار من جهة اليسار.",
+ why:"الكتاب: لتمثيل الرقم 13 داخل بايت واحد، أُكمل بقية المنازل بالرقم (0)، فيكون التمثيل النهائي 00001101."},
+{t:"order",d:3,p:L1,q:"رتّبي خطوات التحويل من النظام العشري إلى النظام الثنائي كما في الكتاب",
+ items:["أقسِم العدد العشري على 2","أحفظ باقي القسمة الذي يكون (0 أو 1)","أكرّر العملية باستخدام الناتج الصحيح","أستمر حتى يصبح ناتج القسمة صفرًا","أرتّب البواقي من الخطوة الأخيرة إلى الأولى"],
+ hint:"بتبدأ بالقسمة وبتنتهي بترتيب البواقي بالعكس.",
+ why:"الكتاب يعدّد الخطوات بهذا الترتيب تمامًا في بند «التحويل من النظام العشري إلى النظام الثنائي»."},
+{t:"mcq",d:3,p:L1,q:"العدد الثنائي 10110 يساوي في النظام العشري:",
+ c:["22","26","18","44"],a:0,
+ hint:"اضربي كل خانة بقيمتها المنزلية واجمعي: 16+0+4+2+0.",
+ why:"الكتاب في مثال (1): (10110)₂ = (16×1)+(8×0)+(4×1)+(2×1)+(1×0) = 16+0+4+2+0 = 22."},
+{t:"mcq",d:3,p:L1,q:"العدد الثنائي 1101010 يساوي في النظام العشري:",
+ c:["106","86","118","212"],a:0,
+ hint:"القيم المنزلية: 64 و32 و16 و8 و4 و2 و1.",
+ why:"الكتاب في مثال (2): (1101010)₂ = 64+32+0+8+0+2+0 = 106."},
+{t:"mcq",d:2,p:L1,q:"حسب إضاءة الكتاب، العدد المكتوب هكذا (100)₂ يدلّ على أنه:",
+ c:["عدد ثنائي","عدد عشري","عدد ثماني","عدد ست عشري"],a:0,
+ hint:"الرقم المصغّر جنب العدد بيحدّد النظام.",
+ why:"الكتاب: تُستخدم طريقة وضع أساس العدد بشكل مصغّر على جانبه للدلالة على النظام الذي ينتمي له. مثلًا (100)₁₀ يدلّ على أن العدد عشريّ، أما العدد (100)₂ فهو عدد ثنائيّ."},
+{t:"mcq",d:3,p:L1,q:"نظام ASCII القياسي يستخدم رمزًا مكوّنًا من:",
+ c:["7 بت لتمثيل 128 حرفًا","8 بت لتمثيل 256 حرفًا","6 بت لتمثيل 64 حرفًا","4 بت لتمثيل 16 حرفًا"],a:0,
+ hint:"النسخة القياسية أصغر من الممتدة ببت واحد.",
+ why:"الكتاب: نظام (ASCII) القياسي يستخدم رمزًا مكوّنًا من 7 بت لتمثيل 128 حرفًا."},
+{t:"mcq",d:3,p:L1,q:"مجموعة ASCII الممتدة تستوعب 256 حرفًا لأنها أضافت:",
+ c:["128 رمزًا جديدًا لدعم حروف اللغات الأخرى","64 رمزًا جديدًا لدعم الأرقام والعلامات","32 رمزًا للتنسيق والتحكم في النصوص","256 رمزًا كاملًا بديلًا عن النظام القياسي"],a:0,
+ hint:"الممتدة ضِعف القياسية، فالإضافة بتساوي القياسية نفسها.",
+ why:"الكتاب: مجموعة (ASCII) الممتدة تستخدم رمزًا مكوّنًا من 8 بت، بحيث يمكن استيعاب 256 حرفًا؛ مما أضاف 128 رمزًا جديدًا لدعم حروف إضافية، مثل حروف اللغات الأخرى أو الرموز الخاصة."},
+{t:"mcq",d:3,p:L1,q:"الحرف «A» يُمثَّل بالعدد الثنائي 01000001 أي ما يعادل:",
+ c:["65","97","33","95"],a:0,
+ hint:"الحرف الكبير قبل الصغير بالترقيم.",
+ why:"الكتاب: الحرف «A» يتم تمثيله بالعدد الثنائي 01000001 أي ما يعادل (65)، بينما الحرف «a» يتم تمثيله بالعدد الثنائي 1100001 (97)."},
+{t:"mcq",d:3,p:L1,q:"من بين حروف ASCII الـ128، كم حرفًا منها قابل للطباعة حسب الكتاب؟",
+ c:["95 حرفًا","33 حرفًا","128 حرفًا","65 حرفًا"],a:0,
+ hint:"الباقي 33 مخصّص للتنسيق والتحكم.",
+ why:"الكتاب: تشمل هذه الحروف 95 حرفًا قابلًا للطباعة، مثل الحروف (A-Z، a-z)، والأرقام (0-9)، بالإضافة إلى 33 حرفًا غير قابل للطباعة لأغراض مثل التنسيق والتحكم."},
+{t:"mcq",d:3,p:L2,q:"البيانات المتصلة (المستمرة) حسب الكتاب:",
+ c:["تشمل أي قيمة ضمن نطاق معين وتُمثَّل بأعداد حقيقية","تأخذ قيمًا محددة ومحدودة يمكن عدّها وتمييزها بوضوح","تُصنَّف إلى فئات من دون ترتيب وتُستخدم للتصنيف فقط","تُرتَّب وفقًا لمقياس معين لكن الفروق بينها ليست ثابتة"],a:0,
+ hint:"بتقبل الكسور، مش بس أعداد صحيحة.",
+ why:"الكتاب: البيانات المتصلة/ المستمرة هي بيانات يمكن قياسها وتشمل أي قيمة ضمن نطاق معين وتعبّر عن قياسات دقيقة. يتم تمثيلها عادة بوساطة أعداد حقيقية، ويمكن أن تكون أرقامًا غير صحيحة (أي تحتوي على كسور أو أعداد عشرية)."},
+{t:"match",d:3,p:L2,q:"طابقي كل مثال من أمثلة الكتاب مع نوع البيانات الدقيق",
+ pairs:[["درجة حرارة الطقس خلال اليوم","بيانات متصلة"],["عدد الطلبة في الصف","بيانات منفصلة"],["ألوان العيون","بيانات اسمية"],["تقييم الفنادق بالنجوم","بيانات ترتيبية"]],
+ hint:"اللي بينعدّ منفصل، واللي بينقاس متصل، واللي بيوصف صفة نوعي.",
+ why:"الكتاب يورد هذه الأمثلة بالضبط: درجة حرارة الطقس وأسعار الأسهم للمتصلة، وعدد الطلبة وعدد الكتب للمنفصلة، وألوان العيون وأنواع الفاكهة للاسمية، وتقييم الفنادق وترتيب الطلبة للترتيبية."},
+{t:"mcq",d:3,p:L2,q:"البيانات الترتيبية تختلف عن الاسمية في أنها:",
+ c:["تُرتَّب وفقًا لمقياس معين لكن الفروق بينها غير ثابتة","تُقاس عدديًا ويمكن حسابها بالعمليات الرياضية كلّها تمامًا","تُخزَّن في جداول بصفوف وأعمدة داخل قواعد البيانات","تُجمع بالملاحظة المباشرة في أثناء حدوث الأحداث فقط"],a:0,
+ hint:"الاسمية بلا ترتيب، والترتيبية إلها ترتيب.",
+ why:"الكتاب: البيانات الاسمية تُصنَّف إلى فئات من دون ترتيب معين، أما البيانات الترتيبية فتُرتَّب وفقًا لمقياس أو ترتيب معين، ولكنّ الفروق بين القيم أو المسافات بينها ليست محددة أو ثابتة."},
+{t:"mcq",d:3,p:L2,q:"البيانات المنظمة (Structured Data) حسب الكتاب:",
+ c:["نُظِّمت في نموذج محدد مسبقًا وتُخزَّن في جداول","لا تتبع نموذجًا محددًا وتحتاج إلى تقنيات متقدمة","تُجمع بالمقابلات المفتوحة ومجموعات النقاش فقط","تشمل الصور ومقاطع الفيديو ورسائل البريد فقط"],a:0,
+ hint:"صفوف وأعمدة وقواعد بيانات.",
+ why:"الكتاب: البيانات المنظمة هي بيانات تمّ تنظيمها في نموذج أو تنسيق محدد مسبقًا، ما يجعلها سهلة البحث والتحليل. تُخزَّن عادة في جداول بصفوف وأعمدة وقواعد البيانات، وهي مناسبة للتحليل الإحصائي والتقارير."},
+{t:"mcq",d:3,p:L2,q:"تحليل البيانات غير المنظمة أكثر تعقيدًا لأنه يتطلّب:",
+ c:["تقنيات متقدمة مثل معالجة اللغة الطبيعية والتعلم الآلي","جداول بصفوف وأعمدة ونماذج محددة مسبقًا لأجل التخزين","أدوات إحصائية بسيطة لحساب المتوسطات والنسب فقط","أجهزة قياس علمية متخصصة داخل المختبرات المدرسية والجامعية"],a:0,
+ hint:"الكتاب ذكر مصطلحين من مجال الذكاء الاصطناعي.",
+ why:"الكتاب: البيانات غير المنظمة هي بيانات لا تتبع نموذجًا أو تنسيقًا محددًا مسبقًا، ما يجعل تحليلها أكثر تعقيدًا؛ إذ تتطلّب تقنيات متقدمة مثل معالجة اللغة الطبيعية والتعلم الآلي لاستخراج المعلومات."},
+{t:"mcq",d:3,p:L2,q:"أيّ مجموعة كلّها أمثلة على البيانات غير المنظمة حسب الكتاب؟",
+ c:["رسائل البريد الإلكتروني والصور ومقاطع الفيديو","جداول قواعد البيانات والسجلات المالية وسجلات الحضور","ملفات Excel وجداول البيانات وقواعد البيانات العلائقية","السجلات المالية وسجلات الحضور اليومي وجداول التحليل"],a:0,
+ hint:"اللي ما بينحط بجدول بصفوف وأعمدة.",
+ why:"الكتاب: أمثلة البيانات غير المنظمة محتوى مواقع التواصل الاجتماعي ورسائل البريد الإلكتروني والمستندات النصية والصور ومقاطع الفيديو؛ أما المنظمة فأمثلتها جداول قواعد البيانات وجداول البيانات (مثل ملفات Excel) والسجلات المالية وسجلات الحضور."},
+{t:"mcq",d:3,p:L2,q:"الملاحظة (Observation) كطريقة لجمع البيانات تكون — حسب الكتاب — على شكل:",
+ c:["ملاحظة غير مشاركة أو ملاحظة مشاركة","ملاحظة مغلقة أو ملاحظة مفتوحة النهاية","ملاحظة فردية أو ملاحظة جماعية","ملاحظة مباشرة أو ملاحظة مؤجلة"],a:0,
+ hint:"الفرق: هل الملاحِظ داخل النشاط ولا برّا؟",
+ why:"الكتاب: الملاحظة هي توثيق سلوكات أو أحداث في أثناء حدوثها بشكل مباشر. وقد تكون على شكل ملاحظة غير مشاركة بحيث يكون الملاحِظ مراقبًا خارجيًّا فقط، أو ملاحظة مشاركة بحيث يكون الملاحِظ مشاركًا في النشاط أو الحدث."},
+{t:"mcq",d:3,p:L2,q:"الأسئلة التي تسعى الطرائق الكمية للإجابة عنها من نوع:",
+ c:["«كم» أو «كم عدد»","«لماذا» و«كيف» بشكل معمّق","«مَن» و«أين»","«متى» و«مع مَن»"],a:0,
+ hint:"الكميّة إلها علاقة بالأرقام والإحصاء.",
+ why:"الكتاب: طرائق جمع البيانات الكمية تركّز على قياس الأرقام والإحصائيات للإجابة عن أسئلة مثل «كم» أو «كم عدد»."},
+{t:"mcq",d:3,p:L2,q:"الطرائق الكمية تمتاز — في وصف الكتاب لها — بأنّ:",
+ c:["نتائجها رقمية وقابلة للتعميم وتعتمد على أدوات محددة","نتائجها غير قابلة للتعميم لأنها تعتمد على السياق","تستكشف التجارب الإنسانية والآراء بشكل معمّق","تُجمع بالمقابلات ودراسات الحالة والمجموعات المركزة فقط"],a:0,
+ hint:"عكس خصائص النوعية تمامًا.",
+ why:"الكتاب: من خصائص الطرائق الكمية أنها منظمة ورسمية وتعتمد على أدوات محددة، والنتائج رقمية وقابلة للتعميم. وتُعدّ هذه الطرائق أساسية في الدراسات الإحصائية والتجريبية."},
+{t:"match",d:3,p:L2,q:"طابقي كل طريقة كمية مع المثال الذي ضربه الكتاب عليها",
+ pairs:[["الاستبانات المغلقة","«هل أفضّل التعلم عبر الإنترنت؟ نعم/ لا»"],["التجارب","قياس تأثير استخدام التكنولوجيا في أداء الطلبة"],["المراجعات الإحصائية","مراجعة معدّلات الحضور المدرسي السنوي"],["الاختبارات المعملية","قياس جودة المياه داخل المدرسة"]],
+ hint:"كل طريقة إلها مثال واحد بالكتاب.",
+ why:"الكتاب يورد هذه الأمثلة الأربعة بالتحديد تحت كل طريقة من طرائق جمع البيانات الكمية."},
+{t:"mcq",d:3,p:L2,q:"التجارب (Experiments) تُستخدم — حسب الكتاب — لتحديد:",
+ c:["العلاقة السببية بين المتغيّرات","الأنماط السكانية طويلة الأجل","آراء المشاركين وتجاربهم الشخصية","جودة الأدوات العلمية المستخدمة"],a:0,
+ hint:"في التجربة بنضبط متغيّر وبنشوف أثره على غيره.",
+ why:"الكتاب: التجارب يتم فيها اختبار فرضيات عن طريق ضبط متغيّرات معينة، والتعديل على المتغيّرات المراد دراسة أثرها ومراقبة النتائج. وتُستخدم لتحديد العلاقة السببية بين المتغيّرات."},
+{t:"mcq",d:3,p:L2,q:"المنهج المختلط (Mixed Methods) حسب الكتاب:",
+ c:["يجمع بين المنهجين النوعي والكمي لفهم أكثر شمولية","يستخدم الاستبانات المغلقة والتجارب المعملية فقط","يعتمد على المقابلات ومجموعات النقاش المركزة معًا","يحوّل البيانات النوعية إلى أرقام قابلة للتحليل"],a:0,
+ hint:"الاسم بيقول: خليط من اتنين.",
+ why:"الكتاب: المنهج المختلط يجمع بين المنهجين النوعيّ والكميّ لتوفير فهم أكثر شمولية. مثال: استخدام استبانات مغلقة لتحديد نسبة الطلبة الذين يواجهون صعوبة في مادة معينة (طريقة كمية)، وإجراء مقابلات معهم لفهم أسباب هذه الصعوبة (طريقة نوعية)."}
+];})()},
+{id:"ch",name:"مستوى التحدي — خزنة الأرقام",desc:"١٠ تحديات حل مشكلات · بلا تلميحات",hints:false,bank:(function(){ return [
+{t:"mcq",d:3,q:"مكتبة المدرسة بدها تخزّن أسماء ٢٥٠ طالبة، كل اسم بطول ٢٠ حرفًا، بنظام ASCII الممتد. كم بايت يلزمها؟",
+ c:["5000 بايت","5000 بت","40000 بايت","625 بايت"],a:0,
+ probe:"كم بت يستخدم الحرف الواحد في ASCII الممتد؟ وكم بايت يساوي هذا العدد من البتات؟",
+ why:"ASCII الممتد يستخدم 8 بت للحرف، و8 بت = بايت واحد. إذن كل حرف = بايت. 250 اسمًا × 20 حرفًا = 5000 حرف = 5000 بايت."},
+{t:"mcq",d:3,q:"زميلتك حوّلت العدد الثنائي 1011 فطلع معها 13. الناتج الصحيح 11. وين الخلل في طريقتها؟",
+ c:["قرأت المنازل من اليسار بدل اليمين","نسيت ضرب كل منزلة في قيمتها المنزلية","استعملت أساس 10 بدل أساس 2 في الحساب","أضافت منزلة زائدة على يسار العدد"],a:0,
+ probe:"جرّبي تحسبي 1011 مرة من اليمين ومرة من اليسار. شو بيطلع معك في كل مرة؟",
+ why:"من اليمين: 1+2+0+8 = 11، وهو الصحيح. أما لو بدأت من اليسار فتصير 1×1 + 0×2 + 1×4 + 1×8 = 13، وهذا بالضبط ناتجها. الخطأ في اتجاه القراءة لا في الضرب."},
+{t:"mcq",d:3,q:"مديرة المدرسة لاحظت ارتفاع الغياب في الشتاء، وعندها سجل حضور يومي بالأرقام، وبدها تعرف الأسباب لتتصرّف. أنسب تصميم للدراسة:",
+ c:["مراجعة إحصائية لسجلات الحضور ثم مقابلات مع الطالبات","استبانة مغلقة تُوزَّع على المعلمات في نهاية العام الدراسي","تجربة تُضبط فيها متغيّرات الحضور داخل صفّين متشابهين","ملاحظة غير مشاركة لصفّ واحد على مدار أسبوع كامل"],a:0,
+ probe:"هي بدها إشيين: كم ارتفع الغياب، وليش ارتفع. هل طريقة وحدة بتجاوب على السؤالين؟",
+ why:"الرقم يجيب عن «كم» والسبب يجيب عن «لماذا». الجمع بين مراجعة إحصائية (كمية) ومقابلات (نوعية) هو المنهج المختلط الذي عرّفه الكتاب بأنه يوفّر فهمًا أكثر شمولية."},
+{t:"mcq",d:3,q:"بدك تقيسي رضا ٣٠ طالبة عن المختبر، ومعك حصة واحدة فقط. الأنسب ولماذا؟",
+ c:["استبانة مغلقة، لأنها تغطي الثلاثين في الوقت المتاح","مجموعة مركزة، لأنها تعطي فهمًا أعمق لآراء الطالبات","مقابلات فردية، لأنها أدق في جمع الرأي الشخصي","دراسة حالة، لأنها تتعمق في تجربة كل طالبة وحدها"],a:0,
+ probe:"المجموعة المركزة كم شخصًا تستوعب حسب الكتاب؟ وكم طالبة عندك؟",
+ why:"المجموعة المركزة تتكوّن من 6 إلى 12 شخصًا، فلا تغطي 30 طالبة في حصة واحدة، والمقابلات ودراسة الحالة أبطأ منها. الاستبانة المغلقة توفّر بيانات رقمية واضحة وسهلة التحليل في الوقت المتاح."},
+{t:"mcq",d:3,q:"زميلتك صنّفت «ترتيب الطالبات في المسابقة: الأولى، الثانية، الثالثة» بيانات كمية منفصلة لأنها أرقام. وين الخطأ في تفكيرها؟",
+ c:["الأرقام هنا رُتب لا كميات، والفروق بينها غير ثابتة","الأرقام هنا قياسات دقيقة، فهي بيانات متصلة لا منفصلة","الترتيب ليس بيانات أصلًا، فهو معلومات جاهزة للاستخدام","العدد محدود، فهي بيانات اسمية تُستخدم للتصنيف فقط"],a:0,
+ probe:"الفرق بين الأولى والثانية، هل هو نفس الفرق بين الثانية والثالثة؟ وهل تقدري تجمعيهم؟",
+ why:"وجود رقم لا يجعل البيانات كمية. الترتيب في المسابقة بيانات ترتيبية: تُرتَّب وفقًا لمقياس معين، لكنّ الفروق أو المسافات بين القيم ليست محددة أو ثابتة، ولا تُجرى عليها عمليات حسابية."},
+{t:"mcq",d:3,q:"ملف نصي فيه 2048 حرفًا، كل حرف مخزّن في بايت كامل. كم كيلوبايت يشغل الملف؟",
+ c:["2 كيلوبايت","14 كيلوبايت","2048 كيلوبايت","256 كيلوبايت"],a:0,
+ probe:"كم بايت في الكيلوبايت الواحد حسب الكتاب؟ وكم بايت عندك؟",
+ why:"كل حرف = بايت، فالملف 2048 بايت. والكيلوبايت = 1024 بايت، إذن 2048 ÷ 1024 = 2 كيلوبايت."},
+{t:"mcq",d:3,q:"لجنة الحفل عندها: أعمار الحاضرين، وصور من الحفل السابق، وقائمة الأغاني المفضّلة. أيّ خطوة تحوّل هذا كله إلى معرفة يُبنى عليها القرار؟",
+ c:["ربط الأغاني المفضّلة بفئات الأعمار وتفسير النمط","ترتيب قائمة الأغاني أبجديًا في جدول إلكتروني منظم","حساب عدد الحاضرين في الحفل السابق من الصور","تخزين القوائم كلها في ملف واحد على السحابة للرجوع"],a:0,
+ probe:"التنظيم وحده بيعطي معلومات. شو اللي لازم يضاف للمعلومات عشان تصير معرفة؟",
+ why:"المعادلة في الكتاب: البيانات + السياق = المعلومات، والمعلومات + التطبيق والاستخدام = المعرفة. الترتيب والحساب والتخزين كلها تنظيم؛ أما الربط والتفسير لاتخاذ قرار فهو المعرفة."},
+{t:"mcq",d:3,q:"فريق أراد قياس أثر اللوح التفاعلي في التحصيل، فسأل الطالبات: «هل أعجبك اللوح التفاعلي؟ نعم/ لا». وين الخلل المنهجي؟",
+ c:["السؤال يقيس الرضا لا التحصيل، والأثر يحتاج تجربة مضبوطة","السؤال مغلق، والأفضل أن يكون مفتوحًا ليعبّرن عن رأيهن بحرية","العيّنة صغيرة، والأفضل توزيع السؤال على مدارس أخرى كذلك","السؤال نوعي، والأفضل تحويله إلى مقياس رقمي من ١ إلى ٥"],a:0,
+ probe:"شو اللي بدهم يقيسوه بالضبط؟ وهل «أعجبني» بتقول إشي عن العلامات؟",
+ why:"الكتاب: التجارب يتم فيها اختبار فرضيات عن طريق ضبط متغيّرات معينة ومراقبة النتائج، وتُستخدم لتحديد العلاقة السببية بين المتغيّرات. أما سؤال «هل أعجبك» فيقيس الانطباع، وهو متغيّر آخر تمامًا."},
+{t:"order",d:3,q:"رتّبي رحلة سجل الغياب من رقم خام إلى قرار مدرسي",
+ items:["تسجيل الغياب اليومي لكل صف","حساب نسبة الغياب لكل شهر","استنتاج أن الغياب يرتفع في الشتاء","تعديل موعد الأنشطة الشتوية"],
+ probe:"أي خطوة فيها رقم بلا معنى؟ وأي خطوة فيها قرار؟ رتّبي اللي بينهم.",
+ why:"هذا هو مسار البيانات في الكتاب: حقائق خام، ثم تنظيم ومعالجة، ثم معلومات ذات معنى، ثم معرفة تُستخدم في اتخاذ القرار."},
+{t:"mcq",d:3,q:"إذا كان الحرف A يساوي 65 في ASCII، فما الرمز العشري للحرف D؟",
+ c:["68","67","70","64"],a:0,
+ probe:"عدّي الحروف: A ثم B ثم C ثم D. كم خطوة قطعتِ من A؟",
+ why:"نظام ASCII يخصّص رمزًا فريدًا متسلسلًا لكل حرف كما في الجدول (1-1). فإذا كان A = 65، فإن B = 66، وC = 67، وD = 68."}
+];})()}
+];
+let BANK=[];
+let CUR=LEVELS[0];
+
+
+</script>
+
+<script>
+const LET=["أ","ب","ج","د"];
+const PRAISE=["أحسنتِ!","ممتاز!","يا سلام!","إجابة دقيقة!","صح تمامًا!","شغل مهندسة!"];
+const RETRY=["قريبة! جرّبي مرة ثانية","مش هيك، فكّري مرة كمان","ما زال في محاولة، ركّزي بالسؤال"];
+const BADGES=[
+ {id:"seed",n:"بذرة زيتون",need:s=>s.firstTry>=3,hint:"٣ إجابات صحيحة من أول محاولة"},
+ {id:"branch",n:"غصن زيتون",need:s=>s.best>=3,hint:"٣ إجابات متتالية من أول محاولة"},
+ {id:"stitch",n:"قطبة تطريز",need:s=>s.noHint>=5,hint:"٥ إجابات صحيحة بدون تلميح"},
+ {id:"iris",n:"سوسنة سوداء",need:s=>s.done>=10,hint:"إنهاء ١٠ تحديات"},
+ {id:"bird",n:"طائر الشنّار",need:s=>s.best>=6,hint:"٦ إجابات متتالية من أول محاولة"}
+];
+const S={players:[""],pstats:[],turn:0,i:0,scores:[0],review:[],
+         streak:0,best:0,firstTry:0,done:0,noHint:0,usedHint:false,tries:0,earned:[],locked:false};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const shuffle=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1]);
+
+let PLAYERS=[""];
+function drawPlayers(){
+  $("playerRows").innerHTML=PLAYERS.map((p,i)=>`<div class="prow"><span>${i+1}</span><input type="text" id="pn${i}" value="${esc(p)}" placeholder="اسم الطالبة" aria-label="اسم الطالبة ${i+1}"></div>`).join("");
+  $("delP").disabled=PLAYERS.length<=1; $("addP").disabled=PLAYERS.length>=6;
+}
+function readPlayers(){ PLAYERS=PLAYERS.map((p,i)=>($("pn"+i)?$("pn"+i).value:p)); }
+$("addP").addEventListener("click",()=>{readPlayers();PLAYERS.push("");drawPlayers();const n=$("pn"+(PLAYERS.length-1));if(n)n.focus();});
+$("delP").addEventListener("click",()=>{readPlayers();PLAYERS.pop();drawPlayers();});
+drawPlayers();
+$("themeBtn").addEventListener("click",()=>{const r=document.documentElement,c=r.getAttribute("data-theme");
+  const dark=c?c==="dark":matchMedia("(prefers-color-scheme: dark)").matches;r.setAttribute("data-theme",dark?"light":"dark");});
+$("start").addEventListener("click",()=>{
+  readPlayers();
+  const names=PLAYERS.map(p=>p.trim()).filter(Boolean);
+  if(!names.length){$("setupNote").hidden=false;const n=$("pn0");if(n)n.focus();return;}
+  $("setupNote").hidden=true;
+  CUR=LEVELS[LIDX]; BANK=CUR.bank;
+  const st=saved(); st.players=names; st.cls=($("clsInput")&&$("clsInput").value||"").trim(); save(st);
+  S.players=names; S.scores=names.map(()=>0); S.pstats=names.map(()=>({first:0,done:0}));
+  Object.assign(S,{i:0,turn:0,review:[],streak:0,best:0,firstTry:0,done:0,noHint:0,earned:[]});
+  $("setup").hidden=true;$("results").hidden=true;$("game").hidden=false;drawBadges();render();});
+
+
+/* ===== اختيار المستوى ===== */
+let LIDX=0;
+const KEY="dsg:"+document.title;
+function saved(){try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return{}}}
+function save(o){try{localStorage.setItem(KEY,JSON.stringify(o))}catch(e){}}
+function drawLevels(){
+  const done=saved().levels||{};
+  $("lvlPick").innerHTML=LEVELS.map((l,i)=>
+    `<button class="ghost lvl" type="button" data-i="${i}" aria-pressed="${i===LIDX}">
+       <b>${l.name}${done[l.id]?`<span class="tick">✓ ${done[l.id].total}</span>`:""}</b>
+       <small>${l.desc}</small></button>`).join("");
+}
+$("lvlPick").addEventListener("click",e=>{const b=e.target.closest(".lvl");if(!b)return;
+  LIDX=+b.dataset.i;drawLevels();});
+drawLevels();
+const prev=saved();
+if(prev.players&&prev.players.length){PLAYERS=prev.players.slice();drawPlayers();}
+if(prev.cls&&$("clsInput"))$("clsInput").value=prev.cls;
+
+/* ===== بطاقة النتيجة ===== */
+
+function submitUI(total,max){
+  if(!SUBMIT.url||!SUBMIT.f.level)return "";
+  const cls=(($("clsInput")&&$("clsInput").value)||saved().cls||"").trim();
+  return `<div class="row" style="margin-top:14px">`+S.players.map((t,i)=>{
+    const u=new URL(SUBMIT.url);
+    if(SUBMIT.f.name)u.searchParams.set(SUBMIT.f.name,t);
+    if(SUBMIT.f.cls)u.searchParams.set(SUBMIT.f.cls,SUBMIT.grade+(cls?" "+cls:""));
+    if(SUBMIT.f.level)u.searchParams.set(SUBMIT.f.level,CUR.name);
+    if(SUBMIT.f.score)u.searchParams.set(SUBMIT.f.score,String(S.scores[i]));
+    return `<a class="sendbtn" target="_blank" rel="noopener" href="${u.toString()}">📤 أرسلي نتيجة ${esc(t)}</a>`;
+  }).join("")+`</div>
+  <p class="sub" style="font-size:14.5px">بيفتح النموذج معبّى — اضغطي «إرسال» وبس.</p>`;
+}
+
+function resultCard(total,max){
+  const d=new Date(), two=n=>String(n).padStart(2,"0");
+  const when=`${d.getFullYear()}/${two(d.getMonth()+1)}/${two(d.getDate())}`;
+  const st=saved().levels||{};
+  const rows=S.players.map((t,i)=>`<tr><td>${esc(t)}</td><td><b>${S.scores[i]}</b></td><td>${S.pstats[i].first}</td></tr>`).join("");
+  const others=LEVELS.filter(l=>l.id!==CUR.id&&st[l.id]).map(l=>
+    `<tr><td>${l.name.split(" — ")[0]}</td><td><b>${st[l.id].total}</b></td><td>—</td></tr>`).join("");
+  const grand=total+LEVELS.filter(l=>l.id!==CUR.id&&st[l.id]).reduce((a,l)=>a+st[l.id].total,0);
+  return `<div class="card2" id="shotCard">
+    <h3>بطاقة النتيجة</h3>
+    <p class="when">${document.title} · ${CUR.name} · ${when}</p>
+    <table class="tbl"><thead><tr><th>الطالبة</th><th>النقاط</th><th>صح من أول محاولة</th></tr></thead>
+      <tbody>${rows}<tr><td><b>مجموع هذا المستوى</b></td><td><b>${total}</b> من ${max}</td><td><b>${S.firstTry}</b> من ${BANK.length}</td></tr>${others}</tbody></table>
+    ${others?`<div class="grand">المجموع عبر المستويات: ${grand}</div>`:""}
+    <div class="shot">📸 صوّري هذه البطاقة وابعتيها للمعلمة.</div>
+  </div>`;
+}
+
+function praise(t){const p=$("praise");p.innerHTML=`<div>${t}</div>`;setTimeout(()=>p.innerHTML="",1600);}
+function sparks(){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  const colors=["var(--red)","var(--olive)","var(--gold)"];
+  for(let i=0;i<18;i++){const s=document.createElement("div");s.className="spark";
+    s.style.cssText=`left:${innerWidth/2+(Math.random()-.5)*160}px;top:${innerHeight/2}px`;
+    s.innerHTML=`<i style="background:${colors[i%3]}"></i>`;document.body.appendChild(s);
+    s.animate([{transform:"translate(0,0)",opacity:1},{transform:`translate(${(Math.random()-.5)*420}px,${-140-Math.random()*260}px) rotate(${(Math.random()-.5)*720}deg)`,opacity:0}],
+      {duration:1100+Math.random()*500,easing:"cubic-bezier(.2,.7,.4,1)"}).onfinish=()=>s.remove();}
+}
+function drawBadges(){$("badgeRow").innerHTML=BADGES.map(b=>`<span class="badge ${S.earned.includes(b.id)?"on":""}" title="${b.hint}">${S.earned.includes(b.id)?"✦ ":""}${b.n}</span>`).join("");}
+function checkBadges(){BADGES.forEach(b=>{if(!S.earned.includes(b.id)&&b.need(S)){S.earned.push(b.id);praise("وسام جديد: "+b.n);sparks();}});drawBadges();}
+function hud(){
+  $("scorePills").innerHTML = S.players.map((t,i)=>`<span class="pill ${i===S.turn&&S.players.length>1?"turn":(S.players.length===1?"turn":"")}">${esc(t)}: ${S.scores[i]}</span>`).join("")
+    + (S.streak>1?`<span class="pill streak">سلسلة ${S.streak} ✦</span>`:"");
+  $("qCount").textContent=`تحدٍ ${S.i+1} من ${BANK.length}`;
+  $("prog").style.width=(S.i/BANK.length*100)+"%";
+}
+function pointsFor(base){const f=CUR.hints?[1,.6,.3]:[1,.75,.5,.35,.25];let p=Math.round(base*f[Math.min(S.tries,f.length-1)]);if(S.usedHint)p=Math.max(p-2,1);return Math.max(p,1);}
+function succeed(base,q,st,extra){
+  const first=S.tries===0;
+  S.done++; if(first){S.firstTry++;S.streak++;S.best=Math.max(S.best,S.streak);} else {S.streak=0;S.review.push(q.q.replace(/<[^>]+>/g,""));}
+  if(!S.usedHint&&first)S.noHint++;
+  S.scores[S.turn]+=pointsFor(base); S.pstats[S.turn].done++; if(first)S.pstats[S.turn].first++;
+  praise(first&&S.streak>=3?`سلسلة ${S.streak}! ${PRAISE[S.i%PRAISE.length]}`:PRAISE[S.i%PRAISE.length]);sparks();
+  const f=document.createElement("div");f.className="fb show ok";
+  f.innerHTML=`✔ صحيح${first?"":" – بعد التصحيح"}${extra?" – "+extra:""}<small>${q.why}</small>`;
+  st.appendChild(f);st.appendChild(nextBtn());hud();checkBadges();
+}
+function retry(q,st,msg){
+  S.tries++;S.streak=0;
+  let f=st.querySelector(".fb.bad");
+  if(!f){f=document.createElement("div");f.className="fb show bad";st.appendChild(f);}
+  f.innerHTML=`✖ ${RETRY[Math.min(S.tries-1,RETRY.length-1)]}${msg?" – "+msg:""}<small>ما في انتقال للتحدي اللي بعده إلا بالإجابة الصحيحة. صححي وكمّلي.</small>`;
+  const hb=st.querySelector(".hintbtn");if(hb&&!hb.disabled){hb.classList.add("pulse");}
+  if(S.tries>=3)probeUI(q,st);
+  hud();
+}
+function nextBtn(){
+  const d=document.createElement("div");d.className="foot";
+  const b=document.createElement("button");b.className="primary";
+  b.textContent=S.i===BANK.length-1?"النتيجة":"التحدي التالي";
+  b.addEventListener("click",()=>{S.i++;S.turn=(S.turn+1)%S.players.length;S.i<BANK.length?render():results();});
+  d.appendChild(b);return d;
+}
+function head(q){
+  const lv=["","سهل","متوسط","تحدٍ"][q.d||1];
+  return `<p class="q">${q.q}</p><div class="meta"><span class="diff d${q.d||1}">${lv}</span>${S.players.length>1?`<span>الدور على: <b>${esc(S.players[S.turn])}</b></span>`:""}${CUR.hints?((q.hint||q.p)?`<span>التلميح بيخصم نقطتين</span>`:""):`<span>بلا تلميحات — فكّري بالجواب</span>`}</div>`;
+}
+function probeUI(q,st){
+  if(!q.probe||st.querySelector(".probebox"))return;
+  const b=document.createElement("div");b.className="hintbox probebox show";
+  b.innerHTML=`<b>سؤال يساعدك تفكّري:</b><br>${q.probe}`;st.appendChild(b);
+}
+function hintUI(q,st){
+  if(!CUR.hints||(!q.hint&&!q.p))return;
+  const box=document.createElement("div");box.className="hintbox";
+  box.innerHTML=(q.hint?"✦ "+q.hint:"")+(q.p?`<span class="page">📖 الجواب موجود في ${q.p}</span>`:"");
+  const b=document.createElement("button");b.className="ghost hintbtn";b.type="button";
+  b.textContent=q.hint?"أعطيني تلميح":"بأي درس ألاقي الجواب؟";b.style.marginTop="12px";
+  b.addEventListener("click",()=>{S.usedHint=true;box.classList.add("show");b.disabled=true;b.classList.remove("pulse");});
+  st.appendChild(b);st.appendChild(box);
+}
+function render(){
+  hud();const q=BANK[S.i],st=$("stage");st.innerHTML=head(q);S.usedHint=false;S.tries=0;
+  ({mcq:mcq,match:match,order:order}[q.t])(q,st);
+  hintUI(q,st);
+}
+function mcq(q,st){
+  const order=shuffle(q.c.map((c,i)=>({c,i})));
+  const wrap=document.createElement("div");wrap.className="choices";
+  order.forEach((o,idx)=>{
+    const b=document.createElement("button");b.className="choice";b.type="button";
+    b.innerHTML=`<span class="k">${LET[idx]}</span>${o.c}`;
+    b.addEventListener("click",()=>{
+      if(b.disabled||st.querySelector(".fb.ok"))return;
+      if(o.i===q.a){b.classList.add("ok");[...wrap.children].forEach(x=>x.disabled=true);
+        const f=st.querySelector(".fb.bad");if(f)f.remove();
+        succeed(10,q,st);
+      } else {b.classList.add("bad");b.disabled=true;retry(q,st,"هاي الإجابة مش صحيحة، ضلّ عندك خيارات");}
+    });
+    wrap.appendChild(b);
+  });
+  st.appendChild(wrap);
+}
+function match(q,st){
+  const left=shuffle(q.pairs.map((p,i)=>({t:p[0],i}))),right=shuffle(q.pairs.map((p,i)=>({t:p[1],i})));
+  let sel=null,ok=0;
+  const box=document.createElement("div");box.className="pairs";
+  const cl=document.createElement("div");cl.className="pcol";cl.innerHTML='<h3>العمود الأول</h3>';
+  const cr=document.createElement("div");cr.className="pcol";cr.innerHTML='<h3>العمود الثاني</h3>';
+  const mk=(o,side)=>{const b=document.createElement("button");b.type="button";b.className="pitem";b.textContent=o.t;b.dataset.i=o.i;b.dataset.k=q.pairs[o.i][1];b.dataset.side=side;
+    b.addEventListener("click",()=>{
+      if(b.disabled||st.querySelector(".fb.ok"))return;
+      if(!sel||sel.dataset.side===side){if(sel)sel.classList.remove("sel");sel=b;b.classList.add("sel");return;}
+      const good=sel.dataset.k===b.dataset.k,a=sel;sel=null;a.classList.remove("sel");
+      if(good){[a,b].forEach(x=>{x.disabled=true;x.classList.add("done");});ok++;
+        if(ok===q.pairs.length){const f=st.querySelector(".fb.bad");if(f)f.remove();succeed(q.pairs.length*4,q,st);}
+      } else {
+        [a,b].forEach(x=>x.classList.add("miss"));
+        retry(q,st,"التوصيلة غلط، بتقدري تعيديها");
+        setTimeout(()=>[a,b].forEach(x=>x.classList.remove("miss")),700);
+      }
+    });return b;};
+  left.forEach(o=>cl.appendChild(mk(o,"L")));right.forEach(o=>cr.appendChild(mk(o,"R")));
+  box.appendChild(cl);box.appendChild(cr);st.appendChild(box);
+}
+function order(q,st){
+  const target=q.items;let pool=shuffle([...target]),picked=[];
+  const slots=document.createElement("div");slots.className="slots";
+  const chips=document.createElement("div");chips.className="chipset";
+  const undo=document.createElement("button");undo.type="button";undo.className="ghost";undo.textContent="تراجع عن آخر خطوة";undo.style.marginTop="10px";
+  undo.addEventListener("click",()=>{if(st.querySelector(".fb.ok"))return;picked.pop();draw();});
+  function draw(){
+    slots.innerHTML="";
+    target.forEach((_,i)=>{const s=document.createElement("div");s.className="slot"+(picked[i]?" filled":"");
+      s.textContent=picked[i]||`الخطوة ${i+1}`;slots.appendChild(s);});
+    chips.innerHTML="";
+    pool.forEach(p=>{const b=document.createElement("button");b.type="button";b.className="chip";b.textContent=p;
+      b.disabled=picked.includes(p)||!!st.querySelector(".fb.ok");
+      b.addEventListener("click",()=>{picked.push(p);draw();if(picked.length===target.length)check();});
+      chips.appendChild(b);});
+    undo.disabled=picked.length===0||!!st.querySelector(".fb.ok");
+  }
+  function check(){
+    if(picked.every((p,i)=>p===target[i])){const f=st.querySelector(".fb.bad");if(f)f.remove();draw();succeed(14,q,st);}
+    else{retry(q,st,"الترتيب مش مظبوط، رجّعي ورتّبي من جديد");picked=[];draw();}
+  }
+  st.appendChild(slots);st.appendChild(chips);st.appendChild(undo);draw();
+}
+function results(){
+  $("game").hidden=true;const r=$("results");r.hidden=false;
+  const max=BANK.reduce((a,q)=>a+(q.t==="mcq"?10:q.t==="order"?14:q.pairs.length*4),0);
+  const total=S.scores.reduce((a,b)=>a+b,0);
+  const solo=S.players.length===1;
+  const pct=Math.round(total/max*100);
+  let body=`<h2>${pct>=85?"إتقان كامل للدرسين":pct>=60?"كويس، وفي مجال نصير أسرع":"خلصتي التحديات، وبدنا نراجع سوا"}</h2>`;
+  if(solo){
+    body+=`<div class="score">${total} <span style="font-size:22px;color:var(--muted)">من ${max}</span></div>
+      <p class="sub">${esc(S.players[0])} · صح من أول محاولة: <b>${S.firstTry}</b> من ${BANK.length} · أطول سلسلة: <b>${S.best}</b></p>`;
+  } else {
+    body+=`<table class="tbl"><thead><tr><th>الطالبة</th><th>النقاط</th><th>تحديات حلّتها</th><th>صح من أول محاولة</th></tr></thead><tbody>
+      ${S.players.map((t,i)=>`<tr><td>${esc(t)}</td><td>${S.scores[i]}</td><td>${S.pstats[i].done}</td><td>${S.pstats[i].first}</td></tr>`).join("")}
+      <tr><td><b>المجموع</b></td><td><b>${total}</b></td><td><b>${BANK.length}</b></td><td><b>${S.firstTry}</b></td></tr>
+      </tbody></table><p class="sub">المجموع من ${max} نقطة.</p>`;
+  }
+  const st0=saved(); st0.levels=st0.levels||{}; st0.levels[CUR.id]={total:total,max:max,first:S.firstTry,n:BANK.length}; save(st0);
+  body+=resultCard(total,max)+submitUI(total,max);
+  const got=BADGES.filter(b=>S.earned.includes(b.id)),rev=[...new Set(S.review)];
+  r.innerHTML=body
+    +`<div class="badges">${BADGES.map(b=>`<span class="badge ${S.earned.includes(b.id)?"on":""}">${S.earned.includes(b.id)?"✦ ":""}${b.n}</span>`).join("")}</div>`
+    +(got.length?`<p class="sub">وسام الجولة: ${got.map(b=>b.n).join("، ")}</p>`:"")
+    +(rev.length?`<div class="miss"><b>تحديات احتاجت أكثر من محاولة، راجعيها من الكتاب:</b>${rev.map(m=>`<div>${m}</div>`).join("")}</div>`
+                :`<p class="sub">كل التحديات انحلّت من أول محاولة.</p>`)
+    +`<div class="foot"><div class="row">${LIDX<LEVELS.length-1?`<button class="primary" id="nextlvl" type="button">المستوى التالي ←</button>`:""}<button class="ghost" id="again" type="button">أعيدي هذا المستوى</button></div><button class="ghost" id="back" type="button">تغيير الأسماء أو المستوى</button></div>`;
+  if(!rev.length)sparks();
+  $("again").addEventListener("click",()=>{Object.assign(S,{i:0,turn:0,review:[],streak:0,best:0,firstTry:0,done:0,noHint:0,earned:[]});
+    S.scores=S.scores.map(()=>0);S.pstats=S.players.map(()=>({first:0,done:0}));r.hidden=true;$("game").hidden=false;drawBadges();render();});
+  $("back").addEventListener("click",()=>{r.hidden=true;drawLevels();$("setup").hidden=false;});
+  const nx=$("nextlvl"); if(nx) nx.addEventListener("click",()=>{
+    LIDX++; CUR=LEVELS[LIDX]; BANK=CUR.bank; drawLevels();
+    S.scores=S.players.map(()=>0); S.pstats=S.players.map(()=>({first:0,done:0}));
+    Object.assign(S,{i:0,turn:0,review:[],streak:0,best:0,firstTry:0,done:0,noHint:0,earned:[]});
+    r.hidden=true;$("game").hidden=false;drawBadges();render();window.scrollTo(0,0);});
+  r.scrollIntoView({block:"start"});
+}
+</script>
+
+</body></html>
