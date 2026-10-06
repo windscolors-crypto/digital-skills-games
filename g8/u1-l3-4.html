@@ -968,6 +968,22 @@ function countTo(el,from,to){
   })(t0);
 }
 
+/* ===== إرسال النتيجة إلى نموذج «سجل نتائج ألعاب المهارات الرقمية» (رمز واحد، الاسم من حساب الأونروا) ===== */
+const RESULT_FORM={url:"https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=QoWSx2QeIUimYh4GU_yQCXkPYNJN8CJDkPMMgh2Vy6tUQzFUN1k1OEI2S1Y5NlozQ05MMVVGT1JPMy4u",field:"r5fcb6c37d72c494ea4afd2dda3eabe41",game:"G8L34"};
+function resultCode(){
+  const L=LEVELS[S.lv], r=((load().lv)||{})[L.id]||{};
+  const clean=t=>String(t||"").replace(/[|\n\r]/g," ").trim();
+  const lvn=S.lv+1, sc=(r.best!=null?r.best:S.pts), mx=S.max;
+  const secs=Math.round(((r.bestTime!=null?r.bestTime:S.done)||0)/1000), at=r.tries||1;
+  const gnum=parseInt(RESULT_FORM.game.replace(/\D/g,""),10);
+  const chk=(sc*7919+secs*104+at*31+mx*17+lvn*101+gnum*1009+52813)%99991;
+  return [RESULT_FORM.game,lvn,sc,mx,secs,at,clean(S.team),clean(S.sec),clean(S.name),chk].join("|");
+}
+function sendLinks(){
+  const u=RESULT_FORM.url+"&"+RESULT_FORM.field+"="+encodeURIComponent(resultCode());
+  return '<a class="btn" style="text-decoration:none" target="_blank" rel="noopener" href="'+u+'">📤 إرسال النتيجة</a>'+
+    '<div class="sub" style="width:100%;margin-top:6px">يُرسل أفضل نتيجة لكما في هذا المستوى ومدّتها وعدد المحاولات. افتحا الرابط واضغطا «إرسال» فقط.</div>';
+}
 </script>
 
 </body>
