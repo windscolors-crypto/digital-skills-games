@@ -1,0 +1,903 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>دار البرمجيات في عكّا — الصف السابع · الدرسان الثالث والرابع</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --or:#F4845F;        /* برتقالي السجل */
+  --cr:#FFF8F0;        /* كريمي */
+  --tl:#1B6CA8;        /* تيل */
+  --gd:#FFBF3C;        /* ذهبي */
+  --ink:#2A2A2A;
+  --mut:#6B6257;
+  --ok:#1E7A4B;
+  --no:#B23A2F;
+  --line:#E7D9C9;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:'Cairo','Segoe UI','Tahoma',sans-serif;
+  background:var(--cr); color:var(--ink);
+  font-size:17px; line-height:1.7;
+}
+.wrap{max-width:980px;margin:0 auto;padding:14px 14px 40px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:14px;
+  box-shadow:0 2px 0 rgba(0,0,0,.03)}
+h1,h2,h3{margin:0 0 8px;line-height:1.4}
+h1{font-size:27px;font-weight:800}
+h2{font-size:21px;font-weight:800}
+.sub{color:var(--mut);font-size:15px}
+.btn{font-family:inherit;font-size:17px;font-weight:600;cursor:pointer;border:0;border-radius:12px;
+  padding:12px 20px;background:var(--or);color:#fff;transition:filter .12s}
+.btn:hover{filter:brightness(1.07)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.sec{background:#fff;color:var(--tl);border:2px solid var(--tl)}
+.btn.gold{background:var(--gd);color:#4A3200}
+.btn.sm{padding:8px 14px;font-size:15px}
+input[type=text]{font-family:inherit;font-size:17px;padding:11px 14px;border:2px solid var(--line);
+  border-radius:12px;width:100%;background:#fff;color:var(--ink)}
+input[type=text]:focus{outline:0;border-color:var(--or)}
+
+/* ===== الرأس ===== */
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  background:linear-gradient(135deg,var(--or),#E8694B);color:#fff;border-radius:16px;padding:14px 18px;margin-bottom:14px}
+.top .nm{font-weight:800;font-size:19px}
+.top .sp{flex:1}
+.pill{background:rgba(255,255,255,.22);border-radius:999px;padding:5px 14px;font-weight:700;font-size:15px}
+.bar{height:9px;background:#F0E2D2;border-radius:999px;overflow:hidden;margin-top:10px}
+.bar>i{display:block;height:100%;background:var(--tl);width:0;transition:width .35s}
+
+/* ===== شبكة البزل ===== */
+.puz{position:relative;border-radius:14px;overflow:hidden;border:3px solid var(--gd);background:#fff;aspect-ratio:4/3}
+.puz svg{display:block;width:100%;height:100%}
+.tiles{position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,1fr)}
+.tile{background:#6E5B4B;border:1px solid rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:800;font-size:19px;transition:opacity .5s,transform .5s}
+.tile.off{opacity:0;transform:scale(.7);pointer-events:none}
+
+/* ===== السجل ===== */
+.srch{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.srch input{flex:1;min-width:200px}
+.tblwrap{max-height:330px;overflow:auto;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{background:#FBEFE4;position:sticky;top:0;font-weight:800;color:#6b4a35}
+tr.hit td{background:#FFF4D6}
+.no-w{color:var(--no);font-weight:700}
+.ye-w{color:var(--ok);font-weight:700}
+.cnt{font-size:14px;color:var(--mut);margin-top:6px}
+
+/* ===== السؤال ===== */
+.tag{display:inline-block;background:#EAF2F9;color:var(--tl);border-radius:999px;padding:3px 12px;
+  font-size:14px;font-weight:700;margin-bottom:8px}
+.q{font-size:20px;font-weight:700;margin:4px 0 14px}
+.q code{background:#2A2A2A;color:#FFD88A;padding:2px 9px;border-radius:7px;font-size:19px;letter-spacing:1px;
+  font-family:ui-monospace,Consolas,monospace;direction:ltr;display:inline-block}
+.opts{display:grid;gap:9px}
+.opt{font-family:inherit;font-size:17px;text-align:right;background:#fff;border:2px solid var(--line);
+  border-radius:12px;padding:12px 15px;cursor:pointer;transition:border-color .12s,background .12s}
+.opt:hover:not(:disabled){border-color:var(--or);background:#FFF9F4}
+.opt.good{border-color:var(--ok);background:#E9F7EF}
+.opt.bad{border-color:var(--no);background:#FBECEA;opacity:.75}
+.opt:disabled{cursor:default;color:var(--ink);-webkit-text-fill-color:var(--ink)}
+.opt.bad:disabled{color:var(--mut);-webkit-text-fill-color:var(--mut)}
+.fb{margin-top:12px;border-radius:12px;padding:12px 14px;font-size:16px;display:none}
+.fb.show{display:block}
+.fb.good{background:#E9F7EF;border:1px solid #BFE4CE}
+.fb.bad{background:#FBECEA;border:1px solid #F0CFC9}
+.hintbox{margin-top:10px;background:#FFF7E3;border:1px dashed var(--gd);border-radius:12px;padding:10px 13px;
+  font-size:15px;display:none}
+.hintbox.show{display:block}
+.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:12px}
+
+/* ===== الشهادة ===== */
+.cert{border:6px double var(--or);border-radius:16px;padding:26px;text-align:center;background:#fff}
+.cert .ttl{font-size:25px;font-weight:800;color:var(--tl)}
+.cert .who{font-size:31px;font-weight:800;margin:14px 0;color:var(--or)}
+.cert .sc{font-size:21px;font-weight:700}
+.cert .bdg{font-size:46px;margin:6px 0}
+.cert .ftr{margin-top:16px;font-size:14px;color:var(--mut)}
+.skill{background:#EAF2F9;border:1px solid #C9DEEE;border-radius:12px;padding:14px 16px;font-size:16px}
+.skill kbd{background:#2A2A2A;color:#fff;border-radius:6px;padding:2px 8px;font-size:14px;
+  font-family:ui-monospace,Consolas,monospace;direction:ltr;display:inline-block}
+.hide{display:none}
+/* ===== التحدي: الطابور والصبر والقطع ===== */
+.pat{margin:-4px 0 10px}.pat.hide{display:none}
+.patlbl{font-size:14px;font-weight:700;color:var(--mut);margin-bottom:4px}
+.patbar{height:10px;background:#F0E2D2;border-radius:999px;overflow:hidden}
+.patbar>i{display:block;height:100%;width:100%;background:var(--ok);transform-origin:right center;transition:transform 1s linear,background .3s}
+.patbar.low>i{background:var(--gd)}.patbar.out>i{background:var(--no)}
+.queue{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:8px}
+.dev{border:2px solid var(--line);border-radius:12px;padding:6px 4px;text-align:center;font-size:13px;background:#fff;line-height:1.3}
+.dev .ic{font-size:22px;display:block}
+.dev.cur{border-color:var(--or);box-shadow:0 0 0 3px rgba(244,132,95,.25)}
+.dev.g{background:#EEF7F1;border-color:var(--ok)}.dev.y{background:#FFF6DD;border-color:var(--gd)}
+.qsum{display:flex;gap:14px;flex-wrap:wrap;margin:0 0 10px;font-weight:700}
+.case{border:2px solid var(--line);border-radius:14px;padding:10px 12px;margin-bottom:10px;background:#fff}
+.case.cur{border-color:var(--or)}.case.ok{border-color:var(--ok);background:#EEF7F1}
+.case .stg{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.case .stg span{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--line);font-size:13px;font-weight:700;background:#fff}
+.case .stg span.d{background:var(--ok);border-color:var(--ok);color:#fff}.case .stg span.c{border-color:var(--or);color:var(--or)}
+.flash{animation:fl .6s}@keyframes fl{0%{transform:scale(1)}40%{transform:scale(1.15)}100%{transform:scale(1)}}
+/* ===== دفتر الورشة والشارة ===== */
+.zone{border:3px dashed var(--tl);border-radius:14px;padding:14px;margin:10px 0 14px;background:#F3F8FC;text-align:center}
+.zone.done{border-style:solid;border-color:var(--ok);background:#EEF7F1}
+.zone .msg{font-weight:700}
+.book{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.pg{background:#FFFDF8;border:1px solid var(--line);border-inline-start:6px solid var(--or);border-radius:10px;overflow:hidden;font-size:13px}
+.pg .pgh{background:repeating-linear-gradient(45deg,#FBE9DC 0 8px,#FFF8F0 8px 16px);padding:6px 9px;display:flex;justify-content:space-between;gap:6px;flex-wrap:wrap}
+.pg img{display:block;width:100%;height:auto;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.pg .pgf{padding:4px 9px;color:var(--mut)}
+.pg.empty{display:flex;align-items:center;justify-content:center;min-height:110px;color:#B9A897;font-weight:700;border-inline-start-color:var(--line)}
+.bookbig{display:grid;gap:16px}
+.bookbig .pg{font-size:15px;break-inside:avoid;page-break-inside:avoid}
+.badgewrap{display:flex;justify-content:center;padding:8px}
+.badgewrap svg{width:min(100%,360px);height:auto}
+@media print{
+  body{background:#fff}
+  .noprint{display:none!important}
+  .card{border:0;box-shadow:none;margin:0;padding:0}
+}
+@media(max-width:560px){
+  body{font-size:16px}
+  .q{font-size:18px}
+  h1{font-size:23px}
+}
+/* ===== تأثيرات بصرية خفيفة (transform/opacity فقط) ===== */
+#fxc{position:fixed;inset:0;pointer-events:none;z-index:60}
+.tile{backface-visibility:hidden}
+.tile.off{opacity:0;transform:rotateY(85deg) scale(.6)}
+.tile.pop{animation:tpop .55s ease-out}
+@keyframes tpop{0%{box-shadow:0 0 0 0 rgba(255,191,60,.9)}100%{box-shadow:0 0 0 26px rgba(255,191,60,0)}}
+.puz.glow{animation:pglow .9s ease-out}
+@keyframes pglow{0%{box-shadow:0 0 0 0 rgba(255,191,60,.75)}100%{box-shadow:0 0 0 18px rgba(255,191,60,0)}}
+.opt.bad{animation:shk .34s}
+@keyframes shk{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.opt.good{animation:gpop .4s ease-out}
+@keyframes gpop{0%{transform:scale(1)}45%{transform:scale(1.035)}100%{transform:scale(1)}}
+.opt:hover:not(:disabled){transform:translateY(-2px)}
+.opt{transition:border-color .12s,background .12s,transform .12s}
+section{animation:fin .4s ease-out}
+@keyframes fin{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:none}}
+.card.qin{animation:qin .32s ease-out}
+@keyframes qin{0%{opacity:0;transform:translateX(18px)}100%{opacity:1;transform:none}}
+.bar>i{background:linear-gradient(90deg,var(--tl),#2E8BCE,var(--tl));background-size:200% 100%;animation:shim 2.4s linear infinite}
+@keyframes shim{0%{background-position:0 0}100%{background-position:200% 0}}
+#hdP.bump{animation:bmp .4s ease-out}
+@keyframes bmp{0%{transform:scale(1)}40%{transform:scale(1.22)}100%{transform:scale(1)}}
+.cert .bdg{animation:puls 2.2s ease-in-out infinite}
+@keyframes puls{0%,100%{transform:scale(1)}50%{transform:scale(1.11)}}
+.fxoff *,.fxoff *::before,.fxoff *::after{animation:none!important;transition:none!important}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.fxbtn{position:fixed;inset-inline-start:10px;bottom:10px;z-index:70;font-family:inherit;font-size:13px;
+  background:#fff;border:1px solid var(--line);color:var(--mut);border-radius:999px;padding:6px 12px;cursor:pointer;opacity:.85}
+
+/* ===== منتقي المستويات ===== */
+.lvls{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.lvl{text-align:right;background:#fff;border:2px solid var(--line);border-radius:16px;padding:16px;cursor:pointer;
+  font-family:inherit;font-size:16px;transition:transform .12s,border-color .12s}
+.lvl:hover{border-color:var(--or);transform:translateY(-3px)}
+.lvl b{display:block;font-size:19px;margin-bottom:4px;color:var(--tl)}
+.lvl small{display:block;color:var(--mut);font-size:14px;line-height:1.6}
+.lvl em{display:block;margin-top:9px;font-style:normal;font-weight:700;color:var(--or);font-size:15px}
+.lvl .done{display:inline-block;background:#E9F7EF;color:var(--ok);border-radius:999px;padding:2px 10px;font-size:13px;font-weight:700;margin-top:8px}
+/* ===== أسئلة الترتيب ===== */
+.ord{display:grid;gap:9px}
+.oitem{font-family:inherit;font-size:17px;text-align:right;background:#fff;border:2px solid var(--line);
+  border-radius:12px;padding:12px 15px;cursor:pointer;transition:border-color .12s,background .12s,transform .12s;position:relative}
+.oitem:hover:not(:disabled){border-color:var(--or);transform:translateY(-2px)}
+.oitem.pick{border-color:var(--ok);background:#E9F7EF;cursor:default;padding-inline-start:48px}
+.oitem .nm{position:absolute;inset-inline-start:12px;top:50%;transform:translateY(-50%);
+  background:var(--ok);color:#fff;border-radius:999px;width:26px;height:26px;display:flex;align-items:center;
+  justify-content:center;font-size:14px;font-weight:800}
+.oitem.wrong{animation:shk .34s;border-color:var(--no)}
+.oitem:disabled{color:var(--ink);-webkit-text-fill-color:var(--ink)}
+.oitem:disabled:not(.pick){opacity:.62}
+.ordhint{font-size:14px;color:var(--mut);margin-bottom:8px}
+/* ===== بطاقة النتيجة ===== */
+.shot{background:linear-gradient(135deg,#FFF8F0,#FFEFE2);border:3px solid var(--or);border-radius:18px;padding:22px;text-align:center}
+.shot .big{font-size:40px;font-weight:800;color:var(--or);line-height:1.2}
+.shot table{width:auto;margin:12px auto;font-size:16px}
+.shot td{border:0;padding:4px 14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ======== البداية ======== -->
+<section id="scrStart">
+  <div class="card" style="text-align:center">
+    <div style="font-size:50px;line-height:1">💻</div>
+    <h1>دار البرمجيات في عكّا</h1>
+    <p class="sub">المهارات الرقمية · الصف السابع · الوحدة الأولى<br>
+    الدرس الثالث: مكونات الحاسوب البرمجية &nbsp;·&nbsp; الدرس الرابع: أنظمة التشغيل</p>
+    <div style="max-width:360px;margin:16px auto 0;text-align:right">
+      <label style="font-weight:700;display:block;margin-bottom:6px">أسماء الثنائي على هذا الجهاز:</label>
+      <input type="text" id="nm" placeholder="الاسم الأول" autocomplete="off">
+      <input type="text" id="nm2" placeholder="الاسم الثاني" autocomplete="off" style="margin-top:8px">
+      <label style="font-weight:700;display:block;margin:12px 0 6px">اسم الفريق (يُكتب على دفتركما):</label>
+      <input type="text" id="tm" placeholder="مثال: فريق عكّا" autocomplete="off">
+      <label style="font-weight:700;display:block;margin:12px 0 6px">الشعبة:</label>
+      <input type="text" id="sec" placeholder="مثال: ٧ أ" autocomplete="off" style="max-width:160px">
+      <div id="startErr" style="color:var(--no);font-size:15px;height:22px"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>اختارا المستوى</h2>
+    <p class="sub">الأول طابور طلبات ضد الوقت، والثاني مهمات على جهازكما بلقطات شاشة تُحفظ في دفتر المبرمج، والثالث ثلاثة بلاغات دعم فنّي تُحلّ على مراحل.<br><b>وزّعا الأدوار:</b> واحد/ة ينفّذ المهمة والثاني/ة يسجّل، ثم بدّلا.</p>
+    <div class="lvls" id="lvls"></div>
+  </div>
+
+  <div class="card">
+    <h3>قواعد اللعب</h3>
+    <p class="sub" style="color:var(--ink)">
+    ✦ ما في انتقال للسؤال التالي إلا بالإجابة الصحيحة — صحّحا الغلط وجرّبا من جديد.<br>
+    ✦ كل محاولة خاطئة بتقلّل نقاط السؤال، والتلميح بيكلّف نقطتين، والمستوى الثالث بلا تلميحات.<br>
+    ✦ <b>البطاريات:</b> معكما ٣ بطاريات 🔋، وكل خطأ بيستهلك بطارية. إذا خلصت بترجعا ٣ أسئلة لورا وبتنشحن البطاريات من جديد.<br>
+    ✦ <b>عدّاد الصبر:</b> الطلب اللي بتنجزاه بسرعة ومن أول محاولة وبلا تلميح بيطلع 🟢 ممتاز، وغير هيك 🟡 مقبول.<br>
+    ✦ <b>سلسلة الإتقان:</b> ٣ طلبات 🟢 ورا بعض = نقاط ×٢، و٥ = ×٣. أول خطأ بيكسر السلسلة.<br>
+    ✦ تقدّمكما محفوظ على نفس الجهاز، فبتقدرا تكملا بعدين.</p>
+  </div>
+</section>
+
+<!-- ======== اللعب ======== -->
+<section id="scrGame" class="hide">
+  <div class="top">
+    <span class="nm" id="hdNm">—</span>
+    <span class="sp"></span>
+    <span class="pill" id="hdQ">١ / ١</span>
+    <span class="pill" id="hdP">٠ نقطة</span>
+    <span class="pill" id="hdT" title="وقت الإنجاز">⏱ ٠٠:٠٠</span>
+    <span class="pill" id="hdParts" title="البطاريات">🔋🔋🔋</span>
+    <span class="pill" id="hdStreak" title="سلسلة الإتقان">🔥 ×١</span>
+  </div>
+  <div class="bar"><i id="hdBar"></i></div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="pat" id="pat"><div class="patlbl" id="patLbl"></div><div class="patbar"><i id="patFill"></i></div></div>
+    <div class="tag" id="qTag">—</div>
+    <div class="q" id="qText">—</div>
+    <div id="qBody"></div>
+    <div class="hintbox" id="qHint"></div>
+    <div class="fb" id="qFb"></div>
+    <div class="row">
+      <button class="btn sec sm" id="btnHint">💡 تلميح (−٢)</button>
+      <button class="btn sm hide" id="btnNext">التالي ←</button>
+      <span class="sp"></span>
+      <button class="btn sec sm" id="btnBack">↩ المستويات</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 id="puzTtl">💻 لوحة الطلبات</h3>
+    <p class="sub" id="puzNote"></p>
+    <div id="book" class="hide"></div>
+    <div class="puz" id="puz">
+      <div id="art"></div>
+      <div class="tiles" id="tiles"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== النتيجة ======== -->
+<section id="scrEnd" class="hide">
+  <div class="card">
+    <div class="shot" id="shotCard">
+      <div style="font-size:15px;color:var(--mut)">المهارات الرقمية · الصف السابع · الوحدة الأولى: أنظمة الحوسبة</div>
+      <h2 id="eTtl" style="margin-top:6px">—</h2>
+      <div class="big" id="eScore">—</div>
+      <div class="sub" id="eDet">—</div>
+      <table id="eTbl"></table>
+      <div class="bdg" id="eBdg" style="font-size:40px">🏅</div>
+      <div class="sub" id="eDate">—</div>
+      <div style="margin-top:10px;font-weight:700;color:var(--or)">📸 صوّرا هذه البطاقة وابعثاها إلى معلّمكما</div>
+    </div>
+    <div class="row noprint">
+      <button class="btn" id="btnNextLvl">المستوى التالي ←</button>
+      <button class="btn sec" id="btnMenu">↩ كل المستويات</button>
+      <button class="btn gold" id="btnRetry">🔁 أعيدا هذا المستوى</button>
+      <a class="btn sec" href="../" style="text-decoration:none">⌂ كل الصفوف</a>
+    </div>
+    <div class="row noprint" id="eSend"></div>
+  </div>
+  <div class="card hide" id="eBookCard">
+    <div class="row noprint" style="justify-content:space-between;align-items:center">
+      <h3 style="margin:0">📓 دفتر المبرمج كاملًا</h3>
+      <button class="btn sec sm" onclick="window.print()">🖨️ اطبعا الدفتر</button>
+    </div>
+    <div id="eBook"></div>
+  </div>
+
+  <div class="card noprint">
+    <h3>📸 مهارتكما: صوّرا الشاشة وابعثاها</h3>
+    <div class="skill">
+      <b>١) صورة لجزء تختارانه:</b> اضغطا <kbd>Win</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> ثم اسحبا حول البطاقة.<br>
+      <b>٢) صورة للشاشة كلها:</b> <kbd>Win</kbd> + <kbd>PrtScn</kbd> — بتنحفظ في الصور ← Screenshots.<br>
+      <b>٣) التنقّل بين النوافذ:</b> <kbd>Alt</kbd> + <kbd>Tab</kbd> للتبديل السريع، و<kbd>Win</kbd> + <kbd>Tab</kbd> لعرض كل النوافذ.<br>
+      <b>٤) الإرسال:</b> افتحا Teams بـ <kbd>Alt</kbd> + <kbd>Tab</kbd>، وفي خانة الرسالة اضغطا <kbd>Ctrl</kbd> + <kbd>V</kbd> ثم أرسلا.
+    </div>
+  </div>
+
+  <div class="card noprint">
+    <h3>📋 مراجعة أسئلة المستوى</h3>
+    <div id="rev"></div>
+  </div>
+</section>
+
+</div>
+<script>
+/* دار البرمجيات في عكّا — الصف السابع · الدرسان الثالث والرابع. محتوى الأسئلة من كتاب الطالب. */
+
+const L1=[
+{"t": "mcq", "d": 1, "p": "سؤال تذكّر", "q": "حسب الكتاب، المكوّنات البرمجية (Software) هي:", "c": ["مجموعة البرامج والتطبيقات التي طُوّرت لتنفيذ مهام متنوعة", "القطع التي يمكن لمسها داخل وحدة النظام وخارجها", "الأسلاك والمنافذ التي تصل وحدات الإدخال بوحدات الإخراج", "وحدات الإدخال التي تُدخل البيانات إلى ذاكرة الجهاز مباشرة"], "a": 0, "why": "الكتاب (ص ٣٣): المكوّنات البرمجية مجموعة من البرامج والتطبيقات التي طُوّرت لتنفيذ مجموعة متنوعة من المهام في أجهزة الحاسوب والأجهزة الذكية الأخرى.", "hint": "ارجعا إلى الدرس الثالث: مكونات الحاسوب البرمجية — ص ٣٣."},
+{"t": "mcq", "d": 1, "p": "سؤال تذكّر", "q": "يُعرَّف البرنامج في الكتاب بأنه:", "c": ["مجموعة من التعليمات والأوامر المتسلسلة لتحقيق هدف معيّن", "قطعة إلكترونية تُركَّب على اللوحة الأم لتسريع الجهاز كثيرًا", "ملف صورة أو فيديو يُحفظ على القرص الصلب للحاسوب", "جهاز إخراج يعرض نتائج المعالجة على الشاشة للمستخدم"], "a": 0, "why": "الكتاب (ص ٣٣): البرنامج مجموعة من التعليمات والأوامر المتسلسلة التي تلزم لتحقيق هدف معيّن.", "hint": "ارجعا إلى الدرس الثالث: مكونات الحاسوب البرمجية — ص ٣٣."},
+{"t": "mcq", "d": 1, "p": "سؤال تذكّر", "q": "يكتب المبرمج التعليمات بلغات يفهمها جهاز الحاسوب، تُسمّى:", "c": ["لغات البرمجة", "لغات الإشارة والرموز المصوّرة", "لغات الإخراج والطباعة الورقية", "لغات التواصل بين المستخدمين"], "a": 0, "why": "الكتاب (ص ٣٣): يتولّى المبرمج كتابة التعليمات والأوامر المتسلسلة بلغات معيّنة يفهمها جهاز الحاسوب، وتُسمّى لغات البرمجة.", "hint": "ارجعا إلى الدرس الثالث: مكونات الحاسوب البرمجية — ص ٣٣."},
+{"t": "mcq", "d": 1, "p": "سؤال تذكّر", "q": "تُصنَّف البرمجيات في الكتاب إلى نوعين رئيسين، هما:", "c": ["برامج النظام وبرامج التطبيقات", "وحدات الإدخال ووحدات الإخراج الخارجية", "المكونات الداخلية والمكونات الخارجية للجهاز", "برامج الألعاب وبرامج الرسم والتصميم الفني"], "a": 0, "why": "الكتاب (ص ٣٣): تُصنَّف البرمجيات إلى نوعين رئيسين: برامج النظام (System Software)، وبرامج التطبيقات (Application Software).", "hint": "ارجعا إلى الدرس الثالث: مكونات الحاسوب البرمجية — ص ٣٣."},
+{"t": "mcq", "d": 1, "p": "سؤال تذكّر", "q": "من أبرز الأمثلة على برامج النظام حسب الكتاب:", "c": ["أنظمة التشغيل", "برامج معالجة النصوص والجداول", "برامج البريد الإلكتروني والمراسلة", "برامج العروض التقديمية متعددة الوسائط"], "a": 0, "why": "الكتاب (ص ٣٣): تُعدّ برامج أنظمة التشغيل (Operating Systems) من أبرز الأمثلة على برامج النظام.", "hint": "ارجعا إلى الدرس الثالث: مكونات الحاسوب البرمجية — ص ٣٣."},
+{"t": "mcq", "d": 1, "p": "سؤال تذكّر", "q": "أيّ مجموعة كلّها أنظمة تشغيل ذكرها الكتاب؟", "c": ["Windows و MacOS و Android", "Word و Excel و PowerPoint كلها معًا", "Chrome و Edge وبرامج تصفّح الإنترنت", "Canva وبرامج التصميم والرسم الرقمي"], "a": 0, "why": "الكتاب (ص ٣٣): من الأمثلة على أنظمة التشغيل: مايكروسوفت ويندوز (Microsoft Windows)، وماك أو إس (MacOS)، وأندرويد (Android).", "hint": "ارجعا إلى الدرس الثالث: مكونات الحاسوب البرمجية — ص ٣٣."},
+{"t": "mcq", "d": 1, "p": "سؤال تذكّر", "q": "برامج التطبيقات صُمّمت حسب الكتاب لـ:", "c": ["أداء مهام محدّدة تتعلّق بحاجات المستخدمين", "إدارة عمل جهاز الحاسوب والتحكم فيه وتشغيله", "الوساطة بين المكونات المادية وبرامج النظام كلها", "تنظيم ذاكرة الوصول العشوائي ومنع تداخل البرامج"], "a": 0, "why": "الكتاب (ص ٣٣): برامج التطبيقات برامج حاسوبية صُمّمت لأداء مهام محدّدة تتعلّق بحاجات المستخدمين، لأغراض شخصية أو مهنية أو تعليمية.", "hint": "ارجعا إلى الدرس الثالث: مكونات الحاسوب البرمجية — ص ٣٣."},
+{"t": "mcq", "d": 1, "p": "سؤال تذكّر", "q": "ماذا يحدث للمكوّنات المادية من دون المكوّنات البرمجية، كما يذكر الكتاب؟", "c": ["تصبح معدّات بلا فائدة", "تعمل أسرع لأنها لا تنتظر أوامر", "تتحوّل تلقائيًا إلى برامج للنظام", "تكتب تعليماتها بنفسها بلغة البرمجة"], "a": 0, "why": "الكتاب (ص ٣٣): تؤدّي المكونات البرمجية دورًا فاعلًا في جهاز الحاسوب؛ إذ من دونها تصبح معدّات الحاسوب (المكونات المادية) بلا فائدة.", "hint": "ارجعا إلى الدرس الثالث: مكونات الحاسوب البرمجية — ص ٣٣."},
+{"t": "mcq", "d": 1, "p": "سؤال تذكّر", "q": "برنامج يُستخدم لإجراء الحسابات وتحليل البيانات وإنشاء الرسوم البيانية:", "c": ["برنامج جداول البيانات (Spreadsheet)", "برنامج معالجة النصوص (Word Processing)", "برنامج تصفّح الإنترنت (Web Browser) الحديث", "برنامج البريد الإلكتروني (Email) للمراسلة"], "a": 0, "why": "الكتاب (ص ٣٤): برامج إنشاء جداول البيانات: إنشاء جداول البيانات، وإجراء الحسابات، وتحليل البيانات، وإنشاء الرسوم البيانية.", "hint": "ارجعا إلى الدرس الثالث: مكونات الحاسوب البرمجية — ص ٣٤."},
+{"t": "mcq", "d": 1, "p": "سؤال تذكّر", "q": "لإنشاء عرض فيه نصوص وصور ومقاطع فيديو ورسوم بيانية نستخدم:", "c": ["برنامج العروض التقديمية", "برنامج البريد الإلكتروني لتبادل الملفات", "برنامج تصفّح الإنترنت وتحميل الفيديو", "برنامج جداول البيانات والعمليات الحسابية"], "a": 0, "why": "الكتاب (ص ٣٤): برامج العروض التقديمية (Presentation Software): إنشاء عروض تقديمية متعددة الوسائط تحتوي على نصوص وصور ومقاطع فيديو ورسوم بيانية.", "hint": "ارجعا إلى الدرس الثالث: مكونات الحاسوب البرمجية — ص ٣٤."},
+{"t": "mcq", "d": 1, "p": "سؤال تذكّر", "q": "نظام التشغيل حسب الكتاب هو:", "c": ["برنامج أساسي يعمل وسيطًا بين المستخدم ومكونات الحاسوب المادية", "قطعة مادية داخلية تُثبَّت على اللوحة الأم وتحفظ البيانات دائمًا", "تطبيق لكتابة النصوص وتنسيقها وإضافة الصور والجداول إليها", "موقع إلكتروني لتحميل البرامج والتطبيقات من شبكة الإنترنت"], "a": 0, "why": "الكتاب (ص ٤٠): نظام التشغيل برنامج أساسي يعمل وسيطًا بين المستخدم ومكونات جهاز الحاسوب المادية، ويتيح تشغيل التطبيقات والبرامج المختلفة.", "hint": "ارجعا إلى الدرس الرابع: أنظمة التشغيل — ص ٤٠."},
+{"t": "mcq", "d": 1, "p": "سؤال تذكّر", "q": "طوّرت شركة مايكروسوفت نظام التشغيل ويندوز في:", "c": ["منتصف عقد الثمانينيات من القرن الماضي", "بداية عقد الخمسينيات من القرن الماضي", "نهاية عقد التسعينيات من القرن الماضي تمامًا", "العام الذي ظهر فيه أول هاتف ذكي في العالم"], "a": 0, "why": "الكتاب (ص ٤٠): طوّرت شركة مايكروسوفت نظام التشغيل ويندوز في منتصف عقد الثمانينيات من القرن الماضي، وأحدث إصداراته ويندوز ١٠ وويندوز ١١.", "hint": "ارجعا إلى الدرس الرابع: أنظمة التشغيل — ص ٤٠."},
+{"t": "mcq", "d": 1, "p": "سؤال تذكّر", "q": "سلسلة أنظمة التشغيل ماك أو إس (MacOS) تابعة لشركة:", "c": ["آبل (Apple)", "مايكروسوفت (Microsoft)", "غوغل التي طوّرت أندرويد", "المجتمع المفتوح لمطوّري لينكس"], "a": 0, "why": "الكتاب (ص ٤١): تُعدّ ماك أو إس (MacOS) أحد أشهر أنظمة التشغيل لشركة آبل (Apple).", "hint": "ارجعا إلى الدرس الرابع: أنظمة التشغيل — ص ٤١."},
+{"t": "mcq", "d": 1, "p": "سؤال تذكّر", "q": "من الأمثلة على أنظمة التشغيل مفتوحة المصدر في الكتاب:", "c": ["لينكس (Linux)", "ويندوز (Windows) بإصداراته", "ماك أو إس (macOS) من آبل", "أندرويد (Android) للأجهزة الذكية"], "a": 0, "why": "الكتاب (ص ٤١): من الأمثلة على أنظمة التشغيل مفتوحة المصدر: نظام التشغيل لينكس (Linux).", "hint": "ارجعا إلى الدرس الرابع: أنظمة التشغيل — ص ٤١."},
+{"t": "mcq", "d": 1, "p": "سؤال تذكّر", "q": "تُعرف قدرة نظام التشغيل على فتح برامج متعدّدة وإدارتها في الوقت نفسه بـ:", "c": ["المهام المتعدّدة (Multitasking)", "إدارة الملفات والمجلدات (File Management)", "التحكّم في صلاحيات المستخدمين وحساباتهم", "التحكّم في عمليات الإدخال والإخراج (I/O)"], "a": 0, "why": "الكتاب (ص ٤٤): يمتاز نظام التشغيل بالقدرة على فتح برامج متعدّدة وإدارتها في الوقت نفسه، في ما يُعرف بالمهام المتعدّدة (Multitasking).", "hint": "ارجعا إلى الدرس الرابع: أنظمة التشغيل — ص ٤٤."},
+{"t": "mcq", "d": 1, "p": "سؤال تذكّر", "q": "مدير الملفات في ويندوز اسمه مستكشف الملفات (File Explorer)، وفي ماك أو إس اسمه:", "c": ["فايندر (Finder)", "إدارة المهام (Task Manager)", "لوحة التحكّم (Control Panel)", "متجر التطبيقات الخاص بشركة آبل"], "a": 0, "why": "الكتاب (ص ٤٦): يمكن التمثيل على مدير الملفات بمستكشف الملفات (File Explorer) في مايكروسوفت ويندوز، وفايندر (Finder) في نظام ماك أو إس.", "hint": "ارجعا إلى الدرس الرابع: أنظمة التشغيل — ص ٤٦."},
+{"t": "mcq", "d": 1, "p": "سؤال تذكّر", "q": "المستخدم القياسي (Standard User) يمكنه حسب الكتاب:", "c": ["استخدام التطبيقات والوصول إلى ملفاته الخاصة", "تثبيت البرامج وتغيير إعدادات النظام بالكامل", "إدارة حسابات المستخدمين الآخرين وكلمات مرورهم", "إنشاء حسابات جديدة وتحديد مستويات الوصول لها"], "a": 0, "why": "الكتاب (ص ٤٦): المستخدم القياسي (Standard User) مستخدم له صلاحيات محدودة؛ إذ يمكنه فقط استخدام التطبيقات، والوصول إلى ملفاته الخاصة.", "hint": "ارجعا إلى الدرس الرابع: أنظمة التشغيل — ص ٤٦."}
+];
+const L2=[
+{"t": "mcq", "d": 2, "p": "سؤال تطبيقي", "q": "<div style=\"font-weight:500;font-size:.82em;line-height:1.9;background:var(--bg2,rgba(0,0,0,.04));border-radius:12px;padding:10px 12px;margin-bottom:10px\">🖥️ <b>على جهازكما:</b> افتحا قائمة ابدأ وابحثا فيها عن برنامجين من برامج التطبيقات. خذا لقطة للقائمة بـ <bdi dir=\"ltr\" style=\"white-space:nowrap\"><kbd>Win</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd></bdi>، ثم ارجعا إلى اللعبة بـ <bdi dir=\"ltr\" style=\"white-space:nowrap\"><kbd>Alt</kbd>+<kbd>Tab</kbd></bdi>.</div>أيّ مجموعة كلّها <b>برامج تطبيقات</b> حسب الشكل (٣-١) في الكتاب؟", "c": ["ألعاب الحاسوب، جداول البيانات، معالجات النصوص، متصفّح الإنترنت", "نظام التشغيل، وحدة المعالجة المركزية، القرص الصلب، الطابعة", "الفأرة، الطابعة، القرص الصلب، وحدة المعالجة المركزية معًا", "نظام التشغيل، متصفّح الإنترنت، الفأرة، جداول البيانات كلها معًا"], "a": 0, "why": "الكتاب (ص ٣٥، الشكل ٣-١): برامج وتطبيقات: ألعاب الحاسوب، جداول البيانات، قاعدة البيانات، معالجات النصوص، متصفّح الإنترنت. أمّا نظام التشغيل فمن برامج النظام، والفأرة والطابعة والقرص الصلب ووحدة المعالجة المركزية أجزاء مادية.", "hint": "ارجعا إلى الدرس الثالث: مكونات الحاسوب البرمجية.", "shot": "قائمة البرامج في قائمة ابدأ"},
+{"t": "mcq", "d": 2, "p": "سؤال تطبيقي", "q": "<div style=\"font-weight:500;font-size:.82em;line-height:1.9;background:var(--bg2,rgba(0,0,0,.04));border-radius:12px;padding:10px 12px;margin-bottom:10px\">🖥️ <b>على جهازكما:</b> افتحا المفكرة (Notepad) من قائمة ابدأ واكتبا فيها اسمي فريقكما. لاحظا كيف تظهر الحروف على الشاشة لحظة الضغط على المفاتيح.</div>حسب الكتاب، عند إدخال البيانات بلوحة المفاتيح، وحدة الإدخال:", "c": ["تحتاج إلى أوامر وتعليمات تصدر من نظام التشغيل لتنفيذ المهمة", "تعمل وحدها دون أي برنامج لأنها من المكونات المادية فقط", "تكتب التعليمات بنفسها بلغة البرمجة ثم ترسلها إلى الطابعة", "ترسل البيانات مباشرة إلى برامج التطبيقات دون نظام التشغيل أبدًا"], "a": 0, "why": "الكتاب (ص ٣٥): عند تنفيذ أمر محدّد تعمل المكونات المادية والبرمجية بتناغم وسلاسة؛ فالمكوّن المادي (وحدة الإدخال مثلًا) يحتاج إلى أوامر وتعليمات تصدر من نظام التشغيل لتنفيذ مهمة إدخال البيانات.", "hint": "ارجعا إلى الدرس الثالث: مكونات الحاسوب البرمجية."},
+{"t": "mcq", "d": 2, "p": "سؤال تطبيقي", "q": "وجدتما على موقع غير معروف نسخة مجانية <b>غير أصلية</b> من لعبة مدفوعة. ما الخطر الذي يذكره الكتاب؟", "c": ["قد تحتوي على فيروسات وبرمجيات خبيثة تهدّد أمان الجهاز وخصوصية البيانات", "تعمل اللعبة أبطأ قليلًا من النسخة الأصلية لكنها آمنة تمامًا على الجهاز", "تحتاج إلى مساحة أكبر على القرص الصلب فقط ولا يوجد أي خطر آخر منها", "لا يوجد أي خطر ما دامت اللعبة مجانية ومنتشرة بين الطلبة في المدرسة"], "a": 0, "why": "الكتاب (ص ٣٦، المواطنة الرقمية): النسخ غير الأصلية قد تحتوي على فيروسات وبرمجيات خبيثة تهدّد أمان الجهاز وخصوصية البيانات الشخصية، وتُعدّ انتهاكًا لحقوق الملكية الفكرية؛ لذا ننزّل التطبيقات من مصادر موثوقة.", "hint": "ارجعا إلى الدرس الثالث: مكونات الحاسوب البرمجية."},
+{"t": "mcq", "d": 2, "p": "سؤال تطبيقي", "q": "حسب الكتاب، أين تقع <b>برامج النظام</b> بالنسبة إلى المكونات المادية وبرامج التطبيقات؟", "c": ["وسيط بين المكونات المادية وبرامج التطبيقات", "فوق برامج التطبيقات ولا تتعامل مع القطع", "داخل وحدات الإخراج فقط مثل الشاشة والطابعة", "خارج الجهاز على شبكة الإنترنت دائمًا"], "a": 0, "why": "الكتاب (ص ٣٣): يُعدّ برنامج النظام وسيطًا بين المكونات المادية التي تُشكّل جهاز الحاسوب وبرامج التطبيقات التي تتفاعل معها بصورة مباشرة.", "hint": "ارجعا إلى الدرس الثالث: مكونات الحاسوب البرمجية."},
+{"t": "mcq", "d": 2, "p": "سؤال تطبيقي", "q": "<div style=\"font-weight:500;font-size:.82em;line-height:1.9;background:var(--bg2,rgba(0,0,0,.04));border-radius:12px;padding:10px 12px;margin-bottom:10px\">🖥️ <b>على جهازكما:</b> افتحا الإعدادات ← النظام ← حول (About)، واقرآ حجم الذاكرة المثبّتة (RAM). خذا لقطة للسطر بـ <bdi dir=\"ltr\" style=\"white-space:nowrap\"><kbd>Win</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd></bdi>، ثم ارجعا بـ <bdi dir=\"ltr\" style=\"white-space:nowrap\"><kbd>Alt</kbd>+<kbd>Tab</kbd></bdi>.</div>افتحا إعدادات الجهاز وتحقّقا من حجم الذاكرة. أيّ وظيفة لنظام التشغيل تنظّم استخدام هذه الذاكرة حتى لا تتداخل البرامج؟", "c": ["إدارة الذاكرة (Memory Management)", "توفير واجهة المستخدم (User Interface)", "التحكّم في صلاحيات المستخدمين وحساباتهم", "التحكّم في عمليات الإدخال والإخراج للأجهزة"], "a": 0, "why": "الكتاب (ص ٤٣): إدارة الذاكرة تتضمّن إدارة ذاكرة الوصول العشوائي (RAM) وتنظيم استخدامها؛ لكيلا يحدث تداخل بين البرامج والتطبيقات.", "hint": "ارجعا إلى الدرس الرابع: أنظمة التشغيل.", "shot": "حجم الذاكرة في إعدادات الجهاز"},
+{"t": "mcq", "d": 2, "p": "سؤال تطبيقي", "q": "<div style=\"font-weight:500;font-size:.82em;line-height:1.9;background:var(--bg2,rgba(0,0,0,.04));border-radius:12px;padding:10px 12px;margin-bottom:10px\">🖥️ <b>على جهازكما:</b> افتحا «إدارة المهام» بـ <bdi dir=\"ltr\" style=\"white-space:nowrap\"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Esc</kbd></bdi>، واضغطا «تفاصيل أكثر» إن ظهرت. خذا لقطة لقائمة العمليات بـ <bdi dir=\"ltr\" style=\"white-space:nowrap\"><kbd>Win</kbd>+<kbd>PrtScn</kbd></bdi> (تُحفظ في الصور ← Screenshots)، ثم ارجعا بـ <bdi dir=\"ltr\" style=\"white-space:nowrap\"><kbd>Alt</kbd>+<kbd>Tab</kbd></bdi>.</div>في «إدارة المهام» يظهر لكل برنامج ما خُصّص له من موارد. أيّ مجموعة ذكرها الكتاب كلّها؟", "c": ["الذاكرة، ووحدة المعالجة المركزية، ومساحة التخزين، والشبكة", "الطابعة، والماسح الضوئي، والسمّاعات، ولوحة المفاتيح، والفأرة", "كلمات المرور، وأسماء المستخدمين، وصلاحيات الحسابات", "الأيقونات، والقوائم، والنوافذ، والرموز في الواجهة"], "a": 0, "why": "الكتاب (ص ٤٥، نشاط عملي): أستعرض العمليات النشطة والموارد المخصّصة لها في برنامج إدارة المهام (Task Manager): الذاكرة، ووحدة المعالجة المركزية، ومساحة التخزين، والشبكة.", "hint": "ارجعا إلى الدرس الرابع: أنظمة التشغيل.", "shot": "إدارة المهام: العمليات النشطة"},
+{"t": "mcq", "d": 2, "p": "سؤال تطبيقي", "q": "<div style=\"font-weight:500;font-size:.82em;line-height:1.9;background:var(--bg2,rgba(0,0,0,.04));border-radius:12px;padding:10px 12px;margin-bottom:10px\">🖥️ <b>على جهازكما:</b> افتحا المفكرة ومستكشف الملفات والمتصفّح. تنقّلا بينها بـ <bdi dir=\"ltr\" style=\"white-space:nowrap\"><kbd>Alt</kbd>+<kbd>Tab</kbd></bdi>، ثم اضغطا <bdi dir=\"ltr\" style=\"white-space:nowrap\"><kbd>Win</kbd>+<kbd>Tab</kbd></bdi> لتريا النوافذ كلها معًا، وخذا لقطة للشاشة بـ <bdi dir=\"ltr\" style=\"white-space:nowrap\"><kbd>Win</kbd>+<kbd>PrtScn</kbd></bdi>.</div>فتحتما ثلاثة برامج معًا وتنقّلتما بينها، فبدت كأنها تعمل في اللحظة نفسها. كيف يحقّق نظام التشغيل ذلك؟", "c": ["بتخصيص وقت المعالجة بسرعة كبيرة بين البرامج المختلفة", "بإغلاق كل برنامج تلقائيًا عند فتح البرنامج الذي يليه", "بنقل البرامج كلها إلى القرص الصلب حتى ينتهي العمل", "بطلب كلمة مرور المسؤول قبل فتح كل برنامج جديد"], "a": 0, "why": "الكتاب (ص ٤٤): يمتاز نظام التشغيل بالقدرة على فتح برامج متعدّدة وإدارتها في الوقت نفسه، بتخصيص وقت المعالجة بسرعة كبيرة بين البرامج المختلفة؛ ما يجعلها تبدو كأنها تعمل في اللحظة نفسها.", "hint": "ارجعا إلى الدرس الرابع: أنظمة التشغيل.", "shot": "النوافذ المفتوحة معًا"},
+{"t": "mcq", "d": 2, "p": "سؤال تطبيقي", "q": "<div style=\"font-weight:500;font-size:.82em;line-height:1.9;background:var(--bg2,rgba(0,0,0,.04));border-radius:12px;padding:10px 12px;margin-bottom:10px\">🖥️ <b>على جهازكما:</b> افتحا مستكشف الملفات بـ <bdi dir=\"ltr\" style=\"white-space:nowrap\"><kbd>Win</kbd>+<kbd>E</kbd></bdi>، وادخلا مجلد «المستندات» أو «الصور». غيّرا العرض إلى «تفاصيل»، ثم رتّبا حسب التاريخ. خذا لقطة بـ <bdi dir=\"ltr\" style=\"white-space:nowrap\"><kbd>Win</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd></bdi>.</div>في مستكشف الملفات رتّبتما الملفات حسب التاريخ والحجم. هذه من وظيفة نظام التشغيل:", "c": ["إدارة الملفات (File Management)", "إدارة البرامج والمهام المتعددة", "التحكّم في عمليات الإدخال والإخراج", "إدارة ذاكرة الوصول العشوائي (RAM)"], "a": 0, "why": "الكتاب (ص ٤٦): إدارة الملفات والمجلدات تمكّن نظام التشغيل من تنظيمها وتسهيل طرائق الوصول إليها وحفظها، وإيجاد طرائق لتخزين البيانات واسترجاعها بكفاءة.", "hint": "ارجعا إلى الدرس الرابع: أنظمة التشغيل.", "shot": "مستكشف الملفات مرتّبًا حسب التاريخ"},
+{"t": "mcq", "d": 2, "p": "سؤال تطبيقي", "q": "أرسلتما ملفًّا إلى الطابعة، والماسح الضوئي يعمل في الوقت نفسه دون تداخل. هذا من عمل وظيفة:", "c": ["التحكّم في عمليات الإدخال والإخراج", "إدارة حسابات المستخدمين وكلمات المرور", "إدارة الملفات والمجلدات وترتيبها حسب الحجم", "توفير واجهة المستخدم بالأزرار والقوائم"], "a": 0, "why": "الكتاب (ص ٤٤): التحكّم في عمليات الإدخال والإخراج يتيح إدارة تلقّي البيانات من أجهزة الإدخال وإرسالها إلى أجهزة الإخراج، وتنظيم آلية عمل الأجهزة المتنوعة ومنع تداخل بعضها في بعض.", "hint": "ارجعا إلى الدرس الرابع: أنظمة التشغيل."},
+{"t": "mcq", "d": 2, "p": "سؤال تطبيقي", "q": "<div style=\"font-weight:500;font-size:.82em;line-height:1.9;background:var(--bg2,rgba(0,0,0,.04));border-radius:12px;padding:10px 12px;margin-bottom:10px\">🖥️ <b>على جهازكما:</b> افتحا الإعدادات ← الحسابات ← «معلوماتك»، ولاحظا نوع الحساب المكتوب تحت الاسم. خذا لقطة بـ <bdi dir=\"ltr\" style=\"white-space:nowrap\"><kbd>Win</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd></bdi>، ثم ارجعا بـ <bdi dir=\"ltr\" style=\"white-space:nowrap\"><kbd>Alt</kbd>+<kbd>Tab</kbd></bdi>.</div>حاولتما تثبيت برنامج على جهاز المختبر، فطلب النظام صلاحيات أعلى. أيّ حساب يملك صلاحية تثبيت البرامج؟", "c": ["المسؤول (Administrator)", "المستخدم القياسي (Standard User)", "حساب الضيف الذي يُنشأ تلقائيًا", "أي حساب يعرف اسم الجهاز فقط"], "a": 0, "why": "الكتاب (ص ٤٦): المستخدم المسؤول (Administrator) لديه صلاحيات واسعة تشمل تثبيت البرامج، وتغيير إعدادات النظام، وإدارة حسابات المستخدمين الأخرى.", "hint": "ارجعا إلى الدرس الرابع: أنظمة التشغيل.", "shot": "نوع الحساب في الإعدادات"},
+{"t": "mcq", "d": 2, "p": "سؤال تطبيقي", "q": "<div style=\"font-weight:500;font-size:.82em;line-height:1.9;background:var(--bg2,rgba(0,0,0,.04));border-radius:12px;padding:10px 12px;margin-bottom:10px\">🖥️ <b>على جهازكما:</b> خذا لقطة لشاشة جهازكما كاملة بـ <bdi dir=\"ltr\" style=\"white-space:nowrap\"><kbd>Win</kbd>+<kbd>PrtScn</kbd></bdi> تظهر فيها عناصر الواجهة: زرّ ابدأ والقوائم والنوافذ والرموز.</div>لماذا لا يحتاج من يجرّب نظام تشغيل جديدًا وقتًا طويلًا ليتعلّمه، حسب الكتاب؟", "c": ["لأن مبادئ الاستخدام الأساسية متشابهة في أنظمة التشغيل الحديثة", "لأن واجهة المستخدم لا تختلف أبدًا من نظام تشغيل إلى آخر", "لأن أنظمة التشغيل كلها من إنتاج شركة واحدة هي مايكروسوفت", "لأن الواجهة الجديدة تُحذف ويُستبدل بها نظام ويندوز تلقائيًا دائمًا"], "a": 0, "why": "الكتاب (ص ٤٣): قد يبدو التفاعل مع نظام تشغيل جديد أمرًا غير مألوف للوهلة الأولى، لكن أنظمة التشغيل الحديثة صُمّمت على نحو يجعل استخدامها سهلًا؛ ما يعني أن مبادئ الاستخدام الأساسية متشابهة.", "hint": "ارجعا إلى الدرس الرابع: أنظمة التشغيل.", "shot": "عناصر واجهة المستخدم"},
+{"t": "mcq", "d": 2, "p": "سؤال تطبيقي", "q": "أيّ عبارة تصف <b>أنظمة التشغيل مفتوحة المصدر</b> كما في الكتاب؟", "c": ["شيفرتها متاحة للجميع مجانًا، ويمكن عرضها وتعديلها وتوزيعها", "شيفرتها سرّية لحماية الملكية الفكرية، وتتحكّم فيها الشركات", "لا يمكن تثبيتها إلا على أجهزة شركة واحدة بعد شراء ترخيص", "تتوقّف عن التحديث بعد سنة واحدة من صدور الإصدار الأول"], "a": 0, "why": "الكتاب (ص ٤١): أنظمة مفتوحة المصدر شيفرتها المصدرية متاحة للجميع مجانًا؛ ما يسمح للمستخدمين والمطوّرين بعرضها وتعديلها وتوزيعها بحرية.", "hint": "ارجعا إلى الدرس الرابع: أنظمة التشغيل."},
+{"t": "mcq", "d": 2, "p": "سؤال تطبيقي", "q": "حسب الكتاب، الأمان في الأنظمة <b>مفتوحة المصدر</b>:", "c": ["محكوم بالمجتمع، وقد يتعرّض للاختراق", "مضمون تمامًا ولا يتعرّض لأي اختراق", "تتحكّم فيه الشركات المصنّعة وحدها بدعم مستمر", "غير موجود أصلًا لأن الشيفرة متاحة للجميع"], "a": 0, "why": "الكتاب (ص ٤١): نظام الأمان في الأنظمة مفتوحة المصدر محكوم بالمجتمع، وقد يتعرّض للاختراق.", "hint": "ارجعا إلى الدرس الرابع: أنظمة التشغيل."},
+{"t": "mcq", "d": 2, "p": "سؤال تطبيقي", "q": "لماذا تبقي الشركات الشيفرة المصدرية للأنظمة <b>مغلقة المصدر</b> سرّية؟", "c": ["حمايةً للملكية الفكرية", "حتى تعمل الأنظمة دون كهرباء", "لأن لغات البرمجة لا تسمح بنشرها", "حتى لا تحتاج الأنظمة إلى تحديثات"], "a": 0, "why": "الكتاب (ص ٤١): الشيفرة المصدرية لهذه الأنظمة سرّية؛ حمايةً للملكية الفكرية.", "hint": "ارجعا إلى الدرس الرابع: أنظمة التشغيل."},
+{"t": "mcq", "d": 2, "p": "سؤال تطبيقي", "q": "حسب الكتاب، تحكّم نظام التشغيل في صلاحيات المستخدمين يُسهم في:", "c": ["حماية النظام من الاستخدام غير المصرّح به وتعزيز الأمان", "زيادة سرعة الطابعة وجودة الصور المطبوعة على الورق الملوّن", "تكبير حجم ذاكرة الوصول العشوائي في الجهاز تلقائيًا", "تحويل البرامج مغلقة المصدر إلى برامج مفتوحة المصدر"], "a": 0, "why": "الكتاب (ص ٤٥): التحكّم في صلاحيات المستخدمين يقنّن استعمال الموارد والبيانات بناءً على حاجات المستخدم وصلاحياته، ويُسهم في حماية النظام من الاستخدام غير المصرّح به، ويعزّز مستوى الأمان العام.", "hint": "ارجعا إلى الدرس الرابع: أنظمة التشغيل."},
+{"t": "mcq", "d": 2, "p": "سؤال تطبيقي", "q": "حسب الكتاب، حفظ البيانات بصورة دائمة على وسائط التخزين (مثل الأقراص الصلبة) واسترجاعها عند الحاجة من عمليات:", "c": ["إدارة الذاكرة", "إدارة البرامج", "توفير واجهة المستخدم", "التحكّم في صلاحيات المستخدمين"], "a": 0, "why": "الكتاب (ص ٤٣): من عمليات إدارة الذاكرة: حفظ البيانات بصورة دائمة على وسائط التخزين (مثل الأقراص الصلبة)، واسترجاعها عند الحاجة.", "hint": "ارجعا إلى الدرس الرابع: أنظمة التشغيل."}
+];
+const L3=[
+{"t": "mcq", "d": 3, "p": "تحدٍّ ميداني", "q": "🖥️ <b>المرحلة الأولى:</b> وصل إلى المختبر جهاز جديد بقطع مادية كاملة، لكن لم يُثبَّت عليه أي برنامج. ما وصف الكتاب لحاله الآن؟", "c": ["معدّات بلا فائدة حتى تُثبَّت عليه البرمجيات", "جاهز تمامًا لكتابة التقارير وتصفّح الإنترنت", "يعمل بلغات البرمجة دون الحاجة إلى نظام تشغيل", "يكفي توصيله بالطابعة ليبدأ تنفيذ المهام"], "a": 0, "why": "الكتاب (ص ٣٣): من دون المكونات البرمجية تصبح معدّات الحاسوب (المكونات المادية) بلا فائدة."},
+{"t": "mcq", "d": 3, "p": "تحدٍّ ميداني", "q": "🖥️ <b>المرحلة الثانية:</b> ما البرنامج الذي يجب أن يكون على الجهاز أولًا حتى تعمل عليه برامج التطبيقات؟", "c": ["نظام التشغيل، لأنه الوسيط بين المستخدم والمكونات المادية", "برنامج العروض التقديمية، لأنه يعرض الصور والفيديو", "برنامج البريد الإلكتروني، لأنه يتواصل مع الآخرين عبر الشبكة", "متصفّح الإنترنت، لأنه يحمّل باقي البرامج من الشبكة"], "a": 0, "why": "الكتاب (ص ٤٠): نظام التشغيل برنامج أساسي يعمل وسيطًا بين المستخدم ومكونات الحاسوب المادية، ويتيح تشغيل التطبيقات والبرامج المختلفة."},
+{"t": "mcq", "d": 3, "p": "تحدٍّ ميداني", "q": "🔐 <b>المرحلة الثالثة:</b> بأيّ نوع حساب يُثبِّت مشرف المختبر البرامج ويغيّر إعدادات النظام؟", "c": ["حساب المسؤول (Administrator)", "حساب المستخدم القياسي لكل طالب", "حساب مؤقّت بلا كلمة مرور للجميع", "أي حساب ما دام الجهاز متصلًا بالإنترنت"], "a": 0, "why": "الكتاب (ص ٤٦): المسؤول (Administrator) لديه صلاحيات واسعة تشمل تثبيت البرامج وتغيير إعدادات النظام وإدارة حسابات المستخدمين الأخرى."},
+{"t": "mcq", "d": 3, "p": "تحدٍّ ميداني", "q": "👥 <b>المرحلة الرابعة:</b> أيّ حساب يُعطى للطلبة على أجهزة المختبر، ولماذا؟", "c": ["مستخدم قياسي بصلاحيات محدودة، لحماية النظام من الاستخدام غير المصرّح به", "مسؤول بصلاحيات واسعة، حتى يثبّت كل طالب ما يريد من البرامج والألعاب بحرية", "لا حساب أبدًا، لأن الحسابات تبطئ الجهاز وتملأ الذاكرة بسرعة كبيرة", "حساب واحد مشترك بكلمة مرور معلنة للجميع على السبورة في المختبر"], "a": 0, "why": "الكتاب (ص ٤٥–٤٦): المستخدم القياسي له صلاحيات محدودة (استخدام التطبيقات والوصول إلى ملفاته)، والتحكّم في الصلاحيات يحمي النظام من الاستخدام غير المصرّح به ويعزّز الأمان."},
+{"t": "mcq", "d": 3, "p": "تحدٍّ ميداني", "q": "📋 <b>المرحلة الخامسة:</b> يحتاج المختبر إلى كتابة تقرير، وحساب العلامات برسم بياني، وعرض تقديمي للإذاعة. أيّ مجموعة برامج صحيحة بالترتيب؟", "c": ["معالجة النصوص، جداول البيانات، العروض التقديمية", "جداول البيانات، معالجة النصوص، البريد الإلكتروني", "العروض التقديمية، متصفّح الإنترنت، معالجة النصوص", "البريد الإلكتروني، العروض التقديمية، جداول البيانات"], "a": 0, "why": "الكتاب (ص ٣٤): معالجة النصوص لكتابة النصوص وإعداد المستندات، وجداول البيانات لإجراء الحسابات وإنشاء الرسوم البيانية، والعروض التقديمية لإنشاء عروض متعددة الوسائط."},
+{"t": "mcq", "d": 3, "p": "تحدٍّ ميداني", "q": "⬇️ <b>المرحلة السادسة:</b> من أين تُنزَّل البرامج إلى أجهزة المختبر حسب الكتاب؟", "c": ["من مصادر موثوقة، احترامًا للملكية الفكرية وحمايةً للأجهزة", "من أي موقع يقدّم نسخة مجانية حتى لو لم تكن أصلية أو مرخّصة", "من روابط تصل عبر الرسائل من أشخاص غير معروفين", "من أول نتيجة تظهر في البحث بغضّ النظر عن مصدرها"], "a": 0, "why": "الكتاب (ص ٣٦): الأمان الرقمي يبدأ بتنزيل التطبيقات من مصادر موثوقة، واحترام حقوق الملكية الفكرية، لحماية أجهزتنا وبياناتنا الشخصية."},
+{"t": "mcq", "d": 3, "p": "تحدٍّ ميداني", "q": "⏱️ <b>المرحلة الأولى:</b> افتحا «إدارة المهام» بـ <bdi dir=\"ltr\"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Esc</kbd></bdi> على جهازكما. ماذا يعرض لكل برنامج حسب الكتاب؟", "c": ["العمليات النشطة والموارد المخصّصة لها", "أسماء المستخدمين وكلمات مرورهم المحفوظة", "الملفات المحذوفة من القرص في آخر أسبوع", "قائمة المواقع التي زارها المستخدم اليوم"], "a": 0, "why": "الكتاب (ص ٤٥): أستعرض العمليات النشطة والموارد المخصّصة لها في جهاز الحاسوب بالبحث عن برنامج إدارة المهام (Task Manager) وتشغيله."},
+{"t": "mcq", "d": 3, "p": "تحدٍّ ميداني", "q": "🪟 <b>المرحلة الثانية:</b> المستخدم يفتح متصفّحًا ومعالج نصوص وبريدًا إلكترونيًا معًا. ما اسم هذه الميزة في نظام التشغيل؟", "c": ["المهام المتعدّدة (Multitasking)", "إدارة حسابات المستخدمين (Accounts)", "مستكشف الملفات (File Explorer)", "المصدر المفتوح للشيفرة (Open Source)"], "a": 0, "why": "الكتاب (ص ٤٤): فتح برامج متعدّدة وإدارتها في الوقت نفسه يُعرف بالمهام المتعدّدة (Multitasking)."},
+{"t": "mcq", "d": 3, "p": "تحدٍّ ميداني", "q": "⚙️ <b>المرحلة الثالثة:</b> أيّ وظيفة لنظام التشغيل توزّع وقت المعالجة بين هذه البرامج؟", "c": ["إدارة البرامج (Programs Management)", "إدارة الملفات والمجلدات (File Management)", "توفير واجهة المستخدم (User Interface)", "التحكّم في صلاحيات المستخدمين (Access)"], "a": 0, "why": "الكتاب (ص ٤٤): في إدارة البرامج يخصّص نظام التشغيل وقت المعالجة بسرعة كبيرة بين البرامج المختلفة."},
+{"t": "mcq", "d": 3, "p": "تحدٍّ ميداني", "q": "🧠 <b>المرحلة الرابعة:</b> برنامجان يتنافسان على ذاكرة الوصول العشوائي (RAM). أيّ وظيفة تمنع تداخلهما؟", "c": ["إدارة الذاكرة", "إدارة الملفات", "واجهة المستخدم", "صلاحيات المستخدمين"], "a": 0, "why": "الكتاب (ص ٤٣): إدارة الذاكرة تشمل إدارة ذاكرة الوصول العشوائي (RAM) وتنظيم استخدامها؛ لكيلا يحدث تداخل بين البرامج والتطبيقات."},
+{"t": "mcq", "d": 3, "p": "تحدٍّ ميداني", "q": "🖨️ <b>المرحلة الخامسة:</b> الطابعة والماسح الضوئي متصلان بالجهاز نفسه ويعملان معًا. ما الوظيفة التي تنظّم عملهما؟", "c": ["التحكّم في عمليات الإدخال والإخراج", "إدارة الذاكرة وتنظيم استخدام ذاكرة RAM", "إدارة حسابات المستخدمين القياسيين", "توفير الأزرار والقوائم في الواجهة"], "a": 0, "why": "الكتاب (ص ٤٤): التحكّم في عمليات الإدخال والإخراج ينظّم آلية عمل الأجهزة المتنوعة ويمنع تداخل بعضها في بعض."},
+{"t": "mcq", "d": 3, "p": "تحدٍّ ميداني", "q": "💾 <b>المرحلة السادسة:</b> أغلق المستخدم الجهاز وعاد في اليوم التالي فوجد تقريره محفوظًا على القرص الصلب. حسب الكتاب هذا من عمليات:", "c": ["إدارة الذاكرة", "إدارة البرامج", "توفير واجهة المستخدم", "التحكّم في الإدخال والإخراج"], "a": 0, "why": "الكتاب (ص ٤٣): من عمليات إدارة الذاكرة حفظ البيانات بصورة دائمة على وسائط التخزين (مثل الأقراص الصلبة)، واسترجاعها عند الحاجة."},
+{"t": "mcq", "d": 3, "p": "تحدٍّ ميداني", "q": "🐧 <b>المرحلة الأولى:</b> نادي الحاسوب يريد نظامًا يستطيع أعضاؤه دراسة شيفرته وتعديلها بحرية ومجانًا. أيّ نوع يناسبه؟", "c": ["نظام مفتوح المصدر مثل لينكس (Linux)", "نظام مغلق المصدر مثل ويندوز (Windows)", "نظام مغلق المصدر مثل ماك أو إس (macOS)", "أي نظام يُشترى بترخيص من شركة مصنّعة"], "a": 0, "why": "الكتاب (ص ٤١): الأنظمة مفتوحة المصدر شيفرتها متاحة للجميع مجانًا، ويمكن عرضها وتعديلها وتوزيعها بحرية، ومن أمثلتها لينكس (Linux)."},
+{"t": "mcq", "d": 3, "p": "تحدٍّ ميداني", "q": "⚠️ <b>المرحلة الثانية:</b> ما الخطر الذي يذكره الكتاب على النظام مفتوح المصدر؟", "c": ["أمانه محكوم بالمجتمع وقد يتعرّض للاختراق", "لا يحصل على أي تحديث أو تحسين أبدًا بعد التثبيت", "لا يعمل إلا على أجهزة شركة آبل حصرًا", "يمنع المستخدمين من عرض شيفرته أو تعديلها"], "a": 0, "why": "الكتاب (ص ٤١): نظام الأمان في الأنظمة مفتوحة المصدر محكوم بالمجتمع، وقد يتعرّض للاختراق؛ وهي في المقابل تخضع لتحديثات وتحسينات مستمرة."},
+{"t": "mcq", "d": 3, "p": "تحدٍّ ميداني", "q": "🏫 <b>المرحلة الثالثة:</b> إدارة المدرسة تفضّل نظامًا مغلق المصدر لأجهزتها. أيّ ميزة يذكرها الكتاب تدعم اختيارها؟", "c": ["الشركات المصنّعة توفّر حلول أمان مدمجة ودعمًا مستمرًا", "الشيفرة متاحة لكل الطلبة ليعدّلوها كما يشاؤون دون أي قيود", "النظام مجاني تمامًا ولا يحتاج إلى أي ترخيص", "المجتمع هو من يتحكّم في الأمان والتحديثات"], "a": 0, "why": "الكتاب (ص ٤١): في الأنظمة مغلقة المصدر توفّر الشركات المصنّعة حلول أمان مدمجة ودعمًا مستمرًا."},
+{"t": "mcq", "d": 3, "p": "تحدٍّ ميداني", "q": "📱 <b>المرحلة الرابعة:</b> أيّ مجموعة كلّها أنظمة <b>مغلقة المصدر</b> حسب الكتاب؟", "c": ["Windows و Android و macOS", "Linux و Windows و Android", "Linux و macOS و Windows", "Android و Linux و macOS"], "a": 0, "why": "الكتاب (ص ٤١): من الأمثلة على الأنظمة مغلقة المصدر: نظام التشغيل (Windows) و(Android) و(macOS). أمّا لينكس فمفتوح المصدر."},
+{"t": "mcq", "d": 3, "p": "تحدٍّ ميداني", "q": "📜 <b>المرحلة الخامسة:</b> قرّر النادي استخدام نظام مفتوح المصدر. ما الذي يوجبه الكتاب عليه؟", "c": ["الالتزام بشروط الترخيص", "بيعه للمدارس الأخرى بسعر رمزي", "إخفاء شيفرته عن باقي المستخدمين", "إيقاف تحديثاته حتى لا يتغيّر"], "a": 0, "why": "الكتاب (ص ٤٦، المواطنة الرقمية): في حال استخدام أنظمة التشغيل مفتوحة المصدر يجب الالتزام بشروط الترخيص."},
+{"t": "mcq", "d": 3, "p": "تحدٍّ ميداني", "q": "🔄 <b>المرحلة السادسة:</b> بعد تثبيت الأنظمة على أجهزة المختبر والإدارة، ما الإجراء الذي يطلبه الكتاب ليبقى الوصول إلى أحدث تطبيقات الأمان سهلًا؟", "c": ["تحديث أنظمة التشغيل والبرامج بانتظام", "حذف برامج الحماية لأنها تبطئ الجهاز كثيرًا", "إيقاف التحديثات التلقائية نهائيًا من الإعدادات", "إعطاء كل مستخدم صلاحيات المسؤول الكاملة"], "a": 0, "why": "الكتاب (ص ٤٦، المواطنة الرقمية): يجب تحديث أنظمة التشغيل والبرامج بانتظام؛ لما توفّره من أدوات وإعدادات تسهّل الوصول إلى أحدث تطبيقات الأمان."}
+];
+const LEVELS=[
+ {id:"v1",name:"المستوى الأول — طابور الطلبات",desc:"اطّلاع وتذكّر · كل سؤال طلب له عدّاد صبر · التلميح يعطي اسم الدرس ورقم الصفحة",bank:L1,hints:true,ladder:[10,7,5,3],mode:"queue",patience:45},
+ {id:"v2",name:"المستوى الثاني — دفتر المبرمج",desc:"تطبيق على جهازكما · كل لقطة شاشة صفحة في دفتركما · التلميح باسم الدرس فقط",bank:L2,hints:true,ladder:[10,7,5,3],mode:"notebook",patience:180},
+ {id:"v3",name:"المستوى الثالث — بلاغات الدعم الفنّي",desc:"ثلاثة بلاغات تُحلّ على مراحل · وقت محدّد لكل بلاغ · بلا أي تلميحات · شارة نجوم",bank:L3,hints:false,ladder:[10,8,5,4,3],mode:"cases",cases:[{"t": "البلاغ ١: جهاز جديد للمختبر", "s": 0, "e": 5, "lim": 360, "intro": "📞 <b>بلاغ دعم فنّي:</b> وصل جهاز جديد إلى مختبر المدرسة بلا أي برامج. جهّزاه خطوة خطوة: من البرمجيات الأساسية حتى الحسابات والتطبيقات.", "done": "✅ <b>أُغلق البلاغ الأول:</b> ثبّتّما نظام التشغيل، ووزّعتما الصلاحيات، واخترتما التطبيقات من مصادر موثوقة."}, {"t": "البلاغ ٢: برامج كثيرة مفتوحة", "s": 6, "e": 11, "lim": 360, "intro": "📞 <b>بلاغ دعم فنّي:</b> مستخدم يفتح برامج كثيرة في وقت واحد ويسأل: كيف ينظّم نظام التشغيل كل هذا؟ تتبّعا وظائفه واحدة واحدة.", "done": "✅ <b>أُغلق البلاغ الثاني:</b> ميّزتما إدارة البرامج والذاكرة والإدخال والإخراج."}, {"t": "البلاغ ٣: أيّ نظام تشغيل نختار؟", "s": 12, "e": 17, "lim": 360, "intro": "📞 <b>بلاغ دعم فنّي:</b> نادي الحاسوب وإدارة المدرسة مختلفان: أيّ نظام تشغيل يناسب كلًّا منهما؟ قارنا كما يقارن الكتاب.", "done": "✅ <b>أُغلق البلاغ الثالث:</b> قارنتما بين المفتوح والمغلق المصدر، وحدّدتما واجبات الترخيص والتحديث."}]}
+];
+
+/* ---------- أدوات ---------- */
+const AR=n=>String(n).replace(/\d/g,d=>"٠١٢٣٤٥٦٧٨٩"[d]);
+const $=id=>document.getElementById(id);
+const KEY="jofeh:g7l34:v1";
+function escH(t){return String(t||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function today(){const d=new Date(),MN=["كانون الثاني","شباط","آذار","نيسان","أيار","حزيران","تموز","آب","أيلول","تشرين الأول","تشرين الثاني","كانون الأول"];return AR(d.getDate())+" "+MN[d.getMonth()]+" "+AR(d.getFullYear())}
+function coverSVG(team){
+  let rim="";for(let k=0;k<20;k++){const x=20+k*19;rim+=`<path d="M${x} 14l7 7-7 7-7-7z" fill="#F4845F"/><path d="M${x} 272l7 7-7 7-7-7z" fill="#F4845F"/>`}
+  for(let k=0;k<13;k++){const y=40+k*18;rim+=`<path d="M30 ${y}l7 7-7 7-7-7z" fill="#1B6CA8"/>`}
+  return `<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+  <rect width="400" height="300" fill="#2E4A3A"/><rect x="0" y="0" width="48" height="300" fill="#22382C"/>
+  <rect x="44" y="0" width="6" height="300" fill="#C9A227"/>${rim}
+  <rect x="78" y="58" width="290" height="180" rx="12" fill="#FFF8F0"/><rect x="88" y="68" width="270" height="160" rx="8" fill="none" stroke="#C9A227" stroke-width="2" stroke-dasharray="6 5"/>
+  <text x="223" y="112" text-anchor="middle" font-size="34">💻</text>
+  <text x="223" y="150" text-anchor="middle" font-family="Cairo,Tahoma,sans-serif" font-size="32" font-weight="800" fill="#2A2A2A">دفتر المبرمج</text>
+  <text x="223" y="180" text-anchor="middle" font-family="Cairo,Tahoma,sans-serif" font-size="14" fill="#6B6257">الصف السابع · الدرسان الثالث والرابع</text>
+  <text x="223" y="213" text-anchor="middle" font-family="Cairo,Tahoma,sans-serif" font-size="19" font-weight="700" fill="#1B6CA8">${escH(team)}</text>
+  <path d="M260 238 q20 20 40 0 q20 -20 40 0" stroke="#7A9A4B" stroke-width="3" fill="none"/><ellipse cx="282" cy="250" rx="7" ry="4" fill="#7A9A4B"/><ellipse cx="318" cy="246" rx="7" ry="4" fill="#7A9A4B"/>
+  </svg>`}
+const RANKS=["متدرّب دعم فنّي", "متدرّب دعم فنّي", "مساعد دعم فنّي", "فنّي برمجيات ماهر", "فنّي برمجيات متمكّن", "خبير الأنظمة"];
+function starsOf(p,m){const r=m?p/m:0;return r>=.9?5:r>=.75?4:r>=.6?3:r>=.4?2:r>=.2?1:0}
+function badgeSVG(n,team,live){
+  const st=[0,1,2,3,4].map(k=>{const x=110+(4-k)*45,on=k<n;return `<path transform="translate(${x} 205) scale(1.05)" d="M0-17l5 11 12 1-9 8 3 12-11-6-11 6 3-12-9-8 12-1z" fill="${on?"#FFBF3C":"#E7D9C9"}" stroke="${on?"#C98A00":"#CDBBA6"}" stroke-width="1.5"/>`}).join("");
+  return `<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="#FFF8F0"/>
+  <path d="M150 12h100l-20 60h-60z" fill="#1B6CA8"/><path d="M170 12h60l-12 60h-36z" fill="#F4845F"/>
+  <circle cx="200" cy="120" r="62" fill="#FFBF3C" stroke="#C98A00" stroke-width="5"/><circle cx="200" cy="120" r="48" fill="#FFF3D1" stroke="#C98A00" stroke-width="2" stroke-dasharray="4 4"/>
+  <text x="200" y="136" text-anchor="middle" font-size="46">💻</text>
+  ${st}
+  <text x="200" y="252" text-anchor="middle" font-family="Cairo,Tahoma,sans-serif" font-size="22" font-weight="800" fill="#2A2A2A">${RANKS[n]}</text>
+  <text x="200" y="280" text-anchor="middle" font-family="Cairo,Tahoma,sans-serif" font-size="16" fill="#6B6257">${escH(team)}${live?" · الشارة تكتمل مع كل إجابة":""}</text></svg>`}
+function pageHTML(pg,team,sec){return `<div class="pg"><div class="pgh"><b>دفتر المبرمج · ${escH(team)}</b><span>صفحة ${AR(pg.n)}</span></div>
+  <img src="${pg.img}" alt="${escH(pg.title)}"><div class="pgf">${escH(pg.title)}${sec?" · الشعبة "+escH(sec):""} · ${escH(pg.d)}</div></div>`}
+function bookPages(){const L=LEVELS[S.lv];const out=[];let n=0;L.bank.forEach((q,k)=>{if(q.shot){n++;const pg=S.pages[k];out.push(pg?Object.assign({n},pg):{n,empty:true,title:q.shot})}});return out}
+function saveBook(){try{const db=load();db.book={team:S.team,pages:S.pages};localStorage.setItem(KEY,JSON.stringify(db))}catch(e){$("puzNote").textContent="تنبيه: مساحة الحفظ ممتلئة — الدفتر محفوظ حتى إغلاق الصفحة فقط، فصوّراه قبل الخروج."}}
+function updatePanel(){
+  const L=LEVELS[S.lv];
+  $("hdParts").textContent=S.parts>0?"🔋".repeat(S.parts):"✖ لا بطاريات";
+  const m=multOf(S.streak);$("hdStreak").textContent="🔥 ×"+AR(m)+(S.streak?" ("+AR(S.streak)+")":"");
+  $("hdP").textContent=AR(S.pts+S.bonus)+" نقطة";
+  if(L.mode==="cases"){
+    const n=starsOf(S.pts,S.max);
+    $("puzNote").textContent="نجوم الشارة الآن: "+AR(n)+" من ٥ · مكافآت الوقت والسلسلة: +"+AR(S.bonus);
+    $("book").innerHTML=L.cases.map((C,ci)=>{const cur=S.i>=C.s&&S.i<=C.e,ok=S.i>C.e;
+      return '<div class="case'+(cur?" cur":"")+(ok?" ok":"")+'"><b>'+(ok?"✔ ":cur?"▶ ":"")+C.t+'</b> <span class="sub">· '+fmtT(C.lim*1000)+' دقائق</span><div class="stg">'+
+      Array.from({length:C.e-C.s+1},(_,k)=>{const qi=C.s+k;return '<span class="'+(qi<S.i||(qi===S.i&&S.ok)?"d":qi===S.i?"c":"")+'">'+AR(k+1)+'</span>'}).join("")+'</div></div>'}).join("")+
+      '<div class="badgewrap">'+badgeSVG(n,S.team,true)+'</div>';
+    return;
+  }
+  const g=S.log.filter(x=>x.green).length,y=S.log.length-g;
+  let html='<div class="qsum"><span>🟢 ممتاز: '+AR(g)+'</span><span>🟡 مقبول: '+AR(y)+'</span><span>⏳ بالانتظار: '+AR(L.bank.length-S.log.length)+'</span></div><div class="queue">'+
+    L.bank.map((q,k)=>{const r=S.log.find(x=>x.q===k);const cls=r?(r.green?"g":"y"):(k===S.i?"cur":"");
+      return '<div class="dev '+cls+'"><span class="ic">'+(r?(r.green?"🟢":"🟡"):k===S.i?"💻":"📥")+'</span>'+AR(k+1)+'</div>'}).join("")+'</div>';
+  if(L.mode==="notebook"){const pgs=bookPages(),done=pgs.filter(x=>!x.empty).length;
+    html+='<h3 style="margin:16px 0 6px">📓 صفحات الدفتر: '+AR(done)+' / '+AR(pgs.length)+'</h3><div class="book">'+pgs.map(x=>x.empty?`<div class="pg empty">صفحة ${AR(x.n)}<br>${escH(x.title)}</div>`:pageHTML(x,S.team,S.sec)).join("")+'</div>';}
+  $("puzNote").textContent="أنجزا الطلبات بسرعة ومن أول محاولة لتطلع 🟢 وتكبر سلسلتكما.";
+  $("book").innerHTML=html;
+}
+function setupPanel(){
+  const L=LEVELS[S.lv];
+  $("puz").classList.add("hide");$("book").classList.remove("hide");
+  $("puzTtl").textContent=L.mode==="cases"?"🧰 بلاغات الدعم الفنّي":L.mode==="notebook"?"💻 لوحة الطلبات ودفتر المبرمج":"💻 لوحة الطلبات";
+  updatePanel();
+}
+function multOf(s){return s>=5?3:s>=3?2:1}
+function curCase(){const L=LEVELS[S.lv];return (L.cases||[]).find(C=>S.i>=C.s&&S.i<=C.e)||L.cases[L.cases.length-1]}
+function needPage(){const q=LEVELS[S.lv].bank[S.i];return LEVELS[S.lv].mode==="notebook"&&q.shot&&!S.pages[S.i]}
+function gateNext(){
+  if(!S.ok)return;
+  if(needPage()){$("btnNext").classList.add("hide");const m=$("zoneMsg");if(m)m.innerHTML="✅ الإجابة صحيحة — بقي أن تلصقا اللقطة في الدفتر لتنتقلا.";return}
+  $("btnNext").classList.remove("hide");
+}
+function addShot(file){
+  if(!file||!/^image\//.test(file.type))return;
+  const k=S.i,q=LEVELS[S.lv].bank[k];if(!q.shot)return;
+  const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{
+    const sc=Math.min(1,1000/im.width),c=document.createElement("canvas");c.width=Math.round(im.width*sc);c.height=Math.round(im.height*sc);
+    c.getContext("2d").drawImage(im,0,0,c.width,c.height);
+    S.pages[k]={img:c.toDataURL("image/jpeg",.72),title:q.shot,d:today()};saveBook();
+    const z=$("zone");if(z&&S.i===k){z.classList.add("done");z.innerHTML='<div class="msg">📓 أُضيفت الصفحة إلى دفتركما. تقدرا تلصقا لقطة جديدة لتستبدلاها.</div><div id="zoneMsg"></div>'+
+      '<div style="max-width:320px;margin:8px auto 0">'+pageHTML(Object.assign({n:bookPages().find(x=>x.title===q.shot).n},S.pages[k]),S.team,S.sec)+'</div>'}
+    updatePanel();gateNext();};im.src=fr.result};fr.readAsDataURL(file);
+}
+document.addEventListener("paste",e=>{
+  if(!S||$("scrGame").classList.contains("hide"))return;
+  const q=LEVELS[S.lv].bank[S.i];if(LEVELS[S.lv].mode!=="notebook"||!q.shot)return;
+  const it=[...((e.clipboardData&&e.clipboardData.items)||[])].find(x=>x.type&&x.type.indexOf("image")===0);
+  if(it){e.preventDefault();addShot(it.getAsFile())}
+  else{const m=$("zoneMsg");if(m)m.textContent="ما في صورة بالحافظة — خذا اللقطة أولًا بـ Win+Shift+S ثم الصقاها."}
+});
+function fmtT(ms){const s=Math.floor(ms/1000);return AR(String(Math.floor(s/60)).padStart(2,"0"))+":"+AR(String(s%60).padStart(2,"0"))}
+function elapsed(){return S?(S.el||0)+(S.t0?Date.now()-S.t0:0):0}
+let TIMER=null;
+function tick(){
+  if(!S||!$("hdT"))return;
+  $("hdT").textContent="⏱ "+fmtT(elapsed());
+  const L=LEVELS[S.lv];if(!L||$("scrGame").classList.contains("hide"))return;
+  const bar=$("patFill"),pb=bar&&bar.parentNode;
+  if(L.patience&&S.qT0){
+    const used=(Date.now()-S.qT0)/1000,left=Math.max(0,L.patience-used),r=left/L.patience;
+    bar.style.transform="scaleX("+r+")";pb.classList.toggle("low",r<.35&&r>0);pb.classList.toggle("out",r<=0);
+    $("patLbl").textContent=S.ok?"تمّ إنجاز الطلب":(left>0?"⏳ صبر صاحب الطلب: "+fmtT(left*1000):"⌛ نفد الصبر — الطلب بيطلع 🟡 مقبول");
+  }else if(L.mode==="cases"){
+    const C=curCase(),used=(elapsed()-(S.caseT0||0))/1000,left=C.lim-used,r=Math.max(0,left)/C.lim;
+    bar.style.transform="scaleX("+r+")";pb.classList.toggle("low",r<.35&&r>0);pb.classList.toggle("out",r<=0);
+    $("patLbl").textContent=(left>0?"⏳ وقت تشخيص البلاغ: "+fmtT(left*1000):"⌛ تجاوزتما وقت البلاغ — بتكملا بس بلا مكافأة الوقت")+" · "+C.t;
+  }
+}
+function saveRun(){if(!S)return;const db=load();db.run=db.run||{};
+  db.run[LEVELS[S.lv].id]={i:S.i,pts:S.pts,bonus:S.bonus,streak:S.streak,parts:S.parts,caseT0:S.caseT0,log:S.log,el:elapsed(),name:S.name};store(db)}
+function load(){try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return {}}}
+function store(o){try{localStorage.setItem(KEY,JSON.stringify(o))}catch(e){}}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+let S={name:"",lv:0,i:0,pts:0,max:0,tries:0,used:false,log:[],seq:[]};
+
+/* ---------- منتقي المسارات ---------- */
+function drawLevels(){
+  const db=load(), box=$("lvls"); box.innerHTML="";
+  LEVELS.forEach((L,k)=>{
+    const rec=(db.lv||{})[L.id];
+    const b=document.createElement("button");
+    b.className="lvl";
+    b.innerHTML="<b>"+L.name+"</b><small>"+L.desc+"</small><em>"+AR(L.bank.length)+(L.id==="v3"?" تحدّيًا":" سؤالًا")+"</em>"+
+      (rec?'<span class="done">آخر علامة: '+AR(rec.pts)+" / "+AR(rec.max)+(rec.time?" · ⏱ "+fmtT(rec.time):"")+
+   (rec.best!=null&&rec.best!==rec.pts?" &nbsp;|&nbsp; الأفضل: "+AR(rec.best):"")+"</span>":"")+
+   (((db.run||{})[L.id])?'<span class="done">⏸ محفوظ عند السؤال '+AR(db.run[L.id].i+1)+"</span>":"");
+    b.addEventListener("click",()=>startLevel(k));
+    box.appendChild(b);
+  });
+  const db2=load();
+  if(db2.name)$("nm").value=db2.name;
+  if(db2.name2)$("nm2").value=db2.name2;
+  if(db2.team)$("tm").value=db2.team;
+  if(db2.sec)$("sec").value=db2.sec;
+}
+
+/* ---------- البزل ---------- */
+function cols(n){ for(const c of [5,4,6]) if(n%c===0) return c; return 5 }
+function buildTiles(n){
+  const c=cols(n), r=Math.ceil(n/c), t=$("tiles");
+  t.style.gridTemplateColumns="repeat("+c+",1fr)";
+  t.style.gridTemplateRows="repeat("+r+",1fr)";
+  t.innerHTML="";
+  for(let k=0;k<c*r;k++){
+    const d=document.createElement("div");
+    d.className="tile"; d.id="t"+k;
+    d.textContent=k<n?AR(k+1):"";
+    if(k>=n)d.classList.add("off");
+    t.appendChild(d);
+  }
+}
+
+/* ---------- بدء مستوى ---------- */
+function startLevel(k){
+  const v=$("nm").value.trim();
+  const v2=$("nm2").value.trim();
+  if(v.length<2){$("startErr").textContent="اكتبا الاسم الأول على الأقل 🙂";$("nm").focus();return}
+  $("startErr").textContent="";
+  const L=LEVELS[k];
+  S={name:v+(v2?" و"+v2:""),lv:k,i:0,pts:0,bonus:0,streak:0,parts:3,max:L.bank.length*10,tries:0,used:false,log:[],seq:[],el:0,t0:Date.now(),caseT0:0};
+  S.team=($("tm").value.trim())||("فريق "+S.name); S.sec=$("sec").value.trim(); S.pages={}; S.ok=false;
+  const db=load(); db.name=v; db.name2=v2; db.team=$("tm").value.trim(); db.sec=S.sec;
+  const run=(db.run||{})[L.id];
+  if(run&&run.i>0&&run.i<L.bank.length){
+    if(confirm("عندكما تقدّم محفوظ في هذا المستوى: السؤال "+AR(run.i+1)+" من "+AR(L.bank.length)+"، و"+AR((run.pts||0)+(run.bonus||0))+" نقطة، والوقت "+fmtT(run.el)+".\nموافق = أكملا من حيث توقّفتما\nإلغاء = ابدآ من جديد")){
+      S.i=run.i;S.pts=run.pts||0;S.bonus=run.bonus||0;S.streak=run.streak||0;S.parts=run.parts==null?3:run.parts;S.log=run.log||[];S.el=run.el||0;S.caseT0=run.caseT0||0;
+      if(L.mode==="notebook"&&db.book&&db.book.pages)S.pages=db.book.pages;
+    }else{delete db.run[L.id];}
+  }
+  if(L.mode==="notebook"&&!Object.keys(S.pages).length){delete db.book;}
+  store(db);
+  $("pat").classList.toggle("hide",!(L.patience||L.mode==="cases"));
+  setupPanel();
+  clearInterval(TIMER);TIMER=setInterval(tick,1000);
+  show("scrGame"); render(); tick();
+}
+
+function show(id){["scrStart","scrGame","scrEnd"].forEach(s=>$(s).classList.toggle("hide",s!==id));window.scrollTo(0,0)}
+
+function head(){
+  const L=LEVELS[S.lv];
+  $("hdNm").textContent=S.team;
+  $("hdQ").textContent=AR(S.i+1)+" / "+AR(L.bank.length);
+  $("hdBar").style.width=(S.i/L.bank.length*100)+"%";
+}
+function pointsNow(){
+  const LD=LEVELS[S.lv].ladder||[10,7,5,3]; const f=LD[Math.min(S.tries,LD.length-1)];
+  return Math.max(f-(S.used?2:0),1);
+}
+
+/* ---------- عرض السؤال ---------- */
+function render(){
+  const L=LEVELS[S.lv], q=L.bank[S.i];
+  S.tries=0; S.used=false; S.seq=[]; S.ok=false; S.qT0=Date.now();
+  let intro="";
+  if(L.mode==="cases"){const C=curCase();if(S.i===C.s){S.caseT0=elapsed();intro='<div class="hintbox show" style="margin:0 0 10px">'+C.intro+'</div>'}
+    else if(!S.caseT0&&S.i>C.s){S.caseT0=elapsed();}}
+  head();
+  $("qTag").textContent=L.mode==="cases"?curCase().t+" · المرحلة "+AR(S.i-curCase().s+1)+" من "+AR(curCase().e-curCase().s+1):(q.p||L.name);
+  $("qText").innerHTML=intro+q.q;
+  $("qHint").className="hintbox"; $("qHint").textContent="";
+  $("qFb").className="fb"; $("qFb").innerHTML="";
+  $("btnHint").classList.toggle("hide",!L.hints||!q.hint);
+  $("btnHint").disabled=false;
+  $("btnNext").classList.add("hide");
+  const c=$("qBody").closest(".card");
+  c.classList.remove("qin"); void c.offsetWidth; c.classList.add("qin");
+  const box=$("qBody"); box.innerHTML="";
+  if(L.mode==="notebook"&&q.shot){
+    const z=document.createElement("div");z.className="zone";z.id="zone";
+    z.innerHTML='<div class="msg">📋 صفحة الدفتر: '+escH(q.shot)+'</div><div class="sub" style="color:var(--ink)">بعد أخذ اللقطة ارجعا إلى هنا بـ <bdi dir="ltr"><kbd>Alt</kbd>+<kbd>Tab</kbd></bdi> واضغطا <bdi dir="ltr"><kbd>Ctrl</kbd>+<kbd>V</kbd></bdi> — أو اختارا صورة محفوظة: '+
+      '<label class="btn sec sm" style="display:inline-block;margin-top:6px">📁 اختيار صورة<input type="file" accept="image/*" style="display:none" onchange="addShot(this.files[0])"></label></div><div id="zoneMsg" class="sub"></div>';
+    box.appendChild(z);
+    if(S.pages[S.i]){z.classList.add("done");z.querySelector(".msg").textContent="📓 هذه الصفحة موجودة في دفتركما — تقدرا تلصقا لقطة جديدة لتستبدلاها."}
+  }
+  updatePanel(); tick();
+  if(q.t==="order"){
+    const note=document.createElement("div");
+    note.className="ordhint"; note.textContent="انقرا الخطوات بالترتيب الصحيح، وحدة ورا وحدة.";
+    box.appendChild(note);
+    const gg=document.createElement("div"); gg.className="ord";
+    shuffle(q.items.map((x,i)=>({x,i}))).forEach(o=>{
+      const b=document.createElement("button");
+      b.className="oitem"; b.innerHTML=o.x; b.dataset.i=o.i;
+      b.addEventListener("click",()=>pickOrder(o.i,b));
+      gg.appendChild(b);
+    });
+    box.appendChild(gg);
+  }else{
+    const gg=document.createElement("div"); gg.className="opts";
+    shuffle(q.c.map((txt,k)=>({txt,k}))).forEach(({txt,k})=>{
+      const b=document.createElement("button");
+      b.className="opt"; b.innerHTML=txt; b.dataset.k=k;
+      b.addEventListener("click",()=>answer(k,b));
+      gg.appendChild(b);
+    });
+    box.appendChild(gg);
+  }
+}
+
+/* ---------- الإجابة ---------- */
+function correct(){
+  const L=LEVELS[S.lv], q=L.bank[S.i];
+  const base=pointsNow(), before=S.pts+S.bonus;
+  const inTime=!L.patience||((Date.now()-S.qT0)/1000<=L.patience);
+  const green=S.tries===0&&!S.used&&inTime;
+  S.streak=green?S.streak+1:0;
+  const mult=green?multOf(S.streak):1, bonus=base*(mult-1);
+  S.pts+=base; S.bonus+=bonus; S.ok=true;
+  let caseMsg="";
+  if(L.mode==="cases"){const C=curCase();if(S.i===C.e){const used=(elapsed()-(S.caseT0||0))/1000;
+    if(used<=C.lim){S.bonus+=20;caseMsg="<br>"+C.done+" ⏱ ضمن الوقت: <b>+٢٠ نقطة</b>";}else caseMsg="<br>"+C.done+" ⌛ بعد انتهاء الوقت — بلا مكافأة.";
+    S.caseT0=0;}}
+  const fb=$("qFb");
+  fb.className="fb good show";
+  fb.innerHTML="✅ <b>صحيح! +"+AR(base)+" نقطة"+(bonus?" + "+AR(bonus)+" مكافأة السلسلة ×"+AR(mult):"")+"</b>"+
+    (L.patience?(green?" · 🟢 الطلب طلع ممتاز":" · 🟡 الطلب طلع مقبول"+(!inTime?" (نفد الصبر)":S.used?" (بتلميح)":"")):"")+"<br>"+(q.why||"")+caseMsg;
+  confetti(S.i===L.bank.length-1?110:(green?45:20)); sndGood();
+  countTo($("hdP"),before,S.pts+S.bonus); $("hdP").classList.add("bump");
+  setTimeout(()=>$("hdP").classList.remove("bump"),420);
+  if(mult>1){$("hdStreak").classList.remove("flash");void $("hdStreak").offsetWidth;$("hdStreak").classList.add("flash");}
+  $("btnHint").classList.add("hide");
+  $("btnNext").textContent = S.i===L.bank.length-1 ? "النتيجة ←" : "التالي ←";
+  S.log.push({q:S.i,pts:base,bonus:bonus,tries:S.tries,hint:S.used,green:green});
+  gateNext();
+  head(); updatePanel(); tick();
+}
+function rewind(){
+  const L=LEVELS[S.lv];
+  const floor=L.mode==="cases"?curCase().s:0;
+  const to=Math.max(floor,S.i-3);
+  const gone=S.log.filter(x=>x.q>=to);
+  gone.forEach(x=>{S.pts-=x.pts;S.bonus-=x.bonus||0});
+  S.log=S.log.filter(x=>x.q<to);
+  S.i=to; S.parts=3; S.streak=0;
+  if(L.mode==="cases"&&to===curCase().s)S.caseT0=0;
+  saveRun(); render();
+}
+function wrong(btn,extra){
+  S.tries++; sndBad();
+  S.streak=0; S.parts=Math.max(0,S.parts-1);
+  if(btn){btn.classList.add("bad");if(btn.classList.contains("opt"))btn.disabled=true;
+    if(btn.classList.contains("oitem")){btn.classList.add("wrong");setTimeout(()=>btn.classList.remove("wrong","bad"),400)}}
+  $("hdParts").classList.remove("flash");void $("hdParts").offsetWidth;$("hdParts").classList.add("flash");
+  updatePanel();
+  const fb=$("qFb");
+  if(S.parts===0){
+    const L=LEVELS[S.lv],floor=L.mode==="cases"?curCase().s:0,to=Math.max(floor,S.i-3);
+    fb.className="fb bad show";
+    fb.innerHTML="🔋 <b>نفدت البطاريات!</b><br>"+(to<S.i?"رح ترجعا للسؤال "+AR(to+1)+" وتعيدا آخر "+AR(S.i-to)+" أسئلة، والبطاريات بتنشحن من جديد.":"رح تعيدا هذا السؤال من جديد، والبطاريات بتنشحن.");
+    document.querySelectorAll("#qBody button").forEach(b=>b.disabled=true);
+    setTimeout(rewind,2600);
+    return;
+  }
+  fb.className="fb bad show";
+  fb.innerHTML="❌ <b>مش صح — جرّبا مرة ثانية.</b> بقي معكما "+AR(S.parts)+" "+(S.parts===1?"بطارية":"بطاريات")+" 🔋<br>"+(extra||"ما في انتقال للسؤال التالي إلا بالإجابة الصحيحة.")+
+    (S.tries>=2&&LEVELS[S.lv].hints&&LEVELS[S.lv].bank[S.i].hint?"<br>💡 استعملا زرّ التلميح إذا بدكما.":"");
+}
+function answer(k,btn){
+  const q=LEVELS[S.lv].bank[S.i];
+  if(k===q.a){
+    btn.classList.add("good");
+    [...btn.parentNode.children].forEach(b=>b.disabled=true);
+    correct();
+  }else wrong(btn);
+}
+function pickOrder(i,btn){
+  const q=LEVELS[S.lv].bank[S.i];
+  if(i===S.seq.length){
+    S.seq.push(i);
+    btn.classList.add("pick"); btn.disabled=true;
+    const n=document.createElement("span"); n.className="nm"; n.textContent=AR(S.seq.length);
+    btn.appendChild(n);
+    if(S.seq.length===q.items.length){
+      [...btn.parentNode.children].forEach(b=>b.disabled=true);
+      correct();
+    }
+  }else wrong(btn,"هاي مش الخطوة التالية بالترتيب. فكّرا شو بيجي قبلها.");
+}
+
+$("btnHint").addEventListener("click",()=>{
+  const q=LEVELS[S.lv].bank[S.i];
+  if(S.used||!q.hint||!LEVELS[S.lv].hints)return;
+  S.used=true;
+  $("qHint").className="hintbox show";
+  $("qHint").innerHTML="💡 <b>تلميح:</b> "+q.hint+" (الطلب بيطلع 🟡 وبتنكسر السلسلة)";
+  $("btnHint").disabled=true;
+});
+$("btnNext").addEventListener("click",()=>{
+  S.i++;
+  if(S.i>=LEVELS[S.lv].bank.length)finish(); else {saveRun();render();}
+});
+$("btnBack").addEventListener("click",()=>{saveRun();clearInterval(TIMER);drawLevels();show("scrStart")});
+
+/* ---------- النتيجة ---------- */
+function badge(p,m){
+  const r=p/m;
+  if(r>=.95)return["🥇","إتقان ممتاز"];
+  if(r>=.80)return["🥈","إتقان جيد جدًا"];
+  if(r>=.65)return["🥉","إتقان جيد"];
+  return["🎖️","بحاجة لمراجعة"];
+}
+
+/* ===== نموذج الدرسين الثالث والرابع =====
+   بعد إنشاء النموذج الجديد: خذا رابط "Get pre-filled URL" وضعاه في SUBMIT_NEW.url، وأرقام الحقول (rXXXX) مكانها.
+   ما دام الرابط فارغًا تُرسل النتائج إلى نموذج الدرسين الأول والثاني مع تمييزها باسم «دار البرمجيات في عكّا». */
+const SUBMIT_NEW={url:"",f:{name:"",team:"",cls:"",level:"",score:"",time:""}};
+const SUBMIT_OLD={url:"https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=QoWSx2QeIUimYh4GU_yQCXkPYNJN8CJDkPMMgh2Vy6tUODg0S1M1VFZINFczWVlRTThRQUNHRFhIMy4u",
+ f:{cls:"r43e5b2ed34e345e1ba30786b608224df",level:"r637b4343d36345e19e3a438ac27566ff",score:"r97c591a829f04904ae5e01e4870c0ba0",name:"r7ab483cd2eeb4108a9207e81115eef5d"},
+ grade:"السابع"};
+const SUBMIT=SUBMIT_NEW.url?SUBMIT_NEW:SUBMIT_OLD;
+function sendLinks(){
+  const L=LEVELS[S.lv];
+  const names=[$("nm").value,$("nm2").value].map(x=>(x||"").trim()).filter(Boolean);
+  const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  return names.map(t=>{const u=new URL(SUBMIT.url);
+    u.searchParams.set(SUBMIT.f.name,t);u.searchParams.set(SUBMIT.f.cls,"السابع"+(S.sec?" "+S.sec:""));
+    if(SUBMIT.f.team)u.searchParams.set(SUBMIT.f.team,S.team);
+    u.searchParams.set(SUBMIT.f.level,(SUBMIT===SUBMIT_OLD?"دار البرمجيات في عكّا — ":"")+L.name);if(SUBMIT.f.time){u.searchParams.set(SUBMIT.f.score,AR(S.pts)+" / "+AR(S.max)+" (+"+AR(S.bonus)+" مكافأة)");u.searchParams.set(SUBMIT.f.time,fmtT(S.done||0));}
+    else u.searchParams.set(SUBMIT.f.score,AR(S.pts)+" / "+AR(S.max)+" (+"+AR(S.bonus)+" مكافأة) · الوقت "+fmtT(S.done||0));
+    return '<a class="btn" style="text-decoration:none" target="_blank" rel="noopener" href="'+u.toString()+'">📤 إرسال نتيجة '+esc(t)+'</a>';}).join("");
+}
+function finish(){
+  clearInterval(TIMER); S.done=elapsed(); S.t0=0; S.el=S.done; tick();
+  const L=LEVELS[S.lv];
+  const [ic,ttl]=badge(S.pts,S.max);
+  const first=S.log.filter(x=>x.tries===0).length;
+  const noHint=S.log.filter(x=>!x.hint).length;
+  $("eTtl").textContent=L.name;
+  $("eScore").innerHTML="<bdi>"+AR(S.pts)+"</bdi> / <bdi>"+AR(S.max)+"</bdi>"+
+    '<div style="font-size:17px;color:var(--ink);font-weight:700;margin-top:4px">المكافآت: +'+AR(S.bonus)+' · مجموع النقاط: '+AR(S.pts+S.bonus)+
+    (L.mode!=="cases"?' · 🟢 '+AR(S.log.filter(x=>x.green).length)+' من '+AR(L.bank.length)+' طلبات ممتازة':'')+'</div>';
+  $("eDet").innerHTML="<b>"+escH(S.team)+"</b> ("+escH(S.name)+")"+(S.sec?" · الشعبة "+escH(S.sec):"")+" &nbsp;·&nbsp; ⏱ وقت الإنجاز: <b><bdi>"+fmtT(S.done)+"</bdi></b>";
+  if(L.mode==="cases"){const n=starsOf(S.pts,S.max);$("eBdg").innerHTML='<div class="badgewrap">'+badgeSVG(n,S.team,false)+'</div>';$("eBdg").style.fontSize="16px";}
+  else{$("eBdg").textContent=ic;$("eBdg").style.fontSize="40px";}
+  $("eBookCard").classList.toggle("hide",L.mode!=="notebook");
+  if(L.mode==="notebook"){const pgs=bookPages().filter(x=>!x.empty);
+    $("eBook").innerHTML='<div style="text-align:center;margin:8px 0 14px"><div class="shot" style="padding:14px"><h2 style="margin:0">دفتر المبرمج</h2><div style="font-size:20px;font-weight:700;color:var(--tl)">'+escH(S.team)+'</div><div class="sub">'+escH(S.name)+(S.sec?" · الشعبة "+escH(S.sec):"")+" · "+today()+" · "+AR(pgs.length)+' صفحات</div></div></div><div class="bookbig">'+pgs.map(x=>pageHTML(x,S.team,S.sec)).join("")+"</div>";}
+  const d=new Date();
+  const MN=["كانون الثاني","شباط","آذار","نيسان","أيار","حزيران","تموز","آب","أيلول","تشرين الأول","تشرين الثاني","كانون الأول"];
+  $("eDate").innerHTML=ttl+" &nbsp;·&nbsp; <bdi>"+AR(d.getDate())+"</bdi> "+MN[d.getMonth()]+" <bdi>"+AR(d.getFullYear())+"</bdi>";
+
+  const db=load(); db.lv=db.lv||{};
+  const prev=db.lv[L.id];
+  db.lv[L.id]={pts:S.pts,bonus:S.bonus,max:S.max,first:first,n:L.bank.length,time:S.done,
+               best:Math.max((prev&&prev.best)||0,S.pts),
+               bestTime:(prev&&prev.best>S.pts)?prev.bestTime:((prev&&prev.best===S.pts&&prev.bestTime)?Math.min(prev.bestTime,S.done):S.done),
+               tries:((prev&&prev.tries)||0)+1};
+  if(db.run)delete db.run[L.id];
+  db.name=S.name; store(db);
+
+  const all=LEVELS.map(x=>({n:x.name,r:(db.lv||{})[x.id]}));
+  const tot=all.reduce((a,b)=>a+((b.r&&b.r.pts)||0),0);
+  const totm=all.reduce((a,b)=>a+((b.r&&b.r.max)||0),0);
+  $("eTbl").innerHTML=all.map(x=>
+    "<tr><td style='text-align:right'>"+x.n.split(" — ")[0]+"</td><td><b>"+
+    (x.r?AR(x.r.pts)+" / "+AR(x.r.max):"—")+"</b></td><td>"+(x.r&&x.r.time?"⏱ "+fmtT(x.r.time):"")+"</td></tr>").join("")+
+    (totm?"<tr><td style='text-align:right;border-top:2px solid var(--or)'><b>المجموع</b></td><td style='border-top:2px solid var(--or)'><b>"+AR(tot)+" / "+AR(totm)+"</b></td></tr>":"");
+
+  $("rev").innerHTML=L.bank.map((q,k)=>{
+    const g=S.log.find(x=>x.q===k)||{pts:0,tries:0,hint:false};
+    return '<div style="border-bottom:1px solid var(--line);padding:7px 0">'+
+      '<b>'+AR(k+1)+'.</b> <b>'+AR(g.pts)+'</b> نقطة'+
+      (g.tries?' · محاولات خاطئة: '+AR(g.tries):' · من أول محاولة ✔')+(g.hint?' · بتلميح':'')+
+      '<div class="sub">'+(q.why||"")+'</div></div>';
+  }).join("");
+
+  const nxt=S.lv+1;
+  $("btnNextLvl").classList.toggle("hide",nxt>=LEVELS.length);
+  if(nxt<LEVELS.length)$("btnNextLvl").textContent=LEVELS[nxt].name.split(" — ")[0]+" ←";
+  $("hdBar").style.width="100%";
+  try{$("eSend").innerHTML=sendLinks();}catch(e){$("eSend").innerHTML="";}
+  show("scrEnd");
+  setTimeout(()=>confetti(130),260);
+  setTimeout(()=>confetti(90),900);
+}
+$("btnNextLvl").addEventListener("click",()=>startLevel(S.lv+1));
+$("btnMenu").addEventListener("click",()=>{drawLevels();show("scrStart")});
+$("btnRetry").addEventListener("click",()=>startLevel(S.lv));
+
+drawLevels();
+
+/* ---------- ٩) تأثيرات بصرية وصوتية خفيفة ---------- */
+let FX = (function(){
+  try{ return localStorage.getItem("jofeh:fx")!=="0" }catch(e){ return true }
+})();
+const fxBtn=document.createElement("button");
+fxBtn.className="fxbtn noprint";
+fxBtn.textContent=FX?"✨ الحركة: مفعّلة":"✨ الحركة: مخفّفة";
+fxBtn.addEventListener("click",()=>{
+  FX=!FX;
+  document.body.classList.toggle("fxoff",!FX);
+  fxBtn.textContent=FX?"✨ الحركة: مفعّلة":"✨ الحركة: مخفّفة";
+  try{localStorage.setItem("jofeh:fx",FX?"1":"0")}catch(e){}
+});
+document.body.appendChild(fxBtn);
+document.body.classList.toggle("fxoff",!FX);
+
+/* كونفيتي بسيط على canvas — يتوقف تلقائيًا */
+const fxc=document.createElement("canvas"); fxc.id="fxc"; document.body.appendChild(fxc);
+const ctx=fxc.getContext("2d");
+let parts=[],raf=0;
+function fit(){fxc.width=innerWidth;fxc.height=innerHeight}
+addEventListener("resize",fit); fit();
+const COLS=["#F4845F","#FFBF3C","#1B6CA8","#1E7A4B","#FFF8F0"];
+function confetti(n){
+  if(!FX)return;
+  const cx=innerWidth/2, cy=innerHeight*0.32;
+  for(let k=0;k<n;k++){
+    const a=Math.random()*Math.PI*2, s=3+Math.random()*7;
+    parts.push({x:cx,y:cy,vx:Math.cos(a)*s,vy:Math.sin(a)*s-4,
+      c:COLS[k%COLS.length],r:3+Math.random()*4,rot:Math.random()*6,vr:(Math.random()-.5)*.4,life:62});
+  }
+  if(!raf)raf=requestAnimationFrame(step);
+}
+function step(){
+  ctx.clearRect(0,0,fxc.width,fxc.height);
+  parts=parts.filter(p=>p.life>0);
+  parts.forEach(p=>{
+    p.vy+=0.22; p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr; p.life--;
+    ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+    ctx.globalAlpha=Math.min(1,p.life/22); ctx.fillStyle=p.c;
+    ctx.fillRect(-p.r,-p.r*.6,p.r*2,p.r*1.2); ctx.restore();
+  });
+  if(parts.length){raf=requestAnimationFrame(step)}else{raf=0;ctx.clearRect(0,0,fxc.width,fxc.height)}
+}
+
+/* نغمة نجاح/خطأ مولّدة بالكود — بلا ملفات صوت */
+let AC=null;
+function tone(seq){
+  if(!FX)return;
+  try{
+    AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+    let t=AC.currentTime;
+    seq.forEach(([f,d])=>{
+      const o=AC.createOscillator(), g=AC.createGain();
+      o.type="sine"; o.frequency.value=f;
+      g.gain.setValueAtTime(0.0001,t);
+      g.gain.exponentialRampToValueAtTime(0.14,t+0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001,t+d);
+      o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t+d+0.02);
+      t+=d*0.85;
+    });
+  }catch(e){}
+}
+const sndGood=()=>tone([[523,.12],[659,.12],[784,.2]]);
+const sndBad =()=>tone([[300,.13],[220,.17]]);
+
+/* عدّاد نقاط تصاعدي */
+function countTo(el,from,to){
+  if(!FX||from===to){el.textContent=AR(to)+" نقطة";return}
+  const t0=performance.now(), dur=520;
+  (function tick(t){
+    const k=Math.min(1,(t-t0)/dur);
+    el.textContent=AR(Math.round(from+(to-from)*(1-Math.pow(1-k,3))))+" نقطة";
+    if(k<1)requestAnimationFrame(tick);
+  })(t0);
+}
+
+</script>
+
+</body>
+</html>
