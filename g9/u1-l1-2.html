@@ -665,4 +665,27 @@ function results(){
 }
 </script>
 
+<script>
+/* ===== إرسال النتيجة إلى «سجل نتائج ألعاب المهارات الرقمية» + مؤقّت + أفضل نتيجة وعدد المحاولات ===== */
+(function(){var b=document.getElementById("start");if(b)b.addEventListener("click",function(){window.__t0=Date.now();});})();
+const RESULT_FORM={url:"https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=QoWSx2QeIUimYh4GU_yQCXkPYNJN8CJDkPMMgh2Vy6tUQzFUN1k1OEI2S1Y5NlozQ05MMVVGT1JPMy4u",field:"r5fcb6c37d72c494ea4afd2dda3eabe41",game:"G9L12"};
+function submitUI(total,max){
+  const clean=t=>String(t||"").replace(/[|\n\r]/g," ").trim();
+  const secs=Math.round((Date.now()-(window.__t0||Date.now()))/1000);
+  const lvn=LEVELS.indexOf(CUR)+1, names=clean(S.players.join(" و "));
+  let cls="";try{cls=clean((JSON.parse(localStorage.getItem(KEY)||"{}")).cls)}catch(e){}
+  const BK="dsgbest:"+document.title; let db={};try{db=JSON.parse(localStorage.getItem(BK)||"{}")}catch(e){}
+  const k=CUR.id+"|"+names, r=db[k]||{best:-1,secs:0,tries:0};
+  if(!window.__counted){r.tries++;window.__counted=true;setTimeout(function(){window.__counted=false},3000);}
+  if(total>r.best||(total===r.best&&secs<r.secs)){r.best=total;r.secs=secs;}
+  db[k]=r;try{localStorage.setItem(BK,JSON.stringify(db))}catch(e){}
+  const gnum=parseInt(RESULT_FORM.game.replace(/\D/g,""),10);
+  const chk=(r.best*7919+r.secs*104+r.tries*31+max*17+lvn*101+gnum*1009+52813)%99991;
+  const code=[RESULT_FORM.game,lvn,r.best,max,r.secs,r.tries,names,cls,names,chk].join("|");
+  const u=RESULT_FORM.url+"&"+RESULT_FORM.field+"="+encodeURIComponent(code);
+  const mm=s=>String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
+  return `<div class="row" style="justify-content:center;margin-top:10px"><a class="sendbtn" target="_blank" rel="noopener" href="${u}">📤 إرسال النتيجة</a></div>
+  <p class="sub" style="font-size:14.5px">مدة هذه المحاولة ${mm(secs)} · أفضل نتيجة لكما ${r.best} من ${max} · عدد المحاولات ${r.tries}. افتحا الرابط واضغطا «إرسال» فقط.</p>`;
+}
+</script>
 </body></html>
