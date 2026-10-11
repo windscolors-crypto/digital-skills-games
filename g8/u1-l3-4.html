@@ -337,68 +337,6 @@ section{animation:fin .4s ease-out}
    محتوى الأسئلة من كتاب الطالب حرفيًا. ما في انتقال بدون إجابة صحيحة.
    ========================================================= */
 
-const ART={
-artA:`<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-<defs><pattern id="tzA" width="20" height="20" patternUnits="userSpaceOnUse">
-<rect width="20" height="20" fill="#1B6CA8"/><path d="M10 2 L18 10 L10 18 L2 10 Z" fill="#FFF8F0"/>
-<path d="M10 6 L14 10 L10 14 L6 10 Z" fill="#F4845F"/></pattern></defs>
-<rect width="400" height="300" fill="#FFF8F0"/>
-<rect width="400" height="18" fill="url(#tzA)"/><rect y="282" width="400" height="18" fill="url(#tzA)"/>
-<rect x="0" y="18" width="13" height="264" fill="url(#tzA)"/><rect x="387" y="18" width="13" height="264" fill="url(#tzA)"/>
-<rect x="60" y="52" width="280" height="168" rx="10" fill="#2A2A2A"/>
-<rect x="70" y="62" width="260" height="148" rx="6" fill="#123B55"/>
-<path d="M200 92 L232 104 L232 128 C232 148 218 160 200 166 C182 160 168 148 168 128 L168 104 Z" fill="#1B6CA8" stroke="#FFBF3C" stroke-width="3"/>
-<path d="M186 128 L197 139 L216 118" fill="none" stroke="#FFF8F0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-<rect x="110" y="182" width="180" height="12" rx="6" fill="#0C2A3C"/>
-<rect x="110" y="182" width="140" height="12" rx="6" fill="#FFBF3C"/>
-<text x="200" y="208" font-family="Cairo,Tahoma,sans-serif" font-size="12" fill="#CFE6F5" text-anchor="middle">تحديث النظام والنسخ الاحتياطي</text>
-<rect x="150" y="220" width="100" height="10" fill="#4A4A4A"/><rect x="128" y="230" width="144" height="10" rx="4" fill="#6E6E6E"/>
-<text x="200" y="266" font-family="Cairo,Tahoma,sans-serif" font-size="16" font-weight="800" fill="#F4845F" text-anchor="middle">الدرس الثالث — صيانة الأعطال البرمجية</text>
-</svg>`,
-
-artB:`<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-<defs><pattern id="tzB" width="20" height="20" patternUnits="userSpaceOnUse">
-<rect width="20" height="20" fill="#1E7A4B"/><path d="M10 2 L18 10 L10 18 L2 10 Z" fill="#FFF8F0"/>
-<path d="M10 6 L14 10 L10 14 L6 10 Z" fill="#FFBF3C"/></pattern></defs>
-<rect width="400" height="300" fill="#FFF8F0"/>
-<rect width="400" height="18" fill="url(#tzB)"/><rect y="282" width="400" height="18" fill="url(#tzB)"/>
-<rect x="0" y="18" width="13" height="264" fill="url(#tzB)"/><rect x="387" y="18" width="13" height="264" fill="url(#tzB)"/>
-<rect x="96" y="70" width="208" height="140" rx="10" fill="#8C96A0" stroke="#5E6975" stroke-width="4"/>
-<circle cx="200" cy="140" r="54" fill="#39414A"/><circle cx="200" cy="140" r="16" fill="#8C96A0"/>
-<circle cx="200" cy="140" r="5" fill="#2A2A2A"/>
-<path d="M258 92 L222 132" stroke="#C9CFD6" stroke-width="9" stroke-linecap="round"/>
-<circle cx="260" cy="90" r="9" fill="#C9CFD6"/>
-<rect x="110" y="84" width="22" height="7" rx="3" fill="#C9CFD6"/><rect x="110" y="96" width="14" height="7" rx="3" fill="#C9CFD6"/>
-<g transform="translate(300,196) rotate(-28)">
-<rect x="-7" y="-34" width="14" height="48" rx="4" fill="#F4845F"/>
-<path d="M-13 -46 a13 13 0 1 1 26 0 l-6 10 h-14 z" fill="#FFBF3C" stroke="#D99A1F" stroke-width="2"/>
-</g>
-<text x="200" y="238" font-family="Cairo,Tahoma,sans-serif" font-size="13" fill="#4A5560" text-anchor="middle">Defragment · Disk Cleanup · Troubleshoot</text>
-<text x="200" y="266" font-family="Cairo,Tahoma,sans-serif" font-size="16" font-weight="800" fill="#1E7A4B" text-anchor="middle">الدرس الرابع — أدوات نظام التشغيل</text>
-</svg>`,
-
-artC:`<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-<defs><pattern id="tzC" width="20" height="20" patternUnits="userSpaceOnUse">
-<rect width="20" height="20" fill="#F4845F"/><path d="M10 2 L18 10 L10 18 L2 10 Z" fill="#FFF8F0"/>
-<path d="M10 6 L14 10 L10 14 L6 10 Z" fill="#1B6CA8"/></pattern></defs>
-<rect width="400" height="300" fill="#FFF8F0"/>
-<rect width="400" height="18" fill="url(#tzC)"/><rect y="282" width="400" height="18" fill="url(#tzC)"/>
-<rect x="0" y="18" width="13" height="264" fill="url(#tzC)"/><rect x="387" y="18" width="13" height="264" fill="url(#tzC)"/>
-<rect x="34" y="60" width="150" height="170" rx="8" fill="#525C66" stroke="#39414A" stroke-width="4"/>
-<rect x="46" y="72" width="126" height="146" rx="4" fill="#2F363D"/>
-<rect x="56" y="84" width="104" height="16" rx="3" fill="#1B6CA8"/><rect x="56" y="104" width="104" height="16" rx="3" fill="#1B6CA8"/>
-<rect x="56" y="132" width="60" height="42" rx="4" fill="#8C96A0"/>
-<circle cx="138" cy="186" r="20" fill="#39414A" stroke="#6E7A86" stroke-width="3"/>
-<path d="M138 170 L138 202 M122 186 L154 186" stroke="#6E7A86" stroke-width="3"/>
-<rect x="206" y="104" width="162" height="112" rx="10" fill="#E4D2BE" stroke="#C09A72" stroke-width="4"/>
-<rect x="222" y="120" width="52" height="18" rx="3" fill="#1B6CA8"/><text x="248" y="134" font-family="Cairo,Tahoma,sans-serif" font-size="12" font-weight="800" fill="#fff" text-anchor="middle">١</text>
-<rect x="294" y="120" width="56" height="30" rx="3" fill="#8C96A0"/><text x="322" y="140" font-family="Cairo,Tahoma,sans-serif" font-size="12" font-weight="800" fill="#2A2A2A" text-anchor="middle">٢</text>
-<circle cx="248" cy="178" r="20" fill="#39414A"/><text x="248" y="183" font-family="Cairo,Tahoma,sans-serif" font-size="12" font-weight="800" fill="#FFBF3C" text-anchor="middle">٣</text>
-<rect x="292" y="160" width="60" height="36" rx="4" fill="#6E8F4A"/><text x="322" y="183" font-family="Cairo,Tahoma,sans-serif" font-size="12" font-weight="800" fill="#fff" text-anchor="middle">٤</text>
-<text x="287" y="236" font-family="Cairo,Tahoma,sans-serif" font-size="12" fill="#7B5E3B" text-anchor="middle">صينية القطع المرقّمة</text>
-<text x="200" y="266" font-family="Cairo,Tahoma,sans-serif" font-size="16" font-weight="800" fill="#F4845F" text-anchor="middle">مهمات المختبر — ابحثي بنفسك</text>
-</svg>`
-};
 
 const L1=[
 {"t":"mcq","d":1,"p":"سؤال تذكّر","q":"صيانة البرمجيات — كما وصفها الكتاب — هي:","c":["مكمّلة لصيانة المكونات المادية","بديل عن صيانة المكونات المادية","خاصة بالأجهزة القديمة فقط دون الحديثة","إجراء يُنفَّذ مرة واحدة عند شراء الجهاز"],"a":0,"hint":"ارجعا إلى الدرس الثالث: صيانة الأعطال البرمجية — ص ٥٠.","why":"الكتاب: الأعطال قد تصيب المكونات البرمجية أيضًا، وتُعدّ صيانة البرمجيات مكمّلة لصيانة المكونات المادية."},
@@ -968,22 +906,6 @@ function countTo(el,from,to){
   })(t0);
 }
 
-/* ===== إرسال النتيجة إلى نموذج «سجل نتائج ألعاب المهارات الرقمية» (رمز واحد، الاسم من حساب الأونروا) ===== */
-const RESULT_FORM={url:"https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=QoWSx2QeIUimYh4GU_yQCXkPYNJN8CJDkPMMgh2Vy6tUQzFUN1k1OEI2S1Y5NlozQ05MMVVGT1JPMy4u",field:"r5fcb6c37d72c494ea4afd2dda3eabe41",game:"G8L34"};
-function resultCode(){
-  const L=LEVELS[S.lv], r=((load().lv)||{})[L.id]||{};
-  const clean=t=>String(t||"").replace(/[|\n\r]/g," ").trim();
-  const lvn=S.lv+1, sc=(r.best!=null?r.best:S.pts), mx=S.max;
-  const secs=Math.round(((r.bestTime!=null?r.bestTime:S.done)||0)/1000), at=r.tries||1;
-  const gnum=parseInt(RESULT_FORM.game.replace(/\D/g,""),10);
-  const chk=(sc*7919+secs*104+at*31+mx*17+lvn*101+gnum*1009+52813)%99991;
-  return [RESULT_FORM.game,lvn,sc,mx,secs,at,clean(S.team),clean(S.sec),clean(S.name),chk].join("|");
-}
-function sendLinks(){
-  const u=RESULT_FORM.url+"&"+RESULT_FORM.field+"="+encodeURIComponent(resultCode());
-  return '<a class="btn" style="text-decoration:none" target="_blank" rel="noopener" href="'+u+'">📤 إرسال النتيجة</a>'+
-    '<div class="sub" style="width:100%;margin-top:6px">يُرسل أفضل نتيجة لكما في هذا المستوى ومدّتها وعدد المحاولات. افتحا الرابط واضغطا «إرسال» فقط.</div>';
-}
 </script>
 
 </body>

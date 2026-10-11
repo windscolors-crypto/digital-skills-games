@@ -1,0 +1,941 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ورشة الزيتونة الختامية — الصف الثامن · مراجعة الوحدة الأولى وغلقها</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --or:#F4845F;        /* برتقالي السجل */
+  --cr:#FFF8F0;        /* كريمي */
+  --tl:#1B6CA8;        /* تيل */
+  --gd:#FFBF3C;        /* ذهبي */
+  --ink:#2A2A2A;
+  --mut:#6B6257;
+  --ok:#1E7A4B;
+  --no:#B23A2F;
+  --line:#E7D9C9;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:'Cairo','Segoe UI','Tahoma',sans-serif;
+  background:var(--cr); color:var(--ink);
+  font-size:17px; line-height:1.7;
+}
+.wrap{max-width:980px;margin:0 auto;padding:14px 14px 40px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:14px;
+  box-shadow:0 2px 0 rgba(0,0,0,.03)}
+h1,h2,h3{margin:0 0 8px;line-height:1.4}
+h1{font-size:27px;font-weight:800}
+h2{font-size:21px;font-weight:800}
+.sub{color:var(--mut);font-size:15px}
+.btn{font-family:inherit;font-size:17px;font-weight:600;cursor:pointer;border:0;border-radius:12px;
+  padding:12px 20px;background:var(--or);color:#fff;transition:filter .12s}
+.btn:hover{filter:brightness(1.07)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.sec{background:#fff;color:var(--tl);border:2px solid var(--tl)}
+.btn.gold{background:var(--gd);color:#4A3200}
+.btn.sm{padding:8px 14px;font-size:15px}
+input[type=text]{font-family:inherit;font-size:17px;padding:11px 14px;border:2px solid var(--line);
+  border-radius:12px;width:100%;background:#fff;color:var(--ink)}
+input[type=text]:focus{outline:0;border-color:var(--or)}
+
+/* ===== الرأس ===== */
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  background:linear-gradient(135deg,var(--or),#E8694B);color:#fff;border-radius:16px;padding:14px 18px;margin-bottom:14px}
+.top .nm{font-weight:800;font-size:19px}
+.top .sp{flex:1}
+.pill{background:rgba(255,255,255,.22);border-radius:999px;padding:5px 14px;font-weight:700;font-size:15px}
+.bar{height:9px;background:#F0E2D2;border-radius:999px;overflow:hidden;margin-top:10px}
+.bar>i{display:block;height:100%;background:var(--tl);width:0;transition:width .35s}
+
+/* ===== شبكة البزل ===== */
+.puz{position:relative;border-radius:14px;overflow:hidden;border:3px solid var(--gd);background:#fff;aspect-ratio:4/3}
+.puz svg{display:block;width:100%;height:100%}
+.tiles{position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,1fr)}
+.tile{background:#6E5B4B;border:1px solid rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:800;font-size:19px;transition:opacity .5s,transform .5s}
+.tile.off{opacity:0;transform:scale(.7);pointer-events:none}
+
+/* ===== السجل ===== */
+.srch{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.srch input{flex:1;min-width:200px}
+.tblwrap{max-height:330px;overflow:auto;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{background:#FBEFE4;position:sticky;top:0;font-weight:800;color:#6b4a35}
+tr.hit td{background:#FFF4D6}
+.no-w{color:var(--no);font-weight:700}
+.ye-w{color:var(--ok);font-weight:700}
+.cnt{font-size:14px;color:var(--mut);margin-top:6px}
+
+/* ===== السؤال ===== */
+.tag{display:inline-block;background:#EAF2F9;color:var(--tl);border-radius:999px;padding:3px 12px;
+  font-size:14px;font-weight:700;margin-bottom:8px}
+.q{font-size:20px;font-weight:700;margin:4px 0 14px}
+.q code{background:#2A2A2A;color:#FFD88A;padding:2px 9px;border-radius:7px;font-size:19px;letter-spacing:1px;
+  font-family:ui-monospace,Consolas,monospace;direction:ltr;display:inline-block}
+.opts{display:grid;gap:9px}
+.opt{font-family:inherit;font-size:17px;text-align:right;background:#fff;border:2px solid var(--line);
+  border-radius:12px;padding:12px 15px;cursor:pointer;transition:border-color .12s,background .12s}
+.opt:hover:not(:disabled){border-color:var(--or);background:#FFF9F4}
+.opt.good{border-color:var(--ok);background:#E9F7EF}
+.opt.bad{border-color:var(--no);background:#FBECEA;opacity:.75}
+.opt:disabled{cursor:default;color:var(--ink);-webkit-text-fill-color:var(--ink)}
+.opt.bad:disabled{color:var(--mut);-webkit-text-fill-color:var(--mut)}
+.fb{margin-top:12px;border-radius:12px;padding:12px 14px;font-size:16px;display:none}
+.fb.show{display:block}
+.fb.good{background:#E9F7EF;border:1px solid #BFE4CE}
+.fb.bad{background:#FBECEA;border:1px solid #F0CFC9}
+.hintbox{margin-top:10px;background:#FFF7E3;border:1px dashed var(--gd);border-radius:12px;padding:10px 13px;
+  font-size:15px;display:none}
+.hintbox.show{display:block}
+.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:12px}
+
+/* ===== الشهادة ===== */
+.cert{border:6px double var(--or);border-radius:16px;padding:26px;text-align:center;background:#fff}
+.cert .ttl{font-size:25px;font-weight:800;color:var(--tl)}
+.cert .who{font-size:31px;font-weight:800;margin:14px 0;color:var(--or)}
+.cert .sc{font-size:21px;font-weight:700}
+.cert .bdg{font-size:46px;margin:6px 0}
+.cert .ftr{margin-top:16px;font-size:14px;color:var(--mut)}
+.skill{background:#EAF2F9;border:1px solid #C9DEEE;border-radius:12px;padding:14px 16px;font-size:16px}
+.skill kbd{background:#2A2A2A;color:#fff;border-radius:6px;padding:2px 8px;font-size:14px;
+  font-family:ui-monospace,Consolas,monospace;direction:ltr;display:inline-block}
+.hide{display:none}
+/* ===== التحدي: الطابور والصبر والقطع ===== */
+.pat{margin:-4px 0 10px}.pat.hide{display:none}
+.patlbl{font-size:14px;font-weight:700;color:var(--mut);margin-bottom:4px}
+.patbar{height:10px;background:#F0E2D2;border-radius:999px;overflow:hidden}
+.patbar>i{display:block;height:100%;width:100%;background:var(--ok);transform-origin:right center;transition:transform 1s linear,background .3s}
+.patbar.low>i{background:var(--gd)}.patbar.out>i{background:var(--no)}
+.queue{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:8px}
+.dev{border:2px solid var(--line);border-radius:12px;padding:6px 4px;text-align:center;font-size:13px;background:#fff;line-height:1.3}
+.dev .ic{font-size:22px;display:block}
+.dev.cur{border-color:var(--or);box-shadow:0 0 0 3px rgba(244,132,95,.25)}
+.dev.g{background:#EEF7F1;border-color:var(--ok)}.dev.y{background:#FFF6DD;border-color:var(--gd)}
+.qsum{display:flex;gap:14px;flex-wrap:wrap;margin:0 0 10px;font-weight:700}
+.case{border:2px solid var(--line);border-radius:14px;padding:10px 12px;margin-bottom:10px;background:#fff}
+.case.cur{border-color:var(--or)}.case.ok{border-color:var(--ok);background:#EEF7F1}
+.case .stg{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.case .stg span{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--line);font-size:13px;font-weight:700;background:#fff}
+.case .stg span.d{background:var(--ok);border-color:var(--ok);color:#fff}.case .stg span.c{border-color:var(--or);color:var(--or)}
+.flash{animation:fl .6s}@keyframes fl{0%{transform:scale(1)}40%{transform:scale(1.15)}100%{transform:scale(1)}}
+/* ===== دفتر الورشة والشارة ===== */
+.zone{border:3px dashed var(--tl);border-radius:14px;padding:14px;margin:10px 0 14px;background:#F3F8FC;text-align:center}
+.zone.done{border-style:solid;border-color:var(--ok);background:#EEF7F1}
+.zone .msg{font-weight:700}
+.book{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.pg{background:#FFFDF8;border:1px solid var(--line);border-inline-start:6px solid var(--or);border-radius:10px;overflow:hidden;font-size:13px}
+.pg .pgh{background:repeating-linear-gradient(45deg,#FBE9DC 0 8px,#FFF8F0 8px 16px);padding:6px 9px;display:flex;justify-content:space-between;gap:6px;flex-wrap:wrap}
+.pg img{display:block;width:100%;height:auto;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.pg .pgf{padding:4px 9px;color:var(--mut)}
+.pg.empty{display:flex;align-items:center;justify-content:center;min-height:110px;color:#B9A897;font-weight:700;border-inline-start-color:var(--line)}
+.bookbig{display:grid;gap:16px}
+.bookbig .pg{font-size:15px;break-inside:avoid;page-break-inside:avoid}
+.badgewrap{display:flex;justify-content:center;padding:8px}
+.badgewrap svg{width:min(100%,360px);height:auto}
+@media print{
+  body{background:#fff}
+  .noprint{display:none!important}
+  .card{border:0;box-shadow:none;margin:0;padding:0}
+}
+@media(max-width:560px){
+  body{font-size:16px}
+  .q{font-size:18px}
+  h1{font-size:23px}
+}
+/* ===== تأثيرات بصرية خفيفة (transform/opacity فقط) ===== */
+#fxc{position:fixed;inset:0;pointer-events:none;z-index:60}
+.tile{backface-visibility:hidden}
+.tile.off{opacity:0;transform:rotateY(85deg) scale(.6)}
+.tile.pop{animation:tpop .55s ease-out}
+@keyframes tpop{0%{box-shadow:0 0 0 0 rgba(255,191,60,.9)}100%{box-shadow:0 0 0 26px rgba(255,191,60,0)}}
+.puz.glow{animation:pglow .9s ease-out}
+@keyframes pglow{0%{box-shadow:0 0 0 0 rgba(255,191,60,.75)}100%{box-shadow:0 0 0 18px rgba(255,191,60,0)}}
+.opt.bad{animation:shk .34s}
+@keyframes shk{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.opt.good{animation:gpop .4s ease-out}
+@keyframes gpop{0%{transform:scale(1)}45%{transform:scale(1.035)}100%{transform:scale(1)}}
+.opt:hover:not(:disabled){transform:translateY(-2px)}
+.opt{transition:border-color .12s,background .12s,transform .12s}
+section{animation:fin .4s ease-out}
+@keyframes fin{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:none}}
+.card.qin{animation:qin .32s ease-out}
+@keyframes qin{0%{opacity:0;transform:translateX(18px)}100%{opacity:1;transform:none}}
+.bar>i{background:linear-gradient(90deg,var(--tl),#2E8BCE,var(--tl));background-size:200% 100%;animation:shim 2.4s linear infinite}
+@keyframes shim{0%{background-position:0 0}100%{background-position:200% 0}}
+#hdP.bump{animation:bmp .4s ease-out}
+@keyframes bmp{0%{transform:scale(1)}40%{transform:scale(1.22)}100%{transform:scale(1)}}
+.cert .bdg{animation:puls 2.2s ease-in-out infinite}
+@keyframes puls{0%,100%{transform:scale(1)}50%{transform:scale(1.11)}}
+.fxoff *,.fxoff *::before,.fxoff *::after{animation:none!important;transition:none!important}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.fxbtn{position:fixed;inset-inline-start:10px;bottom:10px;z-index:70;font-family:inherit;font-size:13px;
+  background:#fff;border:1px solid var(--line);color:var(--mut);border-radius:999px;padding:6px 12px;cursor:pointer;opacity:.85}
+
+/* ===== منتقي المستويات ===== */
+.selfbox{background:#EEF6FB;border:2px solid #1B6CA8;border-radius:14px;padding:12px 14px;margin-bottom:10px;line-height:1.7}.selfbox.small{font-size:.75em;font-weight:500;padding:8px 12px}
+.selftbl{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}.selftbl td,.selftbl th{border:1px solid #ddd;padding:6px;text-align:center;white-space:normal}.selfwrap{overflow-x:auto;max-width:100%}.selfwrap .selftbl{min-width:560px}.selftbl tr.need td{background:#FFF1DC}
+.refl{display:block;text-align:right;font-weight:700;margin:6px 0}.refl textarea{width:100%;font:inherit;font-weight:400;border:2px solid #ddd;border-radius:10px;padding:6px;margin-top:4px}
+.lvls{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.lvl{text-align:right;background:#fff;border:2px solid var(--line);border-radius:16px;padding:16px;cursor:pointer;
+  font-family:inherit;font-size:16px;transition:transform .12s,border-color .12s}
+.lvl:hover{border-color:var(--or);transform:translateY(-3px)}
+.lvl b{display:block;font-size:19px;margin-bottom:4px;color:var(--tl)}
+.lvl small{display:block;color:var(--mut);font-size:14px;line-height:1.6}
+.lvl em{display:block;margin-top:9px;font-style:normal;font-weight:700;color:var(--or);font-size:15px}
+.lvl .done{display:inline-block;background:#E9F7EF;color:var(--ok);border-radius:999px;padding:2px 10px;font-size:13px;font-weight:700;margin-top:8px}
+/* ===== أسئلة الترتيب ===== */
+.ord{display:grid;gap:9px}
+.oitem{font-family:inherit;font-size:17px;text-align:right;background:#fff;border:2px solid var(--line);
+  border-radius:12px;padding:12px 15px;cursor:pointer;transition:border-color .12s,background .12s,transform .12s;position:relative}
+.oitem:hover:not(:disabled){border-color:var(--or);transform:translateY(-2px)}
+.oitem.pick{border-color:var(--ok);background:#E9F7EF;cursor:default;padding-inline-start:48px}
+.oitem .nm{position:absolute;inset-inline-start:12px;top:50%;transform:translateY(-50%);
+  background:var(--ok);color:#fff;border-radius:999px;width:26px;height:26px;display:flex;align-items:center;
+  justify-content:center;font-size:14px;font-weight:800}
+.oitem.wrong{animation:shk .34s;border-color:var(--no)}
+.oitem:disabled{color:var(--ink);-webkit-text-fill-color:var(--ink)}
+.oitem:disabled:not(.pick){opacity:.62}
+.ordhint{font-size:14px;color:var(--mut);margin-bottom:8px}
+/* ===== بطاقة النتيجة ===== */
+.shot{background:linear-gradient(135deg,#FFF8F0,#FFEFE2);border:3px solid var(--or);border-radius:18px;padding:22px;text-align:center}
+.shot .big{font-size:40px;font-weight:800;color:var(--or);line-height:1.2}
+.shot table{width:auto;margin:12px auto;font-size:16px}
+.shot td{border:0;padding:4px 14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ======== البداية ======== -->
+<section id="scrStart">
+  <div class="card" style="text-align:center">
+    <div style="font-size:50px;line-height:1">🛠️</div>
+    <h1>ورشة الزيتونة الختامية</h1>
+    <p class="sub">المهارات الرقمية · الصف الثامن · الوحدة الأولى<br>
+    مراجعة الوحدة · أسئلة الوحدة · التقويم الذاتي</p>
+    <div style="max-width:360px;margin:16px auto 0;text-align:right">
+      <label style="font-weight:700;display:block;margin-bottom:6px">أسماء الثنائي على هذا الجهاز:</label>
+      <input type="text" id="nm" placeholder="الاسم الأول" autocomplete="off">
+      <input type="text" id="nm2" placeholder="الاسم الثاني" autocomplete="off" style="margin-top:8px">
+      <label style="font-weight:700;display:block;margin:12px 0 6px">اسم الفريق (يُكتب على دفتركما):</label>
+      <input type="text" id="tm" placeholder="مثال: فريق الزيتونة" autocomplete="off">
+      <label style="font-weight:700;display:block;margin:12px 0 6px">الشعبة:</label>
+      <input type="text" id="sec" placeholder="مثال: ٨ أ" autocomplete="off" style="max-width:160px">
+      <div id="startErr" style="color:var(--no);font-size:15px;height:22px"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>اختارا المستوى</h2>
+    <p class="sub">الأول طابور مراجعة الوحدة، والثاني أسئلة الوحدة على مراحل بوقت محدّد، والثالث التقويم الذاتي.<br><b>وزّعا الأدوار:</b> واحد/ة ينفّذ المهمة والثاني/ة يسجّل، ثم بدّلا.</p>
+    <div class="lvls" id="lvls"></div>
+  </div>
+
+  <div class="card">
+    <h3>قواعد اللعب</h3>
+    <p class="sub" style="color:var(--ink)">
+    ✦ ما في انتقال للسؤال التالي إلا بالإجابة الصحيحة — صحّحا الغلط وجرّبا من جديد.<br>
+    ✦ كل محاولة خاطئة بتقلّل نقاط السؤال، والتلميح بيكلّف نقطتين، والمستوى الثالث بلا تلميحات.<br>
+    ✦ <b>قطع الغيار:</b> معكما ٣ القطع 🔩، وكل خطأ بيكلّفكما واحدة. إذا خلصت بترجعا ٣ أسئلة لورا وبتنشحن من جديد.<br>
+    ✦ <b>عدّاد الصبر:</b> في مستويات الطابور، أجهزة اللي بتنجزاها بسرعة ومن أول محاولة وبلا تلميح بتطلع 🟢 ممتاز، وغير هيك 🟡 مقبول.<br>
+    ✦ <b>سلسلة الإتقان:</b> ٣ إجابات 🟢 ورا بعض = نقاط ×٢، و٥ = ×٣. أول خطأ بيكسر السلسلة.<br>
+    ✦ <b>التقويم الذاتي:</b> قبل كل سؤال تحقّق، احكما بصدق: هل تتقنان هذا المؤشّر؟ وفي النهاية بيطلع جدول بالمؤشّرات اللي بدها مراجعة.<br>
+    ✦ تقدّمكما محفوظ على نفس الجهاز، فبتقدرا تكملا بعدين.</p>
+  </div>
+</section>
+
+<!-- ======== اللعب ======== -->
+<section id="scrGame" class="hide">
+  <div class="top">
+    <span class="nm" id="hdNm">—</span>
+    <span class="sp"></span>
+    <span class="pill" id="hdQ">١ / ١</span>
+    <span class="pill" id="hdP">٠ نقطة</span>
+    <span class="pill" id="hdT" title="وقت الإنجاز">⏱ ٠٠:٠٠</span>
+    <span class="pill" id="hdParts" title="قطع الغيار">🔩🔩🔩</span>
+    <span class="pill" id="hdStreak" title="سلسلة الإتقان">🔥 ×١</span>
+  </div>
+  <div class="bar"><i id="hdBar"></i></div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="pat" id="pat"><div class="patlbl" id="patLbl"></div><div class="patbar"><i id="patFill"></i></div></div>
+    <div class="tag" id="qTag">—</div>
+    <div class="q" id="qText">—</div>
+    <div id="qBody"></div>
+    <div class="hintbox" id="qHint"></div>
+    <div class="fb" id="qFb"></div>
+    <div class="row">
+      <button class="btn sec sm" id="btnHint">💡 تلميح (−٢)</button>
+      <button class="btn sm hide" id="btnNext">التالي ←</button>
+      <span class="sp"></span>
+      <button class="btn sec sm" id="btnBack">↩ المستويات</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 id="puzTtl">🛠️ لوحة الورشة</h3>
+    <p class="sub" id="puzNote"></p>
+    <div id="book" class="hide"></div>
+    <div class="puz" id="puz">
+      <div id="art"></div>
+      <div class="tiles" id="tiles"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== النتيجة ======== -->
+<section id="scrEnd" class="hide">
+  <div class="card">
+    <div class="shot" id="shotCard">
+      <div style="font-size:15px;color:var(--mut)">المهارات الرقمية · الصف الثامن · الوحدة الأولى: أنظمة الحوسبة</div>
+      <h2 id="eTtl" style="margin-top:6px">—</h2>
+      <div class="big" id="eScore">—</div>
+      <div class="sub" id="eDet">—</div>
+      <table id="eTbl"></table>
+      <div class="bdg" id="eBdg" style="font-size:40px">🏅</div>
+      <div class="sub" id="eDate">—</div>
+      <div style="margin-top:10px;font-weight:700;color:var(--or)">📸 صوّرا هذه البطاقة وابعثاها إلى معلّمكما</div>
+    </div>
+    <div class="row noprint">
+      <button class="btn" id="btnNextLvl">المستوى التالي ←</button>
+      <button class="btn sec" id="btnMenu">↩ كل المستويات</button>
+      <button class="btn gold" id="btnRetry">🔁 أعيدا هذا المستوى</button>
+      <a class="btn sec" href="../" style="text-decoration:none">⌂ كل الصفوف</a>
+    </div>
+    <div class="row noprint" id="eSend"></div>
+  </div>
+  <div class="card hide" id="eBookCard">
+    <div class="row noprint" style="justify-content:space-between;align-items:center">
+      <h3 style="margin:0" id="eBookTtl">📓 دفتر الورشة كاملًا</h3>
+      <button class="btn sec sm" onclick="window.print()">🖨️ اطبعا الدفتر</button>
+    </div>
+    <div id="eBook"></div>
+  </div>
+
+  <div class="card noprint">
+    <h3>📸 مهارتكما: صوّرا الشاشة وابعثاها</h3>
+    <div class="skill">
+      <b>١) صورة لجزء تختارانه:</b> اضغطا <kbd>Win</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> ثم اسحبا حول البطاقة.<br>
+      <b>٢) صورة للشاشة كلها:</b> <kbd>Win</kbd> + <kbd>PrtScn</kbd> — بتنحفظ في الصور ← Screenshots.<br>
+      <b>٣) التنقّل بين النوافذ:</b> <kbd>Alt</kbd> + <kbd>Tab</kbd> للتبديل السريع، و<kbd>Win</kbd> + <kbd>Tab</kbd> لعرض كل النوافذ.<br>
+      <b>٤) الإرسال:</b> افتحا Teams بـ <kbd>Alt</kbd> + <kbd>Tab</kbd>، وفي خانة الرسالة اضغطا <kbd>Ctrl</kbd> + <kbd>V</kbd> ثم أرسلا.
+    </div>
+  </div>
+
+  <div class="card noprint">
+    <h3>📋 مراجعة أسئلة المستوى</h3>
+    <div id="rev"></div>
+  </div>
+</section>
+
+</div>
+<script>
+/* ورشة الزيتونة الختامية — الصف الثامن · مراجعة الوحدة الأولى وغلقها. محتوى الأسئلة من كتاب الطالب. */
+
+const L1=[
+{"t": "mcq", "d": 1, "p": "سؤال مراجعة", "q": "صيانة الحاسوب — حسب ملخّص الوحدة — تشمل:", "c": ["الإجراءات الوقائية والعلاجية لضمان عمل الجهاز بكفاءة عالية", "تثبيت البرامج الجديدة فقط دون أيّ فحص للمكونات الداخلية والخارجية", "استبدال جهاز الحاسوب كاملًا عند ظهور أيّ عطل بسيط", "تنظيف الشاشة ولوحة المفاتيح من الخارج مرة كل عام"], "a": 0, "why": "ملخّص الوحدة (ص ٨٦): صيانة الحاسوب تشمل الإجراءات الوقائية والعلاجية التي تهدف إلى ضمان عمل الجهاز بكفاءة عالية، وتركّز على فحص المكونات الداخلية والخارجية وإصلاح التالف منها أو استبداله.", "hint": "ارجعا إلى الدرس الأول: إصلاح الأعطال — ص ١١."},
+{"t": "mcq", "d": 2, "p": "سؤال مراجعة", "q": "أيّ مجموعة <b>كلّها</b> من أهمية صيانة الحاسوب في الشكل (1–1)؟", "c": ["إطالة العمر التشغيلي · الكشف عن الفيروسات · خلق ظروف عمل آمنة", "زيادة استهلاك الطاقة · تسريع تلف القطع · إبطاء البرمجيات · رفع التكاليف", "حذف البيانات المهمة · تعطيل الحماية · زيادة تكاليف الإصلاح", "تقليل سرعة الجهاز · إخفاء الأعطال · منع تحديث البرامج"], "a": 0, "why": "الكتاب (ص ١٢، الشكل 1–1): من أهمية صيانة الحاسوب: الوقاية من وقوع الأعطال، وإطالة العمر التشغيلي، ومعالجة الأعطال، والكشف عن الفيروسات أو البرامج الضارة، والتحسين من فاعلية البرمجيات، والمساعدة في خلق ظروف عمل آمنة.", "hint": "ارجعا إلى الدرس الأول: إصلاح الأعطال — ص ١٢."},
+{"t": "mcq", "d": 1, "p": "سؤال مراجعة", "q": "صيانة تركّز على منع الأعطال قبل حدوثها بإجراءات دورية، مثل تنظيف المكونات وتحديث البرامج:", "c": ["الصيانة الوقائية", "الصيانة التنبّؤية", "الصيانة التكيّفية", "الصيانة العلاجية"], "a": 0, "why": "ملخّص الوحدة (ص ٨٦) والدرس الأول (ص ١٣): الصيانة الوقائية تركّز على الحفاظ على الجهاز ومنع الأعطال قبل حدوثها عن طريق إجراءات دورية، مثل تنظيف المكونات، وفحص التوصيلات، وتحديث البرامج.", "hint": "ارجعا إلى الدرس الأول: إصلاح الأعطال — ص ١٣."},
+{"t": "mcq", "d": 2, "p": "سؤال مراجعة", "q": "صيانة تعتمد على التحليلات لتحديد متى قد يتوقّف الجهاز عن العمل؛ لتقليل التوقّفات المفاجئة:", "c": ["الصيانة التنبّؤية", "الصيانة الوقائية", "الصيانة العلاجية", "الصيانة التكيّفية"], "a": 0, "why": "ملخّص الوحدة (ص ٨٦) والدرس الأول (ص ١٧): الصيانة التنبّؤية تعتمد على التحليلات لتحديد متى قد يتوقّف الجهاز عن العمل؛ بهدف تقليل التوقّفات المفاجئة وحماية البيانات.", "hint": "ارجعا إلى الدرس الأول: إصلاح الأعطال — ص ١٧."},
+{"t": "mcq", "d": 2, "p": "سؤال مراجعة", "q": "تحديث نظام التشغيل أو زيادة سعة التخزين ليتوافق الحاسوب مع التغيّرات الجديدة — هذه صيانة:", "c": ["تكيّفية", "وقائية", "تنبّؤية", "علاجية"], "a": 0, "why": "ملخّص الوحدة (ص ٨٦) والدرس الأول (ص ١٧): الصيانة التكيّفية تهدف إلى تعديل مكونات الحاسوب لتتوافق مع التغيّرات الجديدة، مثل تحديث نظام التشغيل أو زيادة سعة التخزين.", "hint": "ارجعا إلى الدرس الأول: إصلاح الأعطال — ص ١٧."},
+{"t": "order", "d": 2, "p": "سؤال مراجعة", "q": "رتّبا إجراءات الصيانة العلاجية كما في الشكل (1–2):", "items": ["تحديد المشكلة", "البحث عن حلول للمشكلة", "اختيار الحلّ المناسب", "تجربة الحلّ ومراجعة النتائج", "تسجيل إجراءات حلّ المشكلة"], "why": "الكتاب (ص ١٩، الشكل 1–2): إجراءات الصيانة العلاجية: تحديد المشكلة ← البحث عن حلول للمشكلة ← اختيار الحلّ المناسب ← تجربة الحلّ ومراجعة النتائج ← تسجيل إجراءات حلّ المشكلة.", "hint": "ارجعا إلى الدرس الأول: إصلاح الأعطال — ص ١٩."},
+{"t": "mcq", "d": 1, "p": "سؤال مراجعة", "q": "تعرّض الجهاز لحرارة مرتفعة أو رطوبة يُصنَّف — حسب الكتاب — ضمن مسبّبات الأعطال المادية:", "c": ["الظروف البيئية السيئة", "العيوب التصنيعية في القطع", "انتهاء العمر الافتراضي", "الخلل في تعريف المكونات"], "a": 0, "why": "الكتاب (ص ٢٧، الشكل 2–2): الظروف البيئية السيئة: تعرّض الجهاز لظروف غير مناسبة مثل الحرارة المرتفعة أو الرطوبة؛ مما يؤدي إلى تلف المكونات الداخلية والخارجية.", "hint": "ارجعا إلى الدرس الثاني: صيانة الأعطال المادية — ص ٢٧."},
+{"t": "mcq", "d": 1, "p": "سؤال مراجعة", "q": "الفأرة لا تستجيب للحركة. أيّ إجراء ذكره ملخّص الوحدة؟", "c": ["تنظيف المستشعر أو تجربة منفذ USB آخر", "زيادة سعة ذاكرة الوصول العشوائي RAM", "تشغيل أداة تنظيف القرص Disk Cleanup", "تحديث تعريف بطاقة الشاشة من الإنترنت"], "a": 0, "why": "ملخّص الوحدة (ص ٨٦): تعطّل الفأرة بسبب عدم استجابتها للحركة أو تعطّل الأزرار، ويُصلَح بتنظيف المستشعر أو تجربة منفذ USB آخر أو استبدال الفأرة عند الحاجة.", "hint": "ارجعا إلى الدرس الثاني: صيانة الأعطال المادية — ص ٢٩."},
+{"t": "mcq", "d": 2, "p": "سؤال مراجعة", "q": "بعض مفاتيح لوحة المفاتيح لا تستجيب عند الضغط عليها. السبب والإجراء حسب الجدول (2–2):", "c": ["تراكم الغبار حول المفاتيح، والتنظيف بنافخ الهواء", "امتلاء القرص الصلب بالملفات، وحذف البرامج غير الضرورية منه", "خلل في بطاقة الشاشة، واستبدال بطاقة الشاشة", "نفاد الحبر، وتزويد الطابعة بالحبر"], "a": 0, "why": "الكتاب (ص ٣١، جدول 2–2): عدم استجابة بعض المفاتيح عند الضغط عليها سببه تراكم الغبار والأوساخ بين الفراغات الموجودة حول المفاتيح، وإجراء الصيانة استخدام نافخ الهواء Hover لتنظيفها.", "hint": "ارجعا إلى الدرس الثاني: صيانة الأعطال المادية — ص ٣١."},
+{"t": "mcq", "d": 1, "p": "سؤال مراجعة", "q": "الشاشة مظلمة ولا تعمل، واتّضح أن كابل الطاقة غير موصول بشكل صحيح. الإجراء:", "c": ["وصل كابل الطاقة بشكل صحيح", "استبدال ذاكرة RAM فورًا", "تشغيل أداة استكشاف الأخطاء", "تغيير بطاقة الصوت"], "a": 0, "why": "الكتاب (ص ٣٣، جدول 2–3): «الشاشة مظلمة ولا تعمل» من أسبابه كابل الطاقة غير موصول أو موصول بشكل غير صحيح، وإجراء الصيانة: وصل كابل الطاقة بشكل صحيح، أو الاستعانة بفنّي الصيانة.", "hint": "ارجعا إلى الدرس الثاني: صيانة الأعطال المادية — ص ٣٣."},
+{"t": "mcq", "d": 2, "p": "سؤال مراجعة", "q": "السمّاعة سليمة لكنها لا تصدر صوتًا، ومفتاح الصوت ليس مغلقًا. من إجراءات الصيانة في الكتاب:", "c": ["إعادة تعريف بطاقة الصوت", "إعادة تثبيت تعريف لوحة المفاتيح", "تنظيف مستشعر الفأرة", "إلغاء تجزئة القرص الصلب"], "a": 0, "why": "الكتاب (ص ٣٦، جدول 2–4) وملخّص الوحدة (ص ٨٧): من إجراءات صيانة «السمّاعة سليمة لكن لا تصدر صوتًا»: التأكّد من مفتاح الصوت، وإعادة تركيب بطاقة الصوت، وإعادة تعريفها، أو استبدالها.", "hint": "ارجعا إلى الدرس الثاني: صيانة الأعطال المادية — ص ٣٦."},
+{"t": "mcq", "d": 2, "p": "سؤال مراجعة", "q": "سماع صوت Beep طويل عند تشغيل الجهاز — سببه حسب الجدول (2–6):", "c": ["عدم تركيب RAM بشكل صحيح", "امتلاء سلّة المهملات", "تراكم الغبار على لوحة اللمس", "احتفاظ الطابعة بأمر سابق"], "a": 0, "why": "الكتاب (ص ٣٩، جدول 2–6): «سماع صوت Beep طويل» سببه عدم تركيب RAM بشكل صحيح، وإجراء الصيانة إعادة تركيب RAM بشكل صحيح.", "hint": "ارجعا إلى الدرس الثاني: صيانة الأعطال المادية — ص ٣٩."},
+{"t": "mcq", "d": 2, "p": "سؤال مراجعة", "q": "وظيفة أداة تنظيف القرص Disk Cleanup:", "c": ["إزالة الملفات غير الضرورية للحصول على مساحة خالية", "إعادة ترتيب الملفات وإزالة المساحات الفارغة بينها", "فحص ذاكرة الوصول العشوائي وإعطاء تقرير عنها", "حفظ نسخة من ملفات النظام لإعادة تثبيته"], "a": 0, "why": "الكتاب (ص ٧٦) وملخّص الوحدة (ص ٨٧): تنظيف القرص أداة تُستخدم للحصول على مساحة خالية على القرص الصلب عن طريق إزالة الملفات غير الضرورية وغير المرغوب فيها.", "hint": "ارجعا إلى الدرس الرابع: إصلاح الأعطال بأدوات نظام التشغيل — ص ٧٦."},
+{"t": "mcq", "d": 2, "p": "سؤال مراجعة", "q": "أداة يوفّر برنامجها إمكانية إعادة ترتيب الملفات وتنظيمها وإزالة المساحات الفارغة بينها:", "c": ["إلغاء التجزئة/ تحسين محركات الأقراص", "تشخيص الذاكرة لـ Windows Memory Diagnostic", "تنظيف القرص Disk Cleanup", "محرك الاسترداد Recovery Drive"], "a": 0, "why": "الكتاب (ص ٧٥): يوفّر برنامج إلغاء التجزئة/ تحسين محركات الأقراص إمكانية إعادة ترتيب الملفات وتنظيمها وإزالة المساحات الفارغة بينها؛ مما يزيد كفاءة القراءة والكتابة.", "hint": "ارجعا إلى الدرس الرابع: إصلاح الأعطال بأدوات نظام التشغيل — ص ٧٥."},
+{"t": "mcq", "d": 2, "p": "سؤال مراجعة", "q": "أداة تساعد في مراقبة الموارد واكتشاف العمليات التي تستهلك الأداء:", "c": ["مدير المهام Task Manager", "تنظيف القرص Disk Cleanup", "استكشاف الأخطاء Troubleshoot", "محرك الاسترداد Recovery Drive"], "a": 0, "why": "ملخّص الوحدة (ص ٨٧): أداة مدير المهام (Task Manager) تساعد في مراقبة الموارد واكتشاف العمليات التي تستهلك الأداء.", "hint": "ارجعا إلى ملخّص الوحدة — ص ٨٧."},
+{"t": "mcq", "d": 2, "p": "سؤال مراجعة", "q": "للتراجع عن تغييرات حدثت لنظام التشغيل وسبّبت مشكلات، نعود إلى نقطة مرجعية باستخدام:", "c": ["استعادة النظام System Restore", "تحديث Windows Update", "مراقب الأداء Performance Monitor", "تنظيف القرص Disk Cleanup"], "a": 0, "why": "الكتاب (ص ٥٩): تُستخدم أداة استعادة النظام (System Restore) للعودة إلى نقطة مرجعية معيّنة من إعدادات الجهاز، والتراجع عن أيّ تغييرات حدثت لنظام التشغيل بعد تاريخ إنشاء هذه النقطة.", "hint": "ارجعا إلى الدرس الثالث: صيانة الأعطال البرمجية — ص ٥٩."},
+{"t": "mcq", "d": 2, "p": "سؤال مراجعة", "q": "النسخ الاحتياطي <b>المحلي</b> — حسب الكتاب — يكون على وسائط مثل:", "c": ["الأقراص الصلبة الخارجية وذاكرة الفلاش USB", "مساحات تخزينية على الإنترنت مثل Google Drive وOneDrive", "ذاكرة الوصول العشوائي RAM وحدها", "سلّة المهملات Recycle Bin في الجهاز"], "a": 0, "why": "الكتاب (ص ٥٦): النسخ الاحتياطي المحلي: الاحتفاظ بنسخ البيانات على وسائط التخزين المادية، مثل الأقراص الصلبة الداخلية أو الخارجية، وأقراص DVD، وذاكرة الفلاش USB.", "hint": "ارجعا إلى الدرس الثالث: صيانة الأعطال البرمجية — ص ٥٦."}
+];
+const L2=[
+{"t": "mcq", "d": 2, "p": "من أسئلة الوحدة", "q": "عرّفا: <b>الصيانة العلاجية</b>", "c": ["صيانة الأعطال عند حدوثها فعليًا بتحديد العطل ثم إصلاحه أو تبديل التالف", "إجراءات دورية للعناية بجهاز الحاسوب تُنفَّذ وفق خطة زمنية محدّدة قبل وقوع الأعطال", "استخدام علم البيانات والتحليلات لتقدير وقت توقّف إحدى المعدات", "إجراءات لتكييف مكونات الحاسوب مع تغيّرات البيئة المحيطة بها"], "a": 0, "why": "الكتاب (ص ١٨): الصيانة العلاجية هي صيانة الأعطال عند حدوثها فعليًا، وذلك عن طريق تحديد العطل ونوعه ومكانه ومعرفة أسبابه، ثم إصلاح العطل أو تبديل التالف إذا لزم؛ بهدف استعادة النظام حالته التشغيلية الطبيعية."},
+{"t": "mcq", "d": 2, "p": "من أسئلة الوحدة", "q": "عرّفا: <b>بطاقة الشاشة</b>", "c": ["بطاقة إلكترونية توضع في أحد شقوق اللوحة الأم وفيها منفذ لكابل الشاشة", "بطاقة تنشئ إشارة صوتية ثم ترسلها إلى مكبّر الصوت لإخراجها", "شريحة سيليكون تقوم بالعمليات الحسابية والمنطقية في الحاسوب", "ذاكرة تخزّن البيانات المؤقتة التي يحتاج إليها جهاز الحاسوب في أثناء استخدام التطبيقات"], "a": 0, "why": "الكتاب (ص ٣٣): بطاقة الشاشة هي البطاقة الإلكترونية التي توضع في أحد شقوق اللوحة الأم في جهاز الحاسوب، وتتضمّن منفذًا يوصَل فيه كابل الشاشة، وتعتمد سرعة أدائها على الذاكرة بشكل كبير."},
+{"t": "mcq", "d": 2, "p": "من أسئلة الوحدة", "q": "عرّفا: <b>نظام التشغيل</b>", "c": ["برنامج أساسي يدير الحاسوب ويعمل وسيطًا بين المستخدم ومكوناته", "برنامج الفحص الذاتي الموجود في ذاكرة ROM يفحص مكونات الجهاز عند التشغيل", "أداة تعيد ترتيب الملفات على القرص وتزيل المساحات الفارغة", "خدمة على الإنترنت تحفظ نسخًا من البيانات في مساحات تخزينية"], "a": 0, "why": "الكتاب (ص ٥٢): نظام التشغيل هو برنامج أساسي يقوم بإدارة جهاز الحاسوب ويعمل وسيطًا بين المستخدم ومكونات الحاسوب. (المشتّت الثاني وصف لبرنامج POST، ص ٥٠.)"},
+{"t": "mcq", "d": 2, "p": "من أسئلة الوحدة", "q": "عرّفا: <b>النسخ الاحتياطي السحابي</b>", "c": ["الاحتفاظ بنسخ البيانات على مساحات تخزينية متوافرة على شبكة الإنترنت", "الاحتفاظ بنسخ البيانات على وسائط تخزين مادية مثل قرص صلب خارجي أو ذاكرة فلاش USB", "حذف الملفات المؤقتة للحصول على مساحة خالية في القرص الصلب", "إنشاء نقطة مرجعية للتراجع عن تغييرات حدثت لنظام التشغيل"], "a": 0, "why": "الكتاب (ص ٥٦): النسخ الاحتياطي السحابي: الاحتفاظ بنسخ البيانات على مساحات تخزينية متوافرة على شبكة الإنترنت؛ مما يضمن سلامتها ويضمن سهولة الوصول إليها من أيّ جهاز متصل بالإنترنت."},
+{"t": "mcq", "d": 2, "p": "من أسئلة الوحدة", "q": "عرّفا: <b>القرص الثابت (SSD)</b>", "c": ["دوائر متكاملة تحوي شرائح ذاكرة، بلا أجزاء متحركة، ويُوصل إليها إلكترونيًا", "قرص يتكوّن من أقراص متحدة المحور ورؤوس قراءة وكتابة وذراع ومحرّك لتدوير الأقراص", "ذاكرة غير متطايرة مبرمجة مسبقًا ببيانات خاصة عند التصنيع", "قرص ضوئي يُنسخ عليه بشعاع الليزر عبر رؤوس الكتابة"], "a": 0, "why": "الكتاب (ص ٤٣، جدول 2–9): القرص الثابت SSD يتكوّن من دوائر متكاملة تحوي شرائح الذاكرة، تُخزَّن البيانات في شرائح الذاكرة من دون أجزاء متحرّكة، ويتمّ الوصول إليها إلكترونيًا."},
+{"t": "mcq", "d": 2, "p": "من أسئلة الوحدة · صح أم خطأ", "q": "«من إجراءات صيانة المكونات المادية ملاحظة مراوح التبريد من حيث السرعة وانتظام عملها وصوتها.»", "c": ["✔ العبارة صحيحة", "✖ العبارة خاطئة"], "a": 0, "why": "صحيحة: الكتاب (ص ١٤): من الإجراءات الوقائية التأكّد من عمل مراوح التبريد بشكل صحيح من حيث السرعة وانتظام عملها وصوتها."},
+{"t": "mcq", "d": 2, "p": "من أسئلة الوحدة · صح أم خطأ", "q": "«تساعد أداة تشخيص الذاكرة لـ Windows في فحص ذاكرة الوصول العشوائي RAM.»", "c": ["✔ العبارة صحيحة", "✖ العبارة خاطئة"], "a": 0, "why": "صحيحة: الكتاب (ص ٨٠): تعمل أداة Windows Memory Diagnostic على فحص ذاكرة الوصول العشوائي RAM، وإعطاء تقرير مفصّل بجميع المشكلات."},
+{"t": "mcq", "d": 2, "p": "من أسئلة الوحدة · صح أم خطأ", "q": "«الصيانة التنبّؤية هي شكل متقدّم من الصيانة الوقائية التي تستخدم علم البيانات والتحليلات لتقدير الوقت الذي قد تتوقّف فيه إحدى المعدّات أو البرامج.»", "c": ["✔ العبارة صحيحة", "✖ العبارة خاطئة"], "a": 0, "why": "صحيحة: الكتاب (ص ١٧): الصيانة التنبّؤية شكل متقدّم من الصيانة الوقائية، تستخدم علم البيانات والتحليلات التنبّؤية لتقدير الوقت الذي قد تتوقّف فيه إحدى المعدّات أو البرامج عن العمل."},
+{"t": "mcq", "d": 2, "p": "من أسئلة الوحدة · صح أم خطأ", "q": "«أحد أسباب بطء جهاز الحاسوب عدم توافر مساحة كافية في القرص الصلب.»", "c": ["✔ العبارة صحيحة", "✖ العبارة خاطئة"], "a": 0, "why": "صحيحة: الكتاب (ص ٦٢): عدم توافر مساحة كافية في القرص الصلب من أسباب بطء الحاسوب؛ وحلّها تفريغ سلّة المهملات وإلغاء تثبيت البرامج غير المستخدمة."},
+{"t": "mcq", "d": 2, "p": "من أسئلة الوحدة · صح أم خطأ", "q": "«يجب استبدال حبر الطابعة عندما تصبح الألوان باهتة جدًا.»", "c": ["✔ العبارة صحيحة", "✖ العبارة خاطئة"], "a": 0, "why": "صحيحة: الكتاب (ص ٣٧، جدول 2–5): «الألوان باهتة جدًا» سببه نفاد الحبر، وإجراء الصيانة تزويد الطابعة بالحبر."},
+{"t": "mcq", "d": 2, "p": "من أسئلة الوحدة · صح أم خطأ", "q": "«تستهلك جميع الأجزاء المعدنية المتحرّكة لمحرك الأقراص SSD قدرًا كبيرًا من الطاقة، وتولّد قدرًا كبيرًا من الحرارة.»", "c": ["✖ العبارة خاطئة", "✔ العبارة صحيحة"], "a": 0, "why": "خاطئة: الكتاب (ص ٤٣، جدول 2–9): هذا وصف القرص الصلب <b>HDD</b>؛ أمّا SSD فلا يحوي أجزاء متحرّكة، ويستهلك طاقة أقلّ بكثير من HDD."},
+{"t": "mcq", "d": 2, "p": "من أسئلة الوحدة · صح أم خطأ", "q": "«تتحوّل أقراص SSD إلى ذاكرة RAM عندما تكون سعة ذاكرة RAM غير كافية؛ مما يزيد من كفاءة جهاز الحاسوب.»", "c": ["✔ العبارة صحيحة", "✖ العبارة خاطئة"], "a": 0, "why": "صحيحة كما وردت في إضاءة الكتاب (ص ٦٢): تتحوّل أقراص SSD إلى ذاكرة RAM عندما تكون سعة ذاكرة RAM غير كافية؛ مما يزيد من كفاءة جهاز الحاسوب."},
+{"t": "mcq", "d": 2, "p": "من أسئلة الوحدة · صح أم خطأ", "q": "«لا تستخدم أيّ منظّفات سائلة أو غازية قد تحتوي على مواد قابلة للاشتعال، عند تنظيف جهاز الحاسوب.»", "c": ["✔ العبارة صحيحة", "✖ العبارة خاطئة"], "a": 0, "why": "صحيحة: الكتاب (ص ٢١): من إرشادات الأمان العامة: عدم استخدام أيّ منظّفات سائلة أو غازية قد تحتوي على موادّ قابلة للاشتعال."},
+{"t": "mcq", "d": 2, "p": "من أسئلة الوحدة · صح أم خطأ", "q": "«تتسبّب الفيروسات والبرامج الضارة في استهلاك الذاكرة والمعالج، وتؤدّي إلى بطء جهاز الحاسوب.»", "c": ["✔ العبارة صحيحة", "✖ العبارة خاطئة"], "a": 0, "why": "صحيحة: الكتاب (ص ٦٢): تتسبّب الفيروسات والبرامج الضارة في استهلاك الذاكرة والمعالج؛ مما يؤدّي إلى بطء جهاز الحاسوب؛ لذا يجب استخدام برنامج مكافحة الفيروسات وتحديثه باستمرار."},
+{"t": "mcq", "d": 1, "p": "من أسئلة الوحدة", "q": "السؤال الثالث: ظهرت على الحاسوب شاشة زرقاء فيها رسالة «تمّ إيقاف تشغيل Windows لمنع حدوث تلف بجهاز الحاسوب». ماذا تُسمّى؟", "c": ["الشاشة الزرقاء Blue Screen", "شاشة مراقب الأداء", "شاشة مستكشف الأخطاء Troubleshoot", "شاشة إدارة المهام"], "a": 0, "why": "الكتاب (ص ٦٥–٦٦، الشكل 3–8): تُسمّى الشاشة الزرقاء (Blue Screen) وتظهر على واجهة نظام التشغيل Windows."},
+{"t": "mcq", "d": 2, "p": "من أسئلة الوحدة", "q": "السؤال الثالث: ما سبب ظهور الشاشة الزرقاء حسب الكتاب؟", "c": ["مواجهة Windows خطأً يدلّ على خلل في المكونات المادية أو البرمجية", "امتلاء سلّة المهملات بالملفات المحذوفة منذ مدّة طويلة دون تفريغها أبدًا", "ضبط سرعة مؤشر الفأرة على قيمة كبيرة من الإعدادات", "تفعيل خاصية استعادة النظام وإنشاء نقطة مرجعية"], "a": 0, "why": "الكتاب (ص ٦٥): تظهر الشاشة الزرقاء على إثر مواجهة نظام التشغيل Windows خطأً بعد أن يتوقّف الجهاز عن العمل، أو يقوم بإعادة التشغيل بشكل غير متوقّع، ويُعدّ ظهورها دليلًا على وجود خلل في النظام سواء في المكونات المادية أو البرمجية."},
+{"t": "order", "d": 3, "p": "من أسئلة الوحدة", "q": "السؤال الثالث: رتّبا خطوات استكشاف خطأ الشاشة الزرقاء وإصلاحه كما وردت في الكتاب:", "items": ["إزالة أيّ جهاز ملحق جديد أُضيف قبل حدوث الخطأ", "التحقّق من إدارة الأجهزة Device Manager وتحديث التعريف", "التحقّق من توافر مساحة كافية في القرص الصلب", "تحديث نظام التشغيل Windows", "استعادة Windows باستخدام نقطة استعادة النظام"], "why": "الكتاب (ص ٦٦–٦٧): ١- إزالة أيّ جهاز ملحق جديد ٢- التحقّق من إدارة الأجهزة (تحديث برنامج التشغيل أو تعطيل الجهاز أو إلغاء تثبيته) ٣- التحقّق من توافر مساحة كافية في القرص الصلب ٤- تحديث نظام التشغيل Windows ٥- إذا لم تُحلّ المشكلة: استعادة النظام (System Restore)."},
+{"t": "mcq", "d": 2, "p": "من أسئلة الوحدة", "q": "السؤال الرابع: أيّ مجموعة <b>كلّها</b> من أهمية تحديث نظام التشغيل Windows؟", "c": ["سدّ الثغرات الأمنية · تحسين الأداء وإضافة ميزات · علاج الأخطاء البرمجية", "زيادة استهلاك الطاقة · حذف البيانات الشخصية · إبطاء البرامج المثبّتة على الجهاز", "إلغاء برامج الحماية · فتح منافذ للاختراق · إيقاف التعريفات", "تقليل مساحة القرص · تعطيل الطابعة · منع الاتصال بالإنترنت"], "a": 0, "why": "الكتاب (ص ٥٢): تتلخّص أهمية تحديث نظام التشغيل في: سدّ الثغرات الأمنية وحماية النظام من الاختراق، وتحسين أداء النظام وإضافة ميزات جديدة، وعلاج المشكلات التقنية والأخطاء البرمجية الموجودة في الإصدارات القديمة."},
+{"t": "mcq", "d": 1, "p": "من أسئلة الوحدة", "q": "السؤال الخامس: أيّ مجموعة <b>كلّها</b> مواقع تقدّم خدمة التخزين الاحتياطي السحابي حسب الكتاب؟", "c": ["Google Drive · Microsoft OneDrive", "Disk Cleanup · Task Manager · Recovery Drive", "Microsoft Word · Windows Update", "VistaCreate · Draw.io"], "a": 0, "why": "الكتاب (ص ٥٦): من الأمثلة على المواقع الإلكترونية التي توفّر خدمة التخزين السحابي: Google Drive، وMicrosoft OneDrive، وغيرها."},
+{"t": "mcq", "d": 2, "p": "من أسئلة الوحدة", "q": "السؤال السادس (المكونات): أيّ وصف ينطبق على القرص الصلب <b>HDD</b>؟", "c": ["أقراص متحدة المحور ورؤوس قراءة وكتابة وذراع ومحرّك لتدوير الأقراص", "دوائر متكاملة تحوي شرائح ذاكرة يُخزَّن فيها ويُوصل إليها إلكترونيًا دون أجزاء متحركة", "شرائح ذاكرة بلا أيّ أجزاء متحرّكة داخل غطاء بلاستيكي", "شريحة سيليكون واحدة مثبّتة على اللوحة الأم بمروحة"], "a": 0, "why": "الكتاب (ص ٤٣، جدول 2–9): يتكوّن HDD من أجزاء ميكانيكية: أقراص عدّة متحدة المحور مغطاة بمادة قابلة للمغنطة، ورؤوس القراءة والكتابة، وذراع يحمل الرؤوس، ومنظومة ميكانيكية لتحريك الذراع، ومحرّك لتدوير الأقراص."},
+{"t": "mcq", "d": 2, "p": "من أسئلة الوحدة", "q": "السؤال السادس (استهلاك الطاقة): أيّ عبارة صحيحة حسب الجدول (2–9)؟", "c": ["يستهلك SSD طاقة أقلّ بكثير من HDD", "يستهلك SSD طاقة أكبر بكثير من HDD", "يستهلك القرصان مقدار الطاقة نفسه", "يولّد SSD حرارة أكبر من HDD"], "a": 0, "why": "الكتاب (ص ٤٣، جدول 2–9): تستهلك الأجزاء المعدنية المتحرّكة لـ HDD قدرًا كبيرًا من الطاقة وتولّد حرارة كبيرة، أمّا SSD فيستهلك طاقة أقلّ بكثير من HDD."},
+{"t": "mcq", "d": 2, "p": "من أسئلة الوحدة", "q": "السؤال السادس (سرعة القراءة والكتابة): لماذا يتمتّع SSD بسرعة أكبر من HDD؟", "c": ["لعدم وجود أجزاء متحرّكة فيه", "لأنه يحوي ذراعًا ميكانيكيًا أسرع حركة", "لأنه يستهلك طاقة أكبر", "لأنه أكبر حجمًا من HDD"], "a": 0, "why": "الكتاب (ص ٤٣، جدول 2–9): نظرًا لعدم وجود أجزاء متحرّكة يتمتّع SSD بسرعة قراءة وكتابة فائقة، أمّا HDD فأبطأ للحاجة إلى تحريك الأقراص والأجزاء المتحرّكة. (لم يتضمّن الجدول بند «الموثوقية»، فاستُعيض عنه ببند السرعة الوارد فيه.)"},
+{"t": "mcq", "d": 2, "p": "من أسئلة الوحدة", "q": "السؤال السابع (بطء الحاسوب): أيّ مجموعة <b>كلّها</b> من أسباب البطء التي ذكرها الكتاب؟", "c": ["تطبيقات بدء التشغيل · امتلاء القرص الصلب · نقص RAM · الفيروسات", "ضبط سرعة الفأرة · نفاد الحبر · كابل السمّاعة غير موصول بالجهاز · انحشار الورق", "تحديث النظام · تثبيت مضاد الفيروسات · تنظيف القرص", "إعادة تعريف الصوت · إنشاء نقطة استعادة · النسخ الاحتياطي"], "a": 0, "why": "الكتاب (ص ٦٠–٦٣): من أسباب بطء الحاسوب: وجود تطبيقات تبدأ العمل مع بدء التحميل، وعدم توافر مساحة كافية في القرص الصلب، وعدم توافر مساحة كافية في RAM، ووجود الفيروسات والبرامج الضارة، وعطل في المكونات المادية."},
+{"t": "mcq", "d": 2, "p": "من أسئلة الوحدة", "q": "السؤال السابع (بطء الحاسوب): الجهاز بطيء لأن القرص الصلب ممتلئ. الإجراء حسب الكتاب:", "c": ["تفريغ سلّة المهملات وإلغاء تثبيت البرامج غير المستخدمة", "إيقاف مروحة التبريد مؤقتًا لتقليل استهلاك الطاقة وتخفيف الضغط على المعالج", "زيادة سطوع الشاشة وتغيير خلفية سطح المكتب", "فصل الطابعة وإعادة توصيلها بمنفذ USB آخر"], "a": 0, "why": "الكتاب (ص ٦٢): لحلّ مشكلة عدم توافر مساحة كافية في القرص الصلب: نفرّغ سلّة المهملات (Recycle Bin) ونلغي تثبيت البرامج غير المستخدمة لتوفير مساحة كافية."},
+{"t": "mcq", "d": 2, "p": "من أسئلة الوحدة", "q": "السؤال السابع (الطابعة): تستمرّ الطابعة في طباعة المستند أكثر من نسخة دون طلب. السبب والإجراء:", "c": ["الاحتفاظ بالأمر السابق في الذاكرة، وإيقاف الطابعة وإعادة تشغيل الجهاز والطابعة", "نفاد الحبر من الخرطوشة، وتزويد الطابعة بالحبر فورًا ثم إعادة إرسال أمر الطباعة إليها", "انحشار الورق داخل الطابعة، وإزالة الورق المحشور", "رطوبة الورق والتصاقه معًا، واستبدال الورق"], "a": 0, "why": "الكتاب (ص ٣٧، جدول 2–5): «استمرار تنفيذ الأمر السابق (استمرار طباعة المستند أكثر من نسخة)» سببه الاحتفاظ بالأمر السابق في الذاكرة، وإجراء الصيانة: إيقاف الطابعة عن العمل وإعادة تشغيل الجهاز والطابعة."},
+{"t": "mcq", "d": 3, "p": "من أسئلة الوحدة", "q": "السؤال السابع (Memory Test Fail): ظهرت الرسالة خلال الفحص التشغيلي POST. أيّ إجراء يتّفق مع جدول أعطال RAM في الكتاب؟", "c": ["إعادة تركيب RAM بشكل صحيح، واستبدالها إن كانت معطّلة", "تنظيف لوحة المفاتيح بنافخ الهواء ثم إعادة تشغيل الجهاز مرة أخرى", "ضبط إعدادات سرعة مؤشر الفأرة من نظام التشغيل", "تزويد الطابعة بالحبر وإعادة إرسال أمر الطباعة"], "a": 0, "why": "الكتاب (ص ٣٩، جدول 2–6): أعطال RAM سببها عدم تركيبها بشكل صحيح أو عطل فيها، وإجراءاتها إعادة تركيب RAM بشكل صحيح أو استبدالها. (الرسالة نفسها وردت في نشاط «أبحث» ص ٣٩، فالإجابة مبنيّة على جدول أعطال RAM.)"},
+{"t": "mcq", "d": 2, "p": "من أسئلة الوحدة", "q": "السؤال السابع (الفأرة): عدم القدرة على التحكّم بمؤشر الفأرة بسهولة — السبب والإجراء:", "c": ["تجمّع الغبار أسفل الفأرة أو سطح أملس، والتنظيف واستخدام Mouse Pad", "خلل في إعدادات سرعة مؤشر الفأرة، وضبطها من إعدادات نظام التشغيل Windows", "الفأرة غير موصولة، ووصل كابلها بالحاسوب بشكل صحيح", "تعطّل لوحة اللمس، والاستعانة بفنّي الصيانة"], "a": 0, "why": "الكتاب (ص ٢٩، جدول 2–1): «عدم القدرة على التحكّم بمؤشر الفأرة بسهولة» سببه تجمّع الغبار والأوساخ أسفل الفأرة وعلى عدسة المستشعر، إضافة إلى استخدام سطح أملس أو زجاجي أو لامع، والإجراء تنظيف الفأرة واستخدام Mouse Pad مناسبة. (المشتّت الثاني لعطل آخر: حركة المؤشر بسرعة كبيرة أو بطيئة.)"},
+{"t": "mcq", "d": 2, "p": "من أسئلة الوحدة", "q": "السؤال الثامن: أصيب الحاسوب بالتجمّد. ما أول إجراء حسب الكتاب؟", "c": ["الضغط على Ctrl+Alt+Delete لفتح إدارة المهام وإنهاء التطبيقات", "فصل كابل الطاقة من مقبس الكهرباء مباشرة دون أيّ محاولة أخرى قبل ذلك", "تشغيل أداة إلغاء التجزئة على جميع محرّكات الأقراص", "حذف نقاط استعادة النظام القديمة من خصائص النظام"], "a": 0, "why": "إضاءة الكتاب (ص ٦٣): التجمّد يُحلّ عن طريق الضغط على المفاتيح Ctrl+Alt+Delete معًا لفتح إدارة المهام (Task Manager) التي تسمح بفرض إنهاء التطبيقات، ثم إعادة التشغيل (Restart). وفي ص ٦٤: اختيار البرنامج الذي لا يستجيب والنقر على إنهاء المهمة (End Task)."},
+{"t": "mcq", "d": 2, "p": "من أسئلة الوحدة", "q": "السؤال الثامن: لم ينجح إنهاء التطبيقات من إدارة المهام. ما الإجراء التالي حسب الكتاب؟", "c": ["الضغط باستمرار على زرّ الطاقة من ٥ إلى ١٠ ثوانٍ ثم إعادة التشغيل", "تحديث تعريف بطاقة الصوت من إدارة الأجهزة Device Manager ثم إعادة تشغيل الجهاز", "إنشاء نقطة استعادة جديدة قبل إغلاق الجهاز", "تشغيل أداة تشخيص الذاكرة وترك الجهاز متجمّدًا"], "a": 0, "why": "إضاءة الكتاب (ص ٦٣): من الطرق الأخرى للحلّ الضغط باستمرار على زرّ الطاقة مدّة تتراوح بين 5 و10 ثوانٍ لإغلاق الجهاز، ثم إعادة تشغيله؛ وإذا لم يُغلق يُفصل كابل الطاقة من مقبس الكهرباء ويُعاد، ثم يُشغَّل الجهاز."}
+];
+const L3=[
+{"t": "mcq", "d": 2, "p": "تقويم ذاتي", "self": "أعرف المقصود بصيانة الحاسوب.", "les": "ارجعا إلى الدرس الأول: إصلاح الأعطال — ص ١١.", "q": "صيانة الحاسوب — حسب الكتاب — هي:", "c": ["الإجراءات والأنشطة التي تحافظ على ديمومة عمل الجهاز بكفاءة وأقلّ تكاليف", "شراء جهاز حاسوب جديد كلما ظهر عطل في أحد مكوناته", "تثبيت أكبر عدد ممكن من البرامج والتطبيقات الجديدة لزيادة قدرات جهاز الحاسوب", "فكّ مكونات الحاسوب الداخلية وإعادة تركيبها كل أسبوع"], "a": 0, "why": "الكتاب (ص ١٢): صيانة الحاسوب هي الإجراءات والأنشطة التي تحافظ على ديمومة عمل جهاز الحاسوب وتضمن عمله بكفاءة عالية وبأقلّ التكاليف، وتتضمّن تشخيص الأعطال ومحاولة إصلاحها."},
+{"t": "mcq", "d": 2, "p": "تقويم ذاتي", "self": "أبين أهمية صيانة الحاسوب.", "les": "ارجعا إلى الدرس الأول: إصلاح الأعطال — ص ١٢.", "q": "أيّها من أهمية صيانة الحاسوب في الشكل (1–1)؟", "c": ["الوقاية من وقوع الأعطال قبل حدوثها لتوفير الوقت والتكاليف", "زيادة عدد الأعطال المتكرّرة لتدريب فنّيي الصيانة على إصلاحها في المختبر", "تقليل العمر التشغيلي للجهاز لشراء أجهزة أحدث", "إخفاء الفيروسات عن برامج الحماية في الجهاز"], "a": 0, "why": "الكتاب (ص ١٢، الشكل 1–1): من أهمية الصيانة: الوقاية من وقوع الأعطال قبل حدوثها لتوفير الوقت وتقليل التكاليف، وإطالة العمر التشغيلي، والكشف عن الفيروسات."},
+{"t": "mcq", "d": 2, "p": "تقويم ذاتي", "self": "أوضح أنواع صيانة الحاسوب وأفرق بينها.", "les": "ارجعا إلى الدرس الأول: إصلاح الأعطال — ص ١٣.", "q": "أظهر برنامج مراقبة النظام ارتفاعًا غير طبيعي في حرارة المعالج يشير إلى مشكلة محتملة في المروحة قريبًا. نوع الصيانة المناسب:", "c": ["التنبّؤية", "العلاجية", "التكيّفية", "الوقائية الدورية"], "a": 0, "why": "الكتاب (ص ١٧ و١٩): الصيانة التنبّؤية تقدّر الوقت الذي قد تتوقّف فيه المعدّات قبل توقّفها؛ والحالة مأخوذة من نشاط الكتاب (ص ١٩)."},
+{"t": "mcq", "d": 2, "p": "تقويم ذاتي", "self": "أبين أهمية فهم ترابط مكونات أنظمة الحوسبة في صيانة الأعطال.", "les": "ارجعا إلى الدرس الأول: إصلاح الأعطال — ص ١١.", "q": "حسب الكتاب، قد تؤثّر مشكلات نظام التشغيل مثل الفيروسات في أداء المكونات المادية. ماذا نستنتج؟", "c": ["المكونات المادية والبرمجية مترابطة، فنفحص الاثنين عند تشخيص العطل", "المكونات المادية مستقلّة تمامًا عن البرمجيات ولا تتأثّر بها", "يكفي فحص الأجزاء المادية وحدها عند ظهور أيّ عطل في الجهاز دون النظر إلى البرمجيات", "لا علاقة للفيروسات بأيّ عطل يظهر في أداء جهاز الحاسوب"], "a": 0, "why": "الكتاب (ص ٢٧): من مسبّبات أعطال المكونات المادية «أعطال نظام التشغيل: تأثير مشكلات في نظام التشغيل مثل الفيروسات أو الأخطاء البرمجية على أداء المكونات المادية»؛ وص ١١ (نشاط تمهيدي): التكامل الوظيفي بين المكونات المادية والبرمجية."},
+{"t": "mcq", "d": 2, "p": "تقويم ذاتي", "self": "أتبع إرشادات الأمان العامة في صيانة أعطال الحاسوب.", "les": "ارجعا إلى الدرس الأول: إصلاح الأعطال — ص ٢٠.", "q": "قبل البدء بصيانة حاسوب مكتبي، ما الإجراء الصحيح حسب إرشادات الأمان؟", "c": ["إغلاق الجهاز بالطريقة الصحيحة وفصل التيار الكهربائي", "فتح الجهاز وهو يعمل لمعرفة مكان العطل بسرعة ودون إضاعة الوقت", "رشّ منظّف سائل قابل للاشتعال على اللوحة الأم", "تقريب ضاغط الهواء جدًا من الدوائر الإلكترونية"], "a": 0, "why": "الكتاب (ص ٢٠–٢١): من إرشادات الأمان: إغلاق الجهاز بالطريقة الصحيحة وفصل التيار الكهربائي، وعدم تقريب ضاغط الهواء أكثر من اللازم، وعدم استخدام منظّفات قابلة للاشتعال."},
+{"t": "mcq", "d": 2, "p": "تقويم ذاتي", "self": "أبين مسببات أعطال المكونات المادية لجهاز الحاسوب.", "les": "ارجعا إلى الدرس الثاني: صيانة الأعطال المادية — ص ٢٧.", "q": "إسقاط الجهاز أو توصيله بشبكة كهربائية غير مستقرّة — من أيّ مسبّبات الأعطال المادية؟", "c": ["الاستخدام غير الصحيح", "العيوب التصنيعية", "انتهاء العمر الافتراضي", "أعطال نظام التشغيل"], "a": 0, "why": "الكتاب (ص ٢٧): الاستخدام غير الصحيح: التعامل غير السليم مع الجهاز، مثل إسقاطه، وتوصيله بشبكة كهربائية غير مستقرّة، أو تنظيفه بطرق غير مناسبة."},
+{"t": "mcq", "d": 2, "p": "تقويم ذاتي", "self": "أوضح أعطال المكونات المادية لجهاز الحاسوب وأسبابها.", "les": "ارجعا إلى الدرس الثاني: صيانة الأعطال المادية — ص ٣٣.", "q": "«توقّف عمل الشاشة ولمبتها مضيئة» — أيّها من أسبابه في الجدول (2–3)؟", "c": ["عطل في كابل البيانات للشاشة", "نفاد الحبر من الطابعة", "تراكم الغبار حول مفاتيح لوحة المفاتيح", "احتفاظ الذاكرة بأمر طباعة"], "a": 0, "why": "الكتاب (ص ٣٣، جدول 2–3): أسباب «توقّف عمل الشاشة ولمبتها مضيئة»: عطل في كابل البيانات للشاشة، أو تلف منفذ البيانات المثبّت بالشاشة، أو عطل في بطاقة الشاشة."},
+{"t": "mcq", "d": 2, "p": "تقويم ذاتي", "self": "أوضح إجراءات الصيانة العلاجية للمكونات المادية.", "les": "ارجعا إلى الدرس الثاني: صيانة الأعطال المادية — ص ٤٢.", "q": "توقّف الحاسوب فجأة بسبب ارتفاع حرارة بيئة العمل وتوقّف نظام التبريد. الإجراء حسب الجدول (2–8):", "c": ["نقل الجهاز إلى بيئة مناسبة وصيانة نظام التبريد أو استبداله", "زيادة سعة الذاكرة وإغلاق البرامج المفتوحة كلها ثم إعادة تشغيل الجهاز", "إعادة تثبيت تعريف لوحة المفاتيح من إدارة الأجهزة", "استبدال القرص المدمج وتنظيف مشغّل الأقراص"], "a": 0, "why": "الكتاب (ص ٤٢، جدول 2–8): «توقّف مفاجئ لجهاز الحاسوب» سببه ارتفاع درجة حرارة بيئة العمل أو توقّف نظام التبريد، وإجراء الصيانة نقل الجهاز إلى بيئة عمل مناسبة وصيانة نظام التبريد أو استبداله."},
+{"t": "mcq", "d": 2, "p": "تقويم ذاتي", "self": "أستخدم استراتيجية الرسم لعمل قواعد إرشاد لإصلاح أعطال المكونات المادية.", "les": "ارجعا إلى الدرس الثاني: صيانة الأعطال المادية — ص ٣٤.", "q": "في المخطّط الانسيابي لعطل «توقّف الشاشة مع إضاءة لمبتها»: إذا كان كابل البيانات سليمًا ومنفذه سليمًا، وبطاقة الشاشة <b>غير</b> معطّلة، فالإجراء:", "c": ["الاستعانة بفنّي الصيانة", "استبدال كابل البيانات", "استبدال بطاقة الشاشة", "صيانة منفذ البيانات المثبّت بالشاشة"], "a": 0, "why": "الكتاب (ص ٣٤، الشكل 2–4): هل كابل البيانات معطّل؟ لا ← هل المنفذ تالف؟ لا ← هل بطاقة الشاشة معطّلة؟ لا ← الاستعانة بفنّي الصيانة."},
+{"t": "mcq", "d": 2, "p": "تقويم ذاتي", "self": "أبين مسببات أعطال المكونات البرمجية لجهاز الحاسوب.", "les": "ارجعا إلى الدرس الثالث: صيانة الأعطال البرمجية — ص ٥٢.", "q": "أيّ مجموعة <b>كلّها</b> من مسبّبات أعطال المكونات البرمجية؟", "c": ["عدم تحديث Windows · برامج كثيرة غير مستخدمة · الفيروسات", "انحشار الورق · نفاد الحبر · تلف الكابلات", "ارتفاع الحرارة · الرطوبة · سقوط الجهاز · توصيله بشبكة كهربائية غير مستقرّة", "تلف القرص المدمج · عطل مشغّل الأقراص"], "a": 0, "why": "الكتاب (ص ٥٢): من مسبّبات الأعطال البرمجية: عدم تحديث نظام التشغيل Windows، وتحميل برامج كثيرة غير مستخدمة، وعدم استخدام أدوات نظام التشغيل، ووجود الفيروسات والبرامج الضارة، وعدم تحديث البرامج والتعريفات."},
+{"t": "mcq", "d": 2, "p": "تقويم ذاتي", "self": "أوضح إجراءات الصيانة الدورية لمكونات الحاسوب البرمجية.", "les": "ارجعا إلى الدرس الثالث: صيانة الأعطال البرمجية — ص ٥٢.", "q": "أيّها إجراء دوري لصيانة المكونات <b>البرمجية</b> ورد في الكتاب؟", "c": ["إزالة التطبيقات والبرامج غير المستخدمة", "تنظيف مروحة التبريد والفتحات بضاغط الهواء", "تغيير كابل البيانات للشاشة", "وضع الجهاز بعيدًا عن الرطوبة"], "a": 0, "why": "الكتاب (ص ٥٢–٥٦): من إجراءات صيانة المكونات البرمجية: تحديث نظام التشغيل Windows، واستخدام أدوات نظام التشغيل، وإزالة التطبيقات والبرامج غير المستخدمة، وعمل نسخ احتياطية، وإنشاء نقطة استعادة النظام. أمّا المشتّتات فإجراءات مادية."},
+{"t": "mcq", "d": 2, "p": "تقويم ذاتي", "self": "أوضح أعطال المكونات البرمجية، وأسبابها وإجراءات إصلاحها.", "les": "ارجعا إلى الدرس الثالث: صيانة الأعطال البرمجية — ص ٦٠.", "q": "الحاسوب بطيء منذ لحظة تشغيله بسبب تطبيقات كثيرة تبدأ العمل معه. الإجراء:", "c": ["إيقاف تطبيقات بدء التشغيل من الإعدادات", "زيادة سطوع الشاشة وحجم الخطّ", "فصل لوحة المفاتيح وإعادة توصيلها بمنفذ USB آخر", "تزويد الطابعة بالحبر"], "a": 0, "why": "الكتاب (ص ٦٠–٦١): من أسباب البطء وجود تطبيقات تبدأ العمل مع بدء تحميل Windows، والحلّ إيقاف بدء التطبيقات عبر الإعدادات ← التطبيقات ← بدء التشغيل (Startup) والنقر على زرّ الإيقاف."},
+{"t": "mcq", "d": 2, "p": "تقويم ذاتي", "self": "أوضح دور أدوات نظام التشغيل Windows في إصلاح الأعطال.", "les": "ارجعا إلى الدرس الرابع: إصلاح الأعطال بأدوات نظام التشغيل — ص ٧٣.", "q": "الأدوات المدمجة في Windows 10 — حسب الكتاب — تساعد في:", "c": ["تشخيص المشكلات التقنية وإصلاحها", "تصميم الصفحات التعريفية والملصقات", "إضافة قطع مادية جديدة إلى الجهاز", "زيادة سرعة الاتصال بالإنترنت دائمًا"], "a": 0, "why": "الكتاب (ص ٧٣): تساعد الأدوات المدمجة في نظام التشغيل Windows 10 في تشخيص المشكلات التقنية التي يمكن مواجهتها عند استخدام جهاز الحاسوب وإصلاحها."},
+{"t": "mcq", "d": 2, "p": "تقويم ذاتي", "self": "أحدد أدوات نظام التشغيل Windows.", "les": "ارجعا إلى الدرس الرابع: إصلاح الأعطال بأدوات نظام التشغيل — ص ٧٢.", "q": "أيّ مجموعة <b>كلّها</b> من أدوات نظام التشغيل Windows في الدرس الرابع؟", "c": ["Troubleshoot · Disk Cleanup · Recovery Drive · Performance Monitor", "VistaCreate · Canva · Draw.io · Padlet · Google Slides · Google Docs", "Google Drive · OneDrive · Google Docs", "Microsoft Word · Excel · PowerPoint"], "a": 0, "why": "الكتاب (ص ٧٢): من أدوات نظام التشغيل: استكشاف الأخطاء وإصلاحها، وإلغاء التجزئة/ تحسين محرّكات الأقراص، وتنظيف القرص، ومحرك الاسترداد، وتشخيص الذاكرة، ومراقب الأداء."},
+{"t": "mcq", "d": 2, "p": "تقويم ذاتي", "self": "أستخدم أدوات نظام التشغيل Windows لإصلاح الأعطال.", "les": "ارجعا إلى الدرس الرابع: إصلاح الأعطال بأدوات نظام التشغيل — ص ٧٧.", "q": "لتشغيل أداة تنظيف القرص Disk Cleanup، نختارها من:", "c": ["قائمة أدوات إدارية لنظام التشغيل Windows", "لوحة التحكّم ثم الأجهزة والطابعات ثم إدارة الأجهزة", "إعدادات الفأرة ثم سرعة المؤشر", "شاشة تطبيقات بدء التشغيل Startup"], "a": 0, "why": "الكتاب (ص ٧٧): اختيار القرص (Disk Cleanup) من قائمة أدوات إدارية لنظام التشغيل Windows (Windows Administrative Tools)، ثم تحديد محرّك الأقراص والنقر على موافق."}
+];
+
+const LEVELS=[
+ {id:"v1",name:"المستوى الأول — مراجعة الوحدة: طابور الورشة",desc:"أسئلة من ملخّص الوحدة · التلميح يعطي اسم الدرس ورقم الصفحة",hints:true,ladder:[10, 7, 5, 3],mode:"queue",patience:45,bank:L1},
+ {id:"v2",name:"المستوى الثاني — أسئلة الوحدة: بلاغات الأعطال",desc:"أسئلة الوحدة من الكتاب على مراحل · وقت محدّد لكل سؤال · بلا تلميحات · شارة نجوم",hints:false,ladder:[10, 8, 5, 4, 3],mode:"cases",cases:[{"t": "السؤال الأول: المصطلحات", "s": 0, "e": 4, "lim": 240, "intro": "📘 <b>أسئلة الوحدة — السؤال الأول (ص ٨٨):</b> اختارا التعريف الصحيح لكل مصطلح.", "done": "✅ <b>أنهيتما السؤال الأول.</b>"}, {"t": "السؤال الثاني: صح أم خطأ", "s": 5, "e": 13, "lim": 330, "intro": "📘 <b>السؤال الثاني (ص ٨٩):</b> احكما على كل عبارة. (حُذفت عبارة لم يرد ما يحسمها في دروس الوحدة.)", "done": "✅ <b>أنهيتما السؤال الثاني.</b>"}, {"t": "الأسئلة ٣–٥: الشاشة الزرقاء والتحديث والنسخ السحابي", "s": 14, "e": 18, "lim": 300, "intro": "📘 <b>الأسئلة ٣–٥ (ص ٩٠):</b> الشاشة الزرقاء، وأهمية تحديث Windows، ومواقع التخزين السحابي — بصيغة اختيار وترتيب.", "done": "✅ <b>أنهيتما الأسئلة ٣–٥.</b>"}, {"t": "الأسئلة ٦–٨: المقارنة والحالات والتجمّد", "s": 19, "e": 28, "lim": 360, "intro": "📘 <b>الأسئلة ٦–٨ (ص ٩١):</b> مقارنة HDD وSSD، وأسباب الأعطال وإجراءاتها، والتعامل مع التجمّد.", "done": "✅ <b>أنهيتما أسئلة الوحدة كلها.</b>"}],bank:L2},
+ {id:"v3",name:"المستوى الثالث — التقويم الذاتي: دفتر الورشة",desc:"احكما على كل مؤشّر بصدق ثم أجيبا سؤال التحقّق · جدول مراجعة وتأمّلات في النهاية",hints:false,ladder:[10, 7, 5, 3],mode:"self",bank:L3}
+];
+
+/* ---------- أدوات ---------- */
+const AR=n=>String(n).replace(/\d/g,d=>"٠١٢٣٤٥٦٧٨٩"[d]);
+const $=id=>document.getElementById(id);
+const KEY="jofeh:g8u1rev:v1";
+function escH(t){return String(t||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function today(){const d=new Date(),MN=["كانون الثاني","شباط","آذار","نيسان","أيار","حزيران","تموز","آب","أيلول","تشرين الأول","تشرين الثاني","كانون الأول"];return AR(d.getDate())+" "+MN[d.getMonth()]+" "+AR(d.getFullYear())}
+function coverSVG(team){
+  let rim="";for(let k=0;k<20;k++){const x=20+k*19;rim+=`<path d="M${x} 14l7 7-7 7-7-7z" fill="#F4845F"/><path d="M${x} 272l7 7-7 7-7-7z" fill="#F4845F"/>`}
+  for(let k=0;k<13;k++){const y=40+k*18;rim+=`<path d="M30 ${y}l7 7-7 7-7-7z" fill="#1B6CA8"/>`}
+  return `<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+  <rect width="400" height="300" fill="#2E4A3A"/><rect x="0" y="0" width="48" height="300" fill="#22382C"/>
+  <rect x="44" y="0" width="6" height="300" fill="#C9A227"/>${rim}
+  <rect x="78" y="58" width="290" height="180" rx="12" fill="#FFF8F0"/><rect x="88" y="68" width="270" height="160" rx="8" fill="none" stroke="#C9A227" stroke-width="2" stroke-dasharray="6 5"/>
+  <text x="223" y="112" text-anchor="middle" font-size="34">🛠️</text>
+  <text x="223" y="150" text-anchor="middle" font-family="Cairo,Tahoma,sans-serif" font-size="32" font-weight="800" fill="#2A2A2A">دفتر الورشة</text>
+  <text x="223" y="180" text-anchor="middle" font-family="Cairo,Tahoma,sans-serif" font-size="14" fill="#6B6257">الصف الثامن · مراجعة الوحدة الأولى وغلقها</text>
+  <text x="223" y="213" text-anchor="middle" font-family="Cairo,Tahoma,sans-serif" font-size="19" font-weight="700" fill="#1B6CA8">${escH(team)}</text>
+  <path d="M260 238 q20 20 40 0 q20 -20 40 0" stroke="#7A9A4B" stroke-width="3" fill="none"/><ellipse cx="282" cy="250" rx="7" ry="4" fill="#7A9A4B"/><ellipse cx="318" cy="246" rx="7" ry="4" fill="#7A9A4B"/>
+  </svg>`}
+const RANKS=["فنّي متدرّب", "فنّي متدرّب", "فنّي مساعد", "فنّي ماهر", "فنّي متمكّن", "خبير الورشة"];
+function starsOf(p,m){const r=m?p/m:0;return r>=.9?5:r>=.75?4:r>=.6?3:r>=.4?2:r>=.2?1:0}
+function badgeSVG(n,team,live){
+  const st=[0,1,2,3,4].map(k=>{const x=110+(4-k)*45,on=k<n;return `<path transform="translate(${x} 205) scale(1.05)" d="M0-17l5 11 12 1-9 8 3 12-11-6-11 6 3-12-9-8 12-1z" fill="${on?"#FFBF3C":"#E7D9C9"}" stroke="${on?"#C98A00":"#CDBBA6"}" stroke-width="1.5"/>`}).join("");
+  return `<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="#FFF8F0"/>
+  <path d="M150 12h100l-20 60h-60z" fill="#1B6CA8"/><path d="M170 12h60l-12 60h-36z" fill="#F4845F"/>
+  <circle cx="200" cy="120" r="62" fill="#FFBF3C" stroke="#C98A00" stroke-width="5"/><circle cx="200" cy="120" r="48" fill="#FFF3D1" stroke="#C98A00" stroke-width="2" stroke-dasharray="4 4"/>
+  <text x="200" y="136" text-anchor="middle" font-size="46">🛠️</text>
+  ${st}
+  <text x="200" y="252" text-anchor="middle" font-family="Cairo,Tahoma,sans-serif" font-size="22" font-weight="800" fill="#2A2A2A">${RANKS[n]}</text>
+  <text x="200" y="280" text-anchor="middle" font-family="Cairo,Tahoma,sans-serif" font-size="16" fill="#6B6257">${escH(team)}${live?" · الشارة تكتمل مع كل إجابة":""}</text></svg>`}
+function pageHTML(pg,team,sec){return `<div class="pg"><div class="pgh"><b>دفتر الورشة · ${escH(team)}</b><span>صفحة ${AR(pg.n)}</span></div>
+  <img src="${pg.img}" alt="${escH(pg.title)}"><div class="pgf">${escH(pg.title)}${sec?" · الشعبة "+escH(sec):""} · ${escH(pg.d)}</div></div>`}
+function bookPages(){const L=LEVELS[S.lv];const out=[];let n=0;L.bank.forEach((q,k)=>{if(q.shot){n++;const pg=S.pages[k];out.push(pg?Object.assign({n},pg):{n,empty:true,title:q.shot})}});return out}
+function saveBook(){try{const db=load();db.book={team:S.team,pages:S.pages};localStorage.setItem(KEY,JSON.stringify(db))}catch(e){$("puzNote").textContent="تنبيه: مساحة الحفظ ممتلئة — الدفتر محفوظ حتى إغلاق الصفحة فقط، فصوّراه قبل الخروج."}}
+function updatePanel(){
+  const L=LEVELS[S.lv];
+  $("hdParts").textContent=S.parts>0?"🔩".repeat(S.parts):"✖ لا القطع";
+  const m=multOf(S.streak);$("hdStreak").textContent="🔥 ×"+AR(m)+(S.streak?" ("+AR(S.streak)+")":"");
+  $("hdP").textContent=AR(S.pts+S.bonus)+" نقطة";
+  if(L.mode==="cases"){
+    const n=starsOf(S.pts,S.max);
+    $("puzNote").textContent="نجوم الشارة الآن: "+AR(n)+" من ٥ · مكافآت الوقت والسلسلة: +"+AR(S.bonus);
+    $("book").innerHTML=L.cases.map((C,ci)=>{const cur=S.i>=C.s&&S.i<=C.e,ok=S.i>C.e;
+      return '<div class="case'+(cur?" cur":"")+(ok?" ok":"")+'"><b>'+(ok?"✔ ":cur?"▶ ":"")+C.t+'</b> <span class="sub">· '+fmtT(C.lim*1000)+' دقائق</span><div class="stg">'+
+      Array.from({length:C.e-C.s+1},(_,k)=>{const qi=C.s+k;return '<span class="'+(qi<S.i||(qi===S.i&&S.ok)?"d":qi===S.i?"c":"")+'">'+AR(k+1)+'</span>'}).join("")+'</div></div>'}).join("")+
+      '<div class="badgewrap">'+badgeSVG(n,S.team,true)+'</div>';
+    return;
+  }
+  const g=S.log.filter(x=>x.green).length,y=S.log.length-g;
+  let html='<div class="qsum"><span>🟢 ممتاز: '+AR(g)+'</span><span>🟡 مقبول: '+AR(y)+'</span><span>⏳ بالانتظار: '+AR(L.bank.length-S.log.length)+'</span></div><div class="queue">'+
+    L.bank.map((q,k)=>{const r=S.log.find(x=>x.q===k);const cls=r?(r.green?"g":"y"):(k===S.i?"cur":"");
+      return '<div class="dev '+cls+'"><span class="ic">'+(r?(r.green?"🟢":"🟡"):k===S.i?"🛠️":"🖥️")+'</span>'+AR(k+1)+'</div>'}).join("")+'</div>';
+  if(L.mode==="notebook"){const pgs=bookPages(),done=pgs.filter(x=>!x.empty).length;
+    html+='<h3 style="margin:16px 0 6px">📓 صفحات الدفتر: '+AR(done)+' / '+AR(pgs.length)+'</h3><div class="book">'+pgs.map(x=>x.empty?`<div class="pg empty">صفحة ${AR(x.n)}<br>${escH(x.title)}</div>`:pageHTML(x,S.team,S.sec)).join("")+'</div>';}
+  $("puzNote").textContent="أصلحا الأجهزة بسرعة ومن أول محاولة لتطلع 🟢 وتكبر سلسلتكما.";
+  $("book").innerHTML=html;
+}
+function setupPanel(){
+  const L=LEVELS[S.lv];
+  $("puz").classList.add("hide");$("book").classList.remove("hide");
+  $("puzTtl").textContent=L.mode==="self"?"📋 مؤشّرات الأداء":L.mode==="cases"?"🧰 بلاغات أسئلة الوحدة":L.mode==="notebook"?"🛠️ لوحة الورشة ودفتر الورشة":"🛠️ لوحة الورشة";
+  updatePanel();
+}
+function multOf(s){return s>=5?3:s>=3?2:1}
+function curCase(){const L=LEVELS[S.lv];return (L.cases||[]).find(C=>S.i>=C.s&&S.i<=C.e)||L.cases[L.cases.length-1]}
+function needPage(){const q=LEVELS[S.lv].bank[S.i];return LEVELS[S.lv].mode==="notebook"&&q.shot&&!S.pages[S.i]}
+function gateNext(){
+  if(!S.ok)return;
+  if(needPage()){$("btnNext").classList.add("hide");const m=$("zoneMsg");if(m)m.innerHTML="✅ الإجابة صحيحة — بقي أن تلصقا اللقطة في الدفتر لتنتقلا.";return}
+  $("btnNext").classList.remove("hide");
+}
+function addShot(file){
+  if(!file||!/^image\//.test(file.type))return;
+  const k=S.i,q=LEVELS[S.lv].bank[k];if(!q.shot)return;
+  const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{
+    const sc=Math.min(1,1000/im.width),c=document.createElement("canvas");c.width=Math.round(im.width*sc);c.height=Math.round(im.height*sc);
+    c.getContext("2d").drawImage(im,0,0,c.width,c.height);
+    S.pages[k]={img:c.toDataURL("image/jpeg",.72),title:q.shot,d:today()};saveBook();
+    const z=$("zone");if(z&&S.i===k){z.classList.add("done");z.innerHTML='<div class="msg">📓 أُضيفت الصفحة إلى دفتركما. تقدرا تلصقا لقطة جديدة لتستبدلاها.</div><div id="zoneMsg"></div>'+
+      '<div style="max-width:320px;margin:8px auto 0">'+pageHTML(Object.assign({n:bookPages().find(x=>x.title===q.shot).n},S.pages[k]),S.team,S.sec)+'</div>'}
+    updatePanel();gateNext();};im.src=fr.result};fr.readAsDataURL(file);
+}
+document.addEventListener("paste",e=>{
+  if(!S||$("scrGame").classList.contains("hide"))return;
+  const q=LEVELS[S.lv].bank[S.i];if(LEVELS[S.lv].mode!=="notebook"||!q.shot)return;
+  const it=[...((e.clipboardData&&e.clipboardData.items)||[])].find(x=>x.type&&x.type.indexOf("image")===0);
+  if(it){e.preventDefault();addShot(it.getAsFile())}
+  else{const m=$("zoneMsg");if(m)m.textContent="ما في صورة بالحافظة — خذا اللقطة أولًا بـ Win+Shift+S ثم الصقاها."}
+});
+function fmtT(ms){const s=Math.floor(ms/1000);return AR(String(Math.floor(s/60)).padStart(2,"0"))+":"+AR(String(s%60).padStart(2,"0"))}
+function elapsed(){return S?(S.el||0)+(S.t0?Date.now()-S.t0:0):0}
+let TIMER=null;
+function tick(){
+  if(!S||!$("hdT"))return;
+  $("hdT").textContent="⏱ "+fmtT(elapsed());
+  const L=LEVELS[S.lv];if(!L||$("scrGame").classList.contains("hide"))return;
+  const bar=$("patFill"),pb=bar&&bar.parentNode;
+  if(L.patience&&S.qT0){
+    const used=(Date.now()-S.qT0)/1000,left=Math.max(0,L.patience-used),r=left/L.patience;
+    bar.style.transform="scaleX("+r+")";pb.classList.toggle("low",r<.35&&r>0);pb.classList.toggle("out",r<=0);
+    $("patLbl").textContent=S.ok?"تمّ إصلاح الجهاز":(left>0?"⏳ صبر صاحب الجهاز: "+fmtT(left*1000):"⌛ نفد الصبر — الجهاز بيطلع 🟡 مقبول");
+  }else if(L.mode==="cases"){
+    const C=curCase(),used=(elapsed()-(S.caseT0||0))/1000,left=C.lim-used,r=Math.max(0,left)/C.lim;
+    bar.style.transform="scaleX("+r+")";pb.classList.toggle("low",r<.35&&r>0);pb.classList.toggle("out",r<=0);
+    $("patLbl").textContent=(left>0?"⏳ وقت تشخيص البلاغ: "+fmtT(left*1000):"⌛ تجاوزتما وقت البلاغ — بتكملا بس بلا مكافأة الوقت")+" · "+C.t;
+  }
+}
+function saveRun(){if(!S)return;const db=load();db.run=db.run||{};
+  db.run[LEVELS[S.lv].id]={i:S.i,pts:S.pts,bonus:S.bonus,streak:S.streak,parts:S.parts,caseT0:S.caseT0,log:S.log,rate:S.rate,el:elapsed(),name:S.name};store(db)}
+function load(){try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return {}}}
+function store(o){try{localStorage.setItem(KEY,JSON.stringify(o))}catch(e){}}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+const BOOKTTL=document.getElementById("eBookTtl").textContent;
+let S={name:"",lv:0,i:0,pts:0,max:0,tries:0,used:false,log:[],seq:[]};
+
+/* ---------- منتقي المسارات ---------- */
+function drawLevels(){
+  const db=load(), box=$("lvls"); box.innerHTML="";
+  LEVELS.forEach((L,k)=>{
+    const rec=(db.lv||{})[L.id];
+    const b=document.createElement("button");
+    b.className="lvl";
+    b.innerHTML="<b>"+L.name+"</b><small>"+L.desc+"</small><em>"+AR(L.bank.length)+(L.id==="v3"?" تحدّيًا":" سؤالًا")+"</em>"+
+      (rec?'<span class="done">آخر علامة: '+AR(rec.pts)+" / "+AR(rec.max)+(rec.time?" · ⏱ "+fmtT(rec.time):"")+
+   (rec.best!=null&&rec.best!==rec.pts?" &nbsp;|&nbsp; الأفضل: "+AR(rec.best):"")+"</span>":"")+
+   (((db.run||{})[L.id])?'<span class="done">⏸ محفوظ عند السؤال '+AR(db.run[L.id].i+1)+"</span>":"");
+    b.addEventListener("click",()=>startLevel(k));
+    box.appendChild(b);
+  });
+  const db2=load();
+  if(db2.name)$("nm").value=db2.name;
+  if(db2.name2)$("nm2").value=db2.name2;
+  if(db2.team)$("tm").value=db2.team;
+  if(db2.sec)$("sec").value=db2.sec;
+}
+
+/* ---------- البزل ---------- */
+function cols(n){ for(const c of [5,4,6]) if(n%c===0) return c; return 5 }
+function buildTiles(n){
+  const c=cols(n), r=Math.ceil(n/c), t=$("tiles");
+  t.style.gridTemplateColumns="repeat("+c+",1fr)";
+  t.style.gridTemplateRows="repeat("+r+",1fr)";
+  t.innerHTML="";
+  for(let k=0;k<c*r;k++){
+    const d=document.createElement("div");
+    d.className="tile"; d.id="t"+k;
+    d.textContent=k<n?AR(k+1):"";
+    if(k>=n)d.classList.add("off");
+    t.appendChild(d);
+  }
+}
+
+/* ---------- بدء مستوى ---------- */
+function startLevel(k){
+  const v=$("nm").value.trim();
+  const v2=$("nm2").value.trim();
+  if(v.length<2){$("startErr").textContent="اكتبا الاسم الأول على الأقل 🙂";$("nm").focus();return}
+  $("startErr").textContent="";
+  const L=LEVELS[k];
+  S={name:v+(v2?" و"+v2:""),lv:k,i:0,pts:0,bonus:0,streak:0,parts:3,max:L.bank.length*10,tries:0,used:false,log:[],seq:[],el:0,t0:Date.now(),caseT0:0,rate:{}};
+  S.team=($("tm").value.trim())||("فريق "+S.name); S.sec=$("sec").value.trim(); S.pages={}; S.ok=false;
+  const db=load(); db.name=v; db.name2=v2; db.team=$("tm").value.trim(); db.sec=S.sec;
+  const run=(db.run||{})[L.id];
+  if(run&&run.i>0&&run.i<L.bank.length){
+    if(confirm("عندكما تقدّم محفوظ في هذا المستوى: السؤال "+AR(run.i+1)+" من "+AR(L.bank.length)+"، و"+AR((run.pts||0)+(run.bonus||0))+" نقطة، والوقت "+fmtT(run.el)+".\nموافق = أكملا من حيث توقّفتما\nإلغاء = ابدآ من جديد")){
+      S.i=run.i;S.pts=run.pts||0;S.bonus=run.bonus||0;S.streak=run.streak||0;S.parts=run.parts==null?3:run.parts;S.log=run.log||[];S.rate=run.rate||{};S.el=run.el||0;S.caseT0=run.caseT0||0;
+      if(L.mode==="notebook"&&db.book&&db.book.pages)S.pages=db.book.pages;
+    }else{delete db.run[L.id];}
+  }
+  if(L.mode==="notebook"&&!Object.keys(S.pages).length){delete db.book;}
+  store(db);
+  $("pat").classList.toggle("hide",!(L.patience||L.mode==="cases"));
+  setupPanel();
+  clearInterval(TIMER);TIMER=setInterval(tick,1000);
+  show("scrGame"); render(); tick();
+}
+
+function show(id){["scrStart","scrGame","scrEnd"].forEach(s=>$(s).classList.toggle("hide",s!==id));window.scrollTo(0,0)}
+
+function head(){
+  const L=LEVELS[S.lv];
+  $("hdNm").textContent=S.team;
+  $("hdQ").textContent=AR(S.i+1)+" / "+AR(L.bank.length);
+  $("hdBar").style.width=(S.i/L.bank.length*100)+"%";
+}
+function pointsNow(){
+  const LD=LEVELS[S.lv].ladder||[10,7,5,3]; const f=LD[Math.min(S.tries,LD.length-1)];
+  return Math.max(f-(S.used?2:0),1);
+}
+
+/* ---------- عرض السؤال ---------- */
+function render(){
+  const L=LEVELS[S.lv], q=L.bank[S.i];
+  S.tries=0; S.used=false; S.seq=[]; S.ok=false; S.qT0=Date.now();
+  let intro="";
+  if(L.mode==="cases"){const C=curCase();if(S.i===C.s){S.caseT0=elapsed();intro='<div class="hintbox show" style="margin:0 0 10px">'+C.intro+'</div>'}
+    else if(!S.caseT0&&S.i>C.s){S.caseT0=elapsed();}}
+  head();
+  $("qTag").textContent=L.mode==="cases"?curCase().t+" · المرحلة "+AR(S.i-curCase().s+1)+" من "+AR(curCase().e-curCase().s+1):(q.p||L.name);
+  $("qText").innerHTML=intro+q.q;
+  $("qHint").className="hintbox"; $("qHint").textContent="";
+  $("qFb").className="fb"; $("qFb").innerHTML="";
+  $("btnHint").classList.toggle("hide",!L.hints||!q.hint);
+  $("btnHint").disabled=false;
+  $("btnNext").classList.add("hide");
+  const c=$("qBody").closest(".card");
+  c.classList.remove("qin"); void c.offsetWidth; c.classList.add("qin");
+  const box=$("qBody"); box.innerHTML="";
+  if(L.mode==="self"&&S.rate[S.i]==null){
+    $("qTag").textContent="مؤشّر الأداء "+AR(S.i+1)+" من "+AR(L.bank.length)+(q.les?" · "+q.les:"");
+    $("qText").innerHTML='<div class="selfbox">📋 <b>'+q.self+'</b></div><div style="font-size:.8em;font-weight:600">قرّرا معًا بصدق: هل تنطبق هذه العبارة عليكما الآن؟</div>';
+    $("btnHint").classList.add("hide");
+    const gg=document.createElement("div");gg.className="opts selfopts";
+    [["yes","✅ نعم"],["no","❌ لا"],["unsure","🤔 لسنا متأكّدَين"]].forEach(([k,t])=>{const b=document.createElement("button");b.className="opt";b.textContent=t;
+      b.addEventListener("click",()=>{S.rate[S.i]=k;saveRun();render();});gg.appendChild(b);});
+    box.appendChild(gg);updatePanel();return;
+  }
+  if(L.mode==="self"){const RT={yes:"✅ نعم",no:"❌ لا",unsure:"🤔 لسنا متأكّدَين"};
+    $("qText").innerHTML='<div class="selfbox small">📋 '+q.self+' — تقديركما: <b>'+RT[S.rate[S.i]]+'</b></div>🔎 <b>سؤال تحقّق:</b> '+q.q;}
+  if(L.mode==="notebook"&&q.shot){
+    const z=document.createElement("div");z.className="zone";z.id="zone";
+    z.innerHTML='<div class="msg">📋 صفحة الدفتر: '+escH(q.shot)+'</div><div class="sub" style="color:var(--ink)">بعد أخذ اللقطة ارجعا إلى هنا بـ <bdi dir="ltr"><kbd>Alt</kbd>+<kbd>Tab</kbd></bdi> واضغطا <bdi dir="ltr"><kbd>Ctrl</kbd>+<kbd>V</kbd></bdi> — أو اختارا صورة محفوظة: '+
+      '<label class="btn sec sm" style="display:inline-block;margin-top:6px">📁 اختيار صورة<input type="file" accept="image/*" style="display:none" onchange="addShot(this.files[0])"></label></div><div id="zoneMsg" class="sub"></div>';
+    box.appendChild(z);
+    if(S.pages[S.i]){z.classList.add("done");z.querySelector(".msg").textContent="📓 هذه الصفحة موجودة في دفتركما — تقدرا تلصقا لقطة جديدة لتستبدلاها."}
+  }
+  updatePanel(); tick();
+  if(q.t==="order"){
+    const note=document.createElement("div");
+    note.className="ordhint"; note.textContent="انقرا الخطوات بالترتيب الصحيح، وحدة ورا وحدة.";
+    box.appendChild(note);
+    const gg=document.createElement("div"); gg.className="ord";
+    shuffle(q.items.map((x,i)=>({x,i}))).forEach(o=>{
+      const b=document.createElement("button");
+      b.className="oitem"; b.innerHTML=o.x; b.dataset.i=o.i;
+      b.addEventListener("click",()=>pickOrder(o.i,b));
+      gg.appendChild(b);
+    });
+    box.appendChild(gg);
+  }else{
+    const gg=document.createElement("div"); gg.className="opts";
+    shuffle(q.c.map((txt,k)=>({txt,k}))).forEach(({txt,k})=>{
+      const b=document.createElement("button");
+      b.className="opt"; b.innerHTML=txt; b.dataset.k=k;
+      b.addEventListener("click",()=>answer(k,b));
+      gg.appendChild(b);
+    });
+    box.appendChild(gg);
+  }
+}
+
+/* ---------- الإجابة ---------- */
+function correct(){
+  const L=LEVELS[S.lv], q=L.bank[S.i];
+  const base=pointsNow(), before=S.pts+S.bonus;
+  const inTime=!L.patience||((Date.now()-S.qT0)/1000<=L.patience);
+  const green=S.tries===0&&!S.used&&inTime;
+  S.streak=green?S.streak+1:0;
+  const mult=green?multOf(S.streak):1, bonus=base*(mult-1);
+  S.pts+=base; S.bonus+=bonus; S.ok=true;
+  let caseMsg="";
+  if(L.mode==="cases"){const C=curCase();if(S.i===C.e){const used=(elapsed()-(S.caseT0||0))/1000;
+    if(used<=C.lim){S.bonus+=20;caseMsg="<br>"+C.done+" ⏱ ضمن الوقت: <b>+٢٠ نقطة</b>";}else caseMsg="<br>"+C.done+" ⌛ بعد انتهاء الوقت — بلا مكافأة.";
+    S.caseT0=0;}}
+  const fb=$("qFb");
+  fb.className="fb good show";
+  fb.innerHTML="✅ <b>صحيح! +"+AR(base)+" نقطة"+(bonus?" + "+AR(bonus)+" مكافأة السلسلة ×"+AR(mult):"")+"</b>"+
+    (L.patience?(green?" · 🟢 الجهاز طلع ممتاز":" · 🟡 الجهاز طلع مقبول"+(!inTime?" (نفد الصبر)":S.used?" (بتلميح)":"")):"")+"<br>"+(q.why||"")+caseMsg;
+  confetti(S.i===L.bank.length-1?110:(green?45:20)); sndGood();
+  countTo($("hdP"),before,S.pts+S.bonus); $("hdP").classList.add("bump");
+  setTimeout(()=>$("hdP").classList.remove("bump"),420);
+  if(mult>1){$("hdStreak").classList.remove("flash");void $("hdStreak").offsetWidth;$("hdStreak").classList.add("flash");}
+  $("btnHint").classList.add("hide");
+  $("btnNext").textContent = S.i===L.bank.length-1 ? "النتيجة ←" : "التالي ←";
+  S.log.push({q:S.i,pts:base,bonus:bonus,tries:S.tries,hint:S.used,green:green,rate:S.rate[S.i]});
+  gateNext();
+  head(); updatePanel(); tick();
+}
+function rewind(){
+  const L=LEVELS[S.lv];
+  const floor=L.mode==="cases"?curCase().s:0;
+  const to=Math.max(floor,S.i-3);
+  const gone=S.log.filter(x=>x.q>=to);
+  gone.forEach(x=>{S.pts-=x.pts;S.bonus-=x.bonus||0});
+  S.log=S.log.filter(x=>x.q<to);
+  S.i=to; S.parts=3; S.streak=0;
+  if(L.mode==="cases"&&to===curCase().s)S.caseT0=0;
+  saveRun(); render();
+}
+function wrong(btn,extra){
+  S.tries++; sndBad();
+  S.streak=0; S.parts=Math.max(0,S.parts-1);
+  if(btn){btn.classList.add("bad");if(btn.classList.contains("opt"))btn.disabled=true;
+    if(btn.classList.contains("oitem")){btn.classList.add("wrong");setTimeout(()=>btn.classList.remove("wrong","bad"),400)}}
+  $("hdParts").classList.remove("flash");void $("hdParts").offsetWidth;$("hdParts").classList.add("flash");
+  updatePanel();
+  const fb=$("qFb");
+  if(S.parts===0){
+    const L=LEVELS[S.lv],floor=L.mode==="cases"?curCase().s:0,to=Math.max(floor,S.i-3);
+    fb.className="fb bad show";
+    fb.innerHTML="🔩 <b>نفدت القطع!</b><br>"+(to<S.i?"رح ترجعا للسؤال "+AR(to+1)+" وتعيدا آخر "+AR(S.i-to)+" أسئلة، والقطع بتنشحن من جديد.":"رح تعيدا هذا السؤال من جديد، والقطع بتنشحن.");
+    document.querySelectorAll("#qBody button").forEach(b=>b.disabled=true);
+    setTimeout(rewind,2600);
+    return;
+  }
+  fb.className="fb bad show";
+  fb.innerHTML="❌ <b>مش صح — جرّبا مرة ثانية.</b> بقي معكما "+AR(S.parts)+" "+(S.parts===1?"قطعة":"القطع")+" 🔩<br>"+(extra||"ما في انتقال للسؤال التالي إلا بالإجابة الصحيحة.")+
+    (S.tries>=2&&LEVELS[S.lv].hints&&LEVELS[S.lv].bank[S.i].hint?"<br>💡 استعملا زرّ التلميح إذا بدكما.":"");
+}
+function answer(k,btn){
+  const q=LEVELS[S.lv].bank[S.i];
+  if(k===q.a){
+    btn.classList.add("good");
+    [...btn.parentNode.children].forEach(b=>b.disabled=true);
+    correct();
+  }else wrong(btn);
+}
+function pickOrder(i,btn){
+  const q=LEVELS[S.lv].bank[S.i];
+  if(i===S.seq.length){
+    S.seq.push(i);
+    btn.classList.add("pick"); btn.disabled=true;
+    const n=document.createElement("span"); n.className="nm"; n.textContent=AR(S.seq.length);
+    btn.appendChild(n);
+    if(S.seq.length===q.items.length){
+      [...btn.parentNode.children].forEach(b=>b.disabled=true);
+      correct();
+    }
+  }else wrong(btn,"هاي مش الخطوة التالية بالترتيب. فكّرا شو بيجي قبلها.");
+}
+
+$("btnHint").addEventListener("click",()=>{
+  const q=LEVELS[S.lv].bank[S.i];
+  if(S.used||!q.hint||!LEVELS[S.lv].hints)return;
+  S.used=true;
+  $("qHint").className="hintbox show";
+  $("qHint").innerHTML="💡 <b>تلميح:</b> "+q.hint+" (الجهاز بيطلع 🟡 وبتنكسر السلسلة)";
+  $("btnHint").disabled=true;
+});
+$("btnNext").addEventListener("click",()=>{
+  S.i++;
+  if(S.i>=LEVELS[S.lv].bank.length)finish(); else {saveRun();render();}
+});
+$("btnBack").addEventListener("click",()=>{saveRun();clearInterval(TIMER);drawLevels();show("scrStart")});
+
+/* ---------- النتيجة ---------- */
+function badge(p,m){
+  const r=p/m;
+  if(r>=.95)return["🥇","إتقان ممتاز"];
+  if(r>=.80)return["🥈","إتقان جيد جدًا"];
+  if(r>=.65)return["🥉","إتقان جيد"];
+  return["🎖️","بحاجة لمراجعة"];
+}
+
+/* ===== نموذج الدرسين الثالث والرابع =====
+   بعد إنشاء النموذج الجديد: خذا رابط "Get pre-filled URL" وضعاه في SUBMIT_NEW.url، وأرقام الحقول (rXXXX) مكانها.
+   ما دام الرابط فارغًا تُرسل النتائج إلى نموذج الدرسين الأول والثاني مع تمييزها باسم «ورشة الزيتونة الختامية». */
+const SUBMIT_NEW={url:"",f:{name:"",team:"",cls:"",level:"",score:"",time:""}};
+const SUBMIT_OLD={url:"https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=QoWSx2QeIUimYh4GU_yQCXkPYNJN8CJDkPMMgh2Vy6tUODg0S1M1VFZINFczWVlRTThRQUNHRFhIMy4u",
+ f:{cls:"r43e5b2ed34e345e1ba30786b608224df",level:"r637b4343d36345e19e3a438ac27566ff",score:"r97c591a829f04904ae5e01e4870c0ba0",name:"r7ab483cd2eeb4108a9207e81115eef5d"},
+ grade:"الثامن"};
+const SUBMIT=SUBMIT_NEW.url?SUBMIT_NEW:SUBMIT_OLD;
+function sendLinks(){
+  const L=LEVELS[S.lv];
+  const names=[$("nm").value,$("nm2").value].map(x=>(x||"").trim()).filter(Boolean);
+  const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  return names.map(t=>{const u=new URL(SUBMIT.url);
+    u.searchParams.set(SUBMIT.f.name,t);u.searchParams.set(SUBMIT.f.cls,"الثامن"+(S.sec?" "+S.sec:""));
+    if(SUBMIT.f.team)u.searchParams.set(SUBMIT.f.team,S.team);
+    u.searchParams.set(SUBMIT.f.level,(SUBMIT===SUBMIT_OLD?"ورشة الزيتونة الختامية — ":"")+L.name);if(SUBMIT.f.time){u.searchParams.set(SUBMIT.f.score,AR(S.pts)+" / "+AR(S.max)+" (+"+AR(S.bonus)+" مكافأة)");u.searchParams.set(SUBMIT.f.time,fmtT(S.done||0));}
+    else u.searchParams.set(SUBMIT.f.score,AR(S.pts)+" / "+AR(S.max)+" (+"+AR(S.bonus)+" مكافأة) · الوقت "+fmtT(S.done||0));
+    return '<a class="btn" style="text-decoration:none" target="_blank" rel="noopener" href="'+u.toString()+'">📤 إرسال نتيجة '+esc(t)+'</a>';}).join("");
+}
+function finish(){
+  clearInterval(TIMER); S.done=elapsed(); S.t0=0; S.el=S.done; tick();
+  const L=LEVELS[S.lv];
+  const [ic,ttl]=badge(S.pts,S.max);
+  const first=S.log.filter(x=>x.tries===0).length;
+  const noHint=S.log.filter(x=>!x.hint).length;
+  $("eTtl").textContent=L.name;
+  $("eScore").innerHTML="<bdi>"+AR(S.pts)+"</bdi> / <bdi>"+AR(S.max)+"</bdi>"+
+    '<div style="font-size:17px;color:var(--ink);font-weight:700;margin-top:4px">المكافآت: +'+AR(S.bonus)+' · مجموع النقاط: '+AR(S.pts+S.bonus)+
+    (L.mode!=="cases"?' · 🟢 '+AR(S.log.filter(x=>x.green).length)+' من '+AR(L.bank.length)+' أجهزة ممتازة':'')+'</div>';
+  $("eDet").innerHTML="<b>"+escH(S.team)+"</b> ("+escH(S.name)+")"+(S.sec?" · الشعبة "+escH(S.sec):"")+" &nbsp;·&nbsp; ⏱ وقت الإنجاز: <b><bdi>"+fmtT(S.done)+"</bdi></b>";
+  if(L.mode==="cases"){const n=starsOf(S.pts,S.max);$("eBdg").innerHTML='<div class="badgewrap">'+badgeSVG(n,S.team,false)+'</div>';$("eBdg").style.fontSize="16px";}
+  else{$("eBdg").textContent=ic;$("eBdg").style.fontSize="40px";}
+  $("eBookCard").classList.toggle("hide",L.mode!=="notebook"&&L.mode!=="self");
+  $("eBookTtl").textContent=L.mode==="self"?"📋 التقويم الذاتي والتأمّلات":BOOKTTL;
+  if(L.mode==="self"){const RT={yes:"✅ نعم",no:"❌ لا",unsure:"🤔 غير متأكّدَين"};
+    const rows=L.bank.map((q,k)=>{const r=S.log.find(x=>x.q===k)||{};const ok=r.tries===0;const rt=S.rate[k];
+      const need=(rt!=="yes")||!ok;
+      return '<tr'+(need?' class="need"':'')+'><td style="text-align:right">'+q.self+'</td><td>'+(RT[rt]||"—")+'</td><td>'+(ok?"✔ من أول محاولة":"⚠ بعد "+AR((r.tries||0)+1)+" محاولات")+'</td><td>'+(need?"📖 "+(q.les||"راجعا الدرس"):"👍")+'</td></tr>'}).join("");
+    const nNeed=L.bank.filter((q,k)=>{const r=S.log.find(x=>x.q===k)||{};return S.rate[k]!=="yes"||r.tries!==0}).length;
+    $("eBook").innerHTML='<div class="shot" style="padding:14px"><h2 style="margin:0 0 6px">نتيجة التقويم الذاتي</h2><div class="sub">'+escH(S.team)+' · '+escH(S.name)+(S.sec?" · الشعبة "+escH(S.sec):"")+' · '+today()+'</div>'+
+      '<div class="selfwrap"><table class="selftbl"><tr><th>مؤشّر الأداء</th><th>تقديرنا</th><th>سؤال التحقّق</th><th>الخطوة التالية</th></tr>'+rows+'</table></div>'+
+      '<p style="font-weight:700;margin:10px 0 4px">'+(nNeed?"بنود تحتاج مراجعة: "+AR(nNeed)+" (المظلّلة).":"أتقنتما كل البنود 👏")+'</p>'+
+      '<div class="sub" style="text-align:right;color:var(--ink)">إذا كانت الإجابة (لا) أو (لسنا متأكّدَين): نراجع المادة الدراسية ونعيد قراءة المحتوى المتعلّق بالمعيار · نطلب المساعدة من المعلّم أو الزملاء · نستخدم مراجع إضافية موثوقة.</div>'+
+      '<h3 style="margin:14px 0 6px">✍️ تأمّلات ذاتية</h3>'+["تعلّمنا في هذه الوحدة:","يمكننا أن نطبّق ما تعلّمناه في:","الصعوبات التي واجهناها أثناء التعلّم:","ذلّلنا هذه الصعوبات عن طريق:","يمكننا مستقبلًا تحسين:"].map(t=>'<label class="refl">'+t+'<textarea rows="2"></textarea></label>').join("")+'</div>';}
+  if(L.mode==="notebook"){const pgs=bookPages().filter(x=>!x.empty);
+    $("eBook").innerHTML='<div style="text-align:center;margin:8px 0 14px"><div class="shot" style="padding:14px"><h2 style="margin:0">دفتر الورشة</h2><div style="font-size:20px;font-weight:700;color:var(--tl)">'+escH(S.team)+'</div><div class="sub">'+escH(S.name)+(S.sec?" · الشعبة "+escH(S.sec):"")+" · "+today()+" · "+AR(pgs.length)+' صفحات</div></div></div><div class="bookbig">'+pgs.map(x=>pageHTML(x,S.team,S.sec)).join("")+"</div>";}
+  const d=new Date();
+  const MN=["كانون الثاني","شباط","آذار","نيسان","أيار","حزيران","تموز","آب","أيلول","تشرين الأول","تشرين الثاني","كانون الأول"];
+  $("eDate").innerHTML=ttl+" &nbsp;·&nbsp; <bdi>"+AR(d.getDate())+"</bdi> "+MN[d.getMonth()]+" <bdi>"+AR(d.getFullYear())+"</bdi>";
+
+  const db=load(); db.lv=db.lv||{};
+  const prev=db.lv[L.id];
+  db.lv[L.id]={pts:S.pts,bonus:S.bonus,max:S.max,first:first,n:L.bank.length,time:S.done,
+               best:Math.max((prev&&prev.best)||0,S.pts),
+               bestTime:(prev&&prev.best>S.pts)?prev.bestTime:((prev&&prev.best===S.pts&&prev.bestTime)?Math.min(prev.bestTime,S.done):S.done),
+               tries:((prev&&prev.tries)||0)+1};
+  if(db.run)delete db.run[L.id];
+  db.name=S.name; store(db);
+
+  const all=LEVELS.map(x=>({n:x.name,r:(db.lv||{})[x.id]}));
+  const tot=all.reduce((a,b)=>a+((b.r&&b.r.pts)||0),0);
+  const totm=all.reduce((a,b)=>a+((b.r&&b.r.max)||0),0);
+  $("eTbl").innerHTML=all.map(x=>
+    "<tr><td style='text-align:right'>"+x.n.split(" — ")[0]+"</td><td><b>"+
+    (x.r?AR(x.r.pts)+" / "+AR(x.r.max):"—")+"</b></td><td>"+(x.r&&x.r.time?"⏱ "+fmtT(x.r.time):"")+"</td></tr>").join("")+
+    (totm?"<tr><td style='text-align:right;border-top:2px solid var(--or)'><b>المجموع</b></td><td style='border-top:2px solid var(--or)'><b>"+AR(tot)+" / "+AR(totm)+"</b></td></tr>":"");
+
+  $("rev").innerHTML=L.bank.map((q,k)=>{
+    const g=S.log.find(x=>x.q===k)||{pts:0,tries:0,hint:false};
+    return '<div style="border-bottom:1px solid var(--line);padding:7px 0">'+
+      '<b>'+AR(k+1)+'.</b> <b>'+AR(g.pts)+'</b> نقطة'+
+      (g.tries?' · محاولات خاطئة: '+AR(g.tries):' · من أول محاولة ✔')+(g.hint?' · بتلميح':'')+
+      '<div class="sub">'+(q.why||"")+'</div></div>';
+  }).join("");
+
+  const nxt=S.lv+1;
+  $("btnNextLvl").classList.toggle("hide",nxt>=LEVELS.length);
+  if(nxt<LEVELS.length)$("btnNextLvl").textContent=LEVELS[nxt].name.split(" — ")[0]+" ←";
+  $("hdBar").style.width="100%";
+  try{$("eSend").innerHTML=sendLinks();}catch(e){$("eSend").innerHTML="";}
+  show("scrEnd");
+  setTimeout(()=>confetti(130),260);
+  setTimeout(()=>confetti(90),900);
+}
+$("btnNextLvl").addEventListener("click",()=>startLevel(S.lv+1));
+$("btnMenu").addEventListener("click",()=>{drawLevels();show("scrStart")});
+$("btnRetry").addEventListener("click",()=>startLevel(S.lv));
+
+drawLevels();
+
+/* ---------- ٩) تأثيرات بصرية وصوتية خفيفة ---------- */
+let FX = (function(){
+  try{ return localStorage.getItem("jofeh:fx")!=="0" }catch(e){ return true }
+})();
+const fxBtn=document.createElement("button");
+fxBtn.className="fxbtn noprint";
+fxBtn.textContent=FX?"✨ الحركة: مفعّلة":"✨ الحركة: مخفّفة";
+fxBtn.addEventListener("click",()=>{
+  FX=!FX;
+  document.body.classList.toggle("fxoff",!FX);
+  fxBtn.textContent=FX?"✨ الحركة: مفعّلة":"✨ الحركة: مخفّفة";
+  try{localStorage.setItem("jofeh:fx",FX?"1":"0")}catch(e){}
+});
+document.body.appendChild(fxBtn);
+document.body.classList.toggle("fxoff",!FX);
+
+/* كونفيتي بسيط على canvas — يتوقف تلقائيًا */
+const fxc=document.createElement("canvas"); fxc.id="fxc"; document.body.appendChild(fxc);
+const ctx=fxc.getContext("2d");
+let parts=[],raf=0;
+function fit(){fxc.width=innerWidth;fxc.height=innerHeight}
+addEventListener("resize",fit); fit();
+const COLS=["#F4845F","#FFBF3C","#1B6CA8","#1E7A4B","#FFF8F0"];
+function confetti(n){
+  if(!FX)return;
+  const cx=innerWidth/2, cy=innerHeight*0.32;
+  for(let k=0;k<n;k++){
+    const a=Math.random()*Math.PI*2, s=3+Math.random()*7;
+    parts.push({x:cx,y:cy,vx:Math.cos(a)*s,vy:Math.sin(a)*s-4,
+      c:COLS[k%COLS.length],r:3+Math.random()*4,rot:Math.random()*6,vr:(Math.random()-.5)*.4,life:62});
+  }
+  if(!raf)raf=requestAnimationFrame(step);
+}
+function step(){
+  ctx.clearRect(0,0,fxc.width,fxc.height);
+  parts=parts.filter(p=>p.life>0);
+  parts.forEach(p=>{
+    p.vy+=0.22; p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr; p.life--;
+    ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+    ctx.globalAlpha=Math.min(1,p.life/22); ctx.fillStyle=p.c;
+    ctx.fillRect(-p.r,-p.r*.6,p.r*2,p.r*1.2); ctx.restore();
+  });
+  if(parts.length){raf=requestAnimationFrame(step)}else{raf=0;ctx.clearRect(0,0,fxc.width,fxc.height)}
+}
+
+/* نغمة نجاح/خطأ مولّدة بالكود — بلا ملفات صوت */
+let AC=null;
+function tone(seq){
+  if(!FX)return;
+  try{
+    AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+    let t=AC.currentTime;
+    seq.forEach(([f,d])=>{
+      const o=AC.createOscillator(), g=AC.createGain();
+      o.type="sine"; o.frequency.value=f;
+      g.gain.setValueAtTime(0.0001,t);
+      g.gain.exponentialRampToValueAtTime(0.14,t+0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001,t+d);
+      o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t+d+0.02);
+      t+=d*0.85;
+    });
+  }catch(e){}
+}
+const sndGood=()=>tone([[523,.12],[659,.12],[784,.2]]);
+const sndBad =()=>tone([[300,.13],[220,.17]]);
+
+/* عدّاد نقاط تصاعدي */
+function countTo(el,from,to){
+  if(!FX||from===to){el.textContent=AR(to)+" نقطة";return}
+  const t0=performance.now(), dur=520;
+  (function tick(t){
+    const k=Math.min(1,(t-t0)/dur);
+    el.textContent=AR(Math.round(from+(to-from)*(1-Math.pow(1-k,3))))+" نقطة";
+    if(k<1)requestAnimationFrame(tick);
+  })(t0);
+}
+
+</script>
+
+</body>
+</html>
