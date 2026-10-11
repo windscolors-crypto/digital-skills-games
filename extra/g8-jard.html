@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>مُحقِّقات الجرد — مدرسة إناث الجوفة الإعدادية</title>
+<title>تحقيق الجرد — المهارات الرقمية</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
@@ -153,23 +153,23 @@ section{animation:fin .4s ease-out}
 <section id="scrStart">
   <div class="card" style="text-align:center">
     <div style="font-size:52px;line-height:1">🔍</div>
-    <h1>مُحقِّقات الجرد</h1>
-    <p class="sub">لعبة بحث في سجل أجهزة مدرسة إناث الجوفة الإعدادية — ٥٨ جهازًا<br>
-    منطقة عمان التعليمية · جرد 17/02/2026</p>
+    <h1>تحقيق الجرد</h1>
+    <p class="sub">المهارات الرقمية · لعبة بحث في سجل جرد أجهزة مدرسية — ٥٨ جهازًا<br>
+    جرد 17/02/2026</p>
     <div style="max-width:380px;margin:18px auto 0;text-align:right">
-      <label for="nm" style="font-weight:700;display:block;margin-bottom:6px">اسمك:</label>
-      <input type="text" id="nm" placeholder="اكتبي اسمك هنا" autocomplete="off">
+      <label for="nm" style="font-weight:700;display:block;margin-bottom:6px">اسم الفريق أو الاسمان:</label>
+      <input type="text" id="nm" placeholder="اكتبا اسميكما أو اسم الفريق هنا" autocomplete="off">
       <div id="startErr" style="color:var(--no);font-size:15px;height:22px"></div>
-      <button class="btn" id="go" style="width:100%">ابدئي التحقيق</button>
+      <button class="btn" id="go" style="width:100%">ابدآ التحقيق</button>
     </div>
     <div id="best" class="sub" style="margin-top:14px"></div>
   </div>
   <div class="card">
-    <h3>كيف تلعبين؟</h3>
+    <h3>كيف تلعبان؟</h3>
     <p class="sub" style="color:var(--ink)">
-    عندك <b>١٢ مهمة</b> على سجل الجرد الحقيقي للمدرسة. السجل كامل موجود أمامك مع <b>مربّع بحث</b> — استخدميه.<br>
+    عندكما <b>١٢ مهمة</b> على سجل الجرد الحقيقي للمدرسة. السجل كامل موجود أمامكما مع <b>مربّع بحث</b> — استخدماه.<br>
     ✦ كل إجابة صحيحة بتكشف قطعة من الصورة المخفيّة.<br>
-    ✦ ما في انتقال للمهمة التالية إلا بالإجابة الصحيحة — بتقدري تحاولي من جديد.<br>
+    ✦ ما في انتقال للمهمة التالية إلا بالإجابة الصحيحة — تقدران المحاولة من جديد.<br>
     ✦ كل محاولة خاطئة بتقلّل نقاط المهمة، والتلميح بيكلّف ٢ نقطة.</p>
   </div>
 </section>
@@ -229,7 +229,7 @@ section{animation:fin .4s ease-out}
   <!-- لوح/سبورة -->
   <rect x="36" y="44" width="186" height="86" rx="6" fill="#23433A" stroke="#C9B9A6" stroke-width="3"/>
   <text x="129" y="80" font-family="Cairo,Tahoma,sans-serif" font-size="20" font-weight="800" fill="#FFBF3C" text-anchor="middle">مختبر الحاسوب</text>
-  <text x="129" y="106" font-family="Cairo,Tahoma,sans-serif" font-size="13" fill="#FFF8F0" text-anchor="middle">مدرسة إناث الجوفة الإعدادية</text>
+  <text x="129" y="106" font-family="Cairo,Tahoma,sans-serif" font-size="13" fill="#FFF8F0" text-anchor="middle">المهارات الرقمية</text>
 
   <!-- طاولة -->
   <rect x="30" y="196" width="340" height="12" rx="4" fill="#C98A5B"/>
@@ -256,7 +256,7 @@ section{animation:fin .4s ease-out}
     <rect x="282" y="210" width="56" height="16" rx="3" fill="#4A4A4A"/>
   </g>
 
-  <text x="200" y="262" font-family="Cairo,Tahoma,sans-serif" font-size="17" font-weight="800" fill="#F4845F" text-anchor="middle">أحسنتِ — كشفتِ الصورة كاملة 🎉</text>
+  <text x="200" y="262" font-family="Cairo,Tahoma,sans-serif" font-size="17" font-weight="800" fill="#F4845F" text-anchor="middle">أحسنتما — كشفتما الصورة كاملة 🎉</text>
 </svg>
 
       <div class="tiles" id="tiles"></div>
@@ -266,7 +266,7 @@ section{animation:fin .4s ease-out}
   <div class="card">
     <h3>📋 سجل الجرد — ٥٨ جهازًا</h3>
     <div class="srch">
-      <input type="text" id="sq" placeholder="ابحثي: Service Tag أو موديل أو مكان أو نوع…" autocomplete="off">
+      <input type="text" id="sq" placeholder="ابحثا: Service Tag أو موديل أو مكان أو نوع…" autocomplete="off">
       <button class="btn sec sm" id="sclr">مسح</button>
     </div>
     <div class="tblwrap">
@@ -283,32 +283,32 @@ section{animation:fin .4s ease-out}
 <section id="scrEnd" class="hide">
   <div class="card">
     <div class="cert" id="cert">
-      <div class="ttl">شهادة إنجاز — مُحقِّقات الجرد</div>
-      <div class="sub">مدرسة إناث الجوفة الإعدادية · منطقة عمان التعليمية · UNRWA</div>
+      <div class="ttl">شهادة إنجاز — تحقيق الجرد</div>
+      <div class="sub">المهارات الرقمية · الصف الثامن</div>
       <div class="who" id="cNm">—</div>
       <div class="bdg" id="cBdg">🥇</div>
       <div class="sc" id="cSc">—</div>
       <div class="sub" id="cDet">—</div>
-      <div class="ftr">معلمة المادة: ريم توفيق · <span id="cDate">—</span></div>
+      <div class="ftr">المهارات الرقمية · <span id="cDate">—</span></div>
     </div>
     <div class="row noprint">
-      <button class="btn" id="btnPrint">🖨️ اطبعي الشهادة</button>
-      <button class="btn sec" id="btnAgain">🔁 العبي مرة أخرى</button>
+      <button class="btn" id="btnPrint">🖨️ اطبعا الشهادة</button>
+      <button class="btn sec" id="btnAgain">🔁 العبا مرة أخرى</button>
     </div>
   </div>
 
   <div class="card noprint">
-    <h3>📸 مهارتك الأولى: صوّري الشاشة وابعثيها</h3>
+    <h3>📸 مهارتكما الأولى: صوّرا الشاشة وأرسلاها</h3>
     <div class="skill">
-      <b>١) صورة للشاشة كلها:</b> اضغطي <kbd>PrtScn</kbd> (أو <kbd>Win</kbd> + <kbd>PrtScn</kbd> لحفظها تلقائيًا في مجلد الصور ← Screenshots).<br>
-      <b>٢) صورة لجزء تختارينه:</b> اضغطي <kbd>Win</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>، ثم اسحبي حول الشهادة.<br>
+      <b>١) صورة للشاشة كلها:</b> اضغطا <kbd>PrtScn</kbd> (أو <kbd>Win</kbd> + <kbd>PrtScn</kbd> لحفظها تلقائيًا في مجلد الصور ← Screenshots).<br>
+      <b>٢) صورة لجزء تختارانه:</b> اضغطا <kbd>Win</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>، ثم اسحبا حول الشهادة.<br>
       <b>٣) التنقّل بين النوافذ:</b> <kbd>Alt</kbd> + <kbd>Tab</kbd> للتبديل السريع، و<kbd>Win</kbd> + <kbd>Tab</kbd> لعرض كل النوافذ.<br>
-      <b>٤) اللصق والإرسال:</b> افتحي Teams بـ <kbd>Alt</kbd> + <kbd>Tab</kbd>، وفي خانة الرسالة اضغطي <kbd>Ctrl</kbd> + <kbd>V</kbd> ثم أرسلي.
+      <b>٤) اللصق والإرسال:</b> افتحا Teams بـ <kbd>Alt</kbd> + <kbd>Tab</kbd>، وفي خانة الرسالة اضغطا <kbd>Ctrl</kbd> + <kbd>V</kbd> ثم أرسلا.
     </div>
   </div>
 
   <div class="card noprint">
-    <h3>📊 مراجعة مهماتك</h3>
+    <h3>📊 مراجعة مهماتكما</h3>
     <div id="rev"></div>
   </div>
 </section>
@@ -316,9 +316,9 @@ section{animation:fin .4s ease-out}
 </div>
 <script>
 /* =========================================================
-   مُحقِّقات الجرد — لعبة بحث على سجل جرد المدرسة
+   تحقيق الجرد — لعبة بحث على سجل جرد المدرسة
    المصدر الوحيد للبيانات: سجل_جرد_الأجهزة_17-02-2026.xlsx
-   ملاحظة لريم: لتعديل الأسئلة غيّري مصفوفة Q في الأسفل فقط.
+   ملاحظة: لتعديل الأسئلة تُعدَّل مصفوفة Q في الأسفل فقط.
    ========================================================= */
 
 /* ---------- ١) بيانات الجرد (٥٨ سجلًا) ---------- */
@@ -392,51 +392,51 @@ const INV=[
    كل الأرقام في الأسئلة محسوبة من ملف الجرد نفسه.          */
 const Q=[
 {t:"🔎 بحث عن جهاز",
- q:"اذهبي إلى سجل الجرد وابحثي عن الجهاز صاحب الـ Service Tag: <code>3YNKJZ1</code><br>أين تجدينه؟",
+ q:"اذهبا إلى سجل الجرد وابحثا عن الجهاز صاحب الـ Service Tag: <code>3YNKJZ1</code><br>أين تجدانه؟",
  c:["مختبر الحاسوب","مختبر العلوم","المكتبة","غرفة الرياضيات"],a:0,
- h:"اكتبي 3YNKJZ1 في مربّع البحث، وشوفي آخر عمود.",
+ h:"اكتبا 3YNKJZ1 في مربّع البحث، وانظرا إلى آخر عمود.",
  w:"الجهاز رقم ١ في السجل: OPTIPLEX 3010 من Dell، يعمل، في مختبر الحاسوب."},
 
 {t:"🔎 بحث عن جهاز",
  q:"في مختبر العلوم حاسوب واحد فقط، Service Tag له <code>JFBGF62</code>.<br>ما موديله؟",
  c:["OPTIPLEX 5040","OPTIPLEX 3010","OPTIPLEX 3060","PowerEdge T360 Server"],a:0,
- h:"ابحثي بكلمة: مختبر العلوم — رح يطلع لك سجلّان فقط.",
+ h:"ابحثا بكلمة: مختبر العلوم — رح يطلع لكما سجلّان فقط.",
  w:"الجهاز رقم ٤٧: حاسوب Dell OPTIPLEX 5040، يعمل، في مختبر العلوم. والجهاز الثاني هناك داتاشو."},
 
 {t:"🔎 بحث عن جهاز",
- q:"ابحثي في المكتبة.<br>كم جهازًا مسجَّلًا فيها؟",
+ q:"ابحثا في المكتبة.<br>كم جهازًا مسجَّلًا فيها؟",
  c:["٣","٤","٥","٦"],a:0,
- h:"اكتبي: المكتبة — وعُدّي الصفوف الظاهرة.",
+ h:"اكتبا: المكتبة — وعُدّا الصفوف الظاهرة.",
  w:"في المكتبة ٣ أجهزة: حاسوب OptiPlex 3060، وسبورة ذكية Kalboard، ونظام صوت Opuimus (لا يعمل)."},
 
 {t:"📊 تحليل بيانات",
  q:"كم جهازًا <b>لا يعمل</b> في المدرسة كلها؟",
  c:["١٧","١٢","١٥","١٩"],a:0,
- h:"العمود «يعمل؟» فيه كلمة «لا» — عُدّيها، أو ابحثي بكلمة: لا",
+ h:"العمود «يعمل؟» فيه كلمة «لا» — عُدّاها، أو ابحثا بكلمة: لا",
  w:"١٧ جهازًا لا تعمل من أصل ٥٨ — أي أكثر من ربع أجهزة المدرسة. ١٢ منها في مستودع الحاسوب."},
 
 {t:"📊 تحليل بيانات",
  q:"أي مكان في المدرسة فيه <b>أكبر عدد</b> من الأجهزة؟",
  c:["مختبر الحاسوب","مستودع الحاسوب","إدارة البنين","الإرشاد"],a:0,
- h:"جرّبي البحث بكل مكان على حدة وقارني عدد الصفوف.",
+ h:"جرّبا البحث بكل مكان على حدة وقارنا عدد الصفوف.",
  w:"مختبر الحاسوب فيه ٢٧ جهازًا (٢٦ حاسوبًا وطابعة)، يليه مستودع الحاسوب بـ ١٢ جهازًا."},
 
 {t:"📊 تحليل بيانات",
  q:"كم <b>طابعة</b> في إدارة البنين؟",
  c:["٢","٣","٤","٥"],a:2,
- h:"ابحثي: إدارة البنين — ثم عُدّي صفوف الطابعات فقط.",
- w:"في إدارة البنين ٥ أجهزة: ٤ طابعات (Xerox وHP ×٢ وCanon) وحاسوب واحد. ٣ من الطابعات لا تعمل."},
+ h:"ابحثا: إدارة البنين — ثم عُدّا صفوف الطابعات فقط.",
+ w:"في إدارة البنين ٥ أجهزة: ٤ طابعات (Xerox وHP ×٢ وCanon) وحاسوب واحد. طابعتان منها لا تعملان: Xerox AltaLink 8170B وHP LaserJet 1020."},
 
 {t:"📊 تحليل بيانات",
  q:"ما الموديل <b>الأكثر تكرارًا</b> بين أجهزة المدرسة؟",
  c:["OPTIPLEX 3010","OPTIPLEX 3020","OPTIPLEX 3060","PowerEdge T360 Server"],a:0,
- h:"ابحثي: 3010 — وشوفي عدد الصفوف أسفل الجدول.",
+ h:"ابحثا: 3010 — وانظرا إلى عدد الصفوف أسفل الجدول.",
  w:"OPTIPLEX 3010 مكرر ٣٤ مرة من أصل ٥٨ — أي أكثر من نصف أجهزة المدرسة من الموديل نفسه."},
 
 {t:"📊 تحليل بيانات",
  q:"الأجهزة الـ ١٢ الموجودة في <b>مستودع الحاسوب</b> يجمعها شيء واحد.<br>ما هو؟",
  c:["كلها مسجَّلة على أنها لا تعمل","كلها من نوع طابعة وليست حواسيب","كلها تحمل Service Tag واضحًا ومقروءًا","كلها من موديل OPTIPLEX 3010 بالضبط"],a:0,
- h:"ابحثي: مستودع — وراقبي عمود «يعمل؟».",
+ h:"ابحثا: مستودع — وراقبا عمود «يعمل؟».",
  w:"كل الـ ١٢ جهازًا في المستودع لا تعمل. المستودع هو المكان الذي تُنقَل إليه الأجهزة المعطّلة."},
 
 {t:"🧩 لغز حاسوبي",
@@ -454,19 +454,19 @@ const Q=[
 {t:"🧩 لغز حاسوبي",
  q:"في المكتبة جهاز <b>Kalboard WX-WB07522H</b>.<br>ما وظيفته؟",
  c:["سبورة ذكية للعرض التفاعلي","طابعة ليزر بالأبيض والأسود للمكتبة","نظام صوت للقاعات والاحتفالات المدرسية","جهاز عرض داتاشو يُعلَّق في سقف الغرفة"],a:0,
- h:"ابحثي عن الرقم WX في السجل، وشوفي عمود «النوع».",
+ h:"ابحثا عن الرقم WX في السجل، وانظرا إلى عمود «النوع».",
  w:"السجل يصنّفه سبورة ذكية (Kalboard) في المكتبة، وهو جهاز عرض تفاعلي يُكتب عليه ويُتحكَّم به باللمس."},
 
 {t:"🧩 لغز حاسوبي",
- q:"ابحثي عن <code>5PJXH5J</code>.<br>رح تلاقيه في <b>صفّين</b>. ما دلالة ذلك؟",
+ q:"ابحثا عن الـ Service Tag <code>5PJXH5J</code>.<br>رح تلاقياه في <b>صفّين</b>. ما دلالة ذلك؟",
  c:["خطأ في السجل، فالرقم يجب أن يكون فريدًا","أمر طبيعي، فالجهازان من الموديل نفسه تمامًا","يعني أن الجهاز انتقل من مكان إلى مكان آخر","يعني أن الجهاز مسجّل مرتين لأنه ما زال يعمل"],a:0,
- h:"تذكّري جواب السؤال السابق عن الـ Service Tag.",
- w:"مكرر فعلًا في السجل (الصفّان ٤٠ و٤١)، وبما أن الـ Service Tag فريد لكل جهاز فهذا خطأ تسجيل يحتاج مراجعة — وكذلك الرقم C5J91A في الإرشاد."}
+ h:"تذكّرا جواب السؤال السابق عن الـ Service Tag.",
+ w:"مكرر فعلًا في السجل (الصفّان ٤٠ و٤١)، وبما أن الـ Service Tag فريد لكل جهاز فهذا خطأ تسجيل يحتاج مراجعة. (انتبها: تكرار C5J91A في الإرشاد ليس خطأً من النوع نفسه، فهو رقم منتج HP للموديل نفسه وليس Service Tag فريدًا.)"}
 ];
 
 /* ---------- ٣) الحالة ---------- */
 const AR=n=>String(n).replace(/\d/g,d=>"٠١٢٣٤٥٦٧٨٩"[d]);
-const KEY="jofeh:hunt:v1";
+const KEY="dsg:jard:v1";
 let S={name:"",i:0,pts:0,tries:0,used:false,log:[]};
 
 function load(){try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return {}}}
@@ -525,7 +525,10 @@ function render(){
   const c=$("qOpts").closest(".card");
   c.classList.remove("qin"); void c.offsetWidth; c.classList.add("qin");
   const box=$("qOpts"); box.innerHTML="";
-  q.c.forEach((txt,k)=>{
+  /* خلط نسخة من الخيارات مع الاحتفاظ برقمها الأصلي؛ المقارنة تتم بالرقم الأصلي */
+  const order=q.c.map((txt,k)=>({txt,k}));
+  for(let x=order.length-1;x>0;x--){const y=Math.floor(Math.random()*(x+1));[order[x],order[y]]=[order[y],order[x]];}
+  order.forEach(({txt,k})=>{
     const b=document.createElement("button");
     b.className="opt"; b.innerHTML=txt; b.dataset.k=k;
     b.addEventListener("click",()=>answer(k,b));
@@ -557,8 +560,8 @@ function answer(k,btn){
     sndBad();
     btn.classList.add("bad"); btn.disabled=true;
     fb.className="fb bad show";
-    fb.innerHTML="❌ <b>مش صح — جرّبي مرة ثانية.</b><br>ارجعي لسجل الجرد وابحثي قبل ما تختاري. المهمة التالية ما بتفتح إلا بالإجابة الصحيحة."+
-      (S.tries>=2?"<br>💡 استعملي زرّ التلميح إذا بدك.":"");
+    fb.innerHTML="❌ <b>مش صح — جرّبا مرة ثانية.</b><br>ارجعا إلى سجل الجرد وابحثا قبل أن تختارا. المهمة التالية ما بتفتح إلا بالإجابة الصحيحة."+
+      (S.tries>=2?"<br>💡 استعملا زرّ التلميح إذا أردتما.":"");
   }
 }
 $("btnHint").addEventListener("click",()=>{
@@ -575,10 +578,10 @@ $("btnNext").addEventListener("click",()=>{
 
 /* ---------- ٧) النهاية والشهادة ---------- */
 function badge(p){
-  if(p>=100)return["🥇","خبيرة جرد"];
-  if(p>=80) return["🥈","محقّقة متقدّمة"];
-  if(p>=50) return["🥉","محقّقة أوّلية"];
-  return["🎖️","محقّقة مبتدئة"];
+  if(p>=100)return["🥇","مستوى الخبراء"];
+  if(p>=80) return["🥈","مستوى متقدّم"];
+  if(p>=50) return["🥉","مستوى أوّلي"];
+  return["🎖️","مستوى مبتدئ"];
 }
 function finish(){
   const [ic,ttl]=badge(S.pts);
@@ -587,7 +590,7 @@ function finish(){
   $("cNm").textContent=S.name;
   $("cBdg").textContent=ic;
   $("cSc").innerHTML=AR(S.pts)+" نقطة من "+AR(Q.length*10)+" — <b>"+ttl+"</b>";
-  $("cDet").innerHTML="أنجزت <bdi>"+AR(Q.length)+"</bdi> مهمة &nbsp;·&nbsp; من المحاولة الأولى: <bdi>"+AR(first)+
+  $("cDet").innerHTML="أنجزتما <bdi>"+AR(Q.length)+"</bdi> مهمة &nbsp;·&nbsp; من المحاولة الأولى: <bdi>"+AR(first)+
     "</bdi> &nbsp;·&nbsp; بدون تلميح: <bdi>"+AR(noHint)+"</bdi>";
   const d=new Date();
   const MN=["كانون الثاني","شباط","آذار","نيسان","أيار","حزيران","تموز","آب","أيلول","تشرين الأول","تشرين الثاني","كانون الأول"];
@@ -596,7 +599,7 @@ function finish(){
     const L=S.log.find(x=>x.q===k)||{pts:0,tries:0,hint:false};
     return '<div style="border-bottom:1px solid var(--line);padding:7px 0">'+
       '<b>'+AR(k+1)+'.</b> '+q.t+' — <b>'+AR(L.pts)+'</b> نقطة'+
-      (L.tries?' · '+AR(L.tries)+' محاولة خاطئة':' · من أول محاولة ✔')+(L.hint?' · استعملتِ التلميح':'')+
+      (L.tries?' · '+AR(L.tries)+' محاولة خاطئة':' · من أول محاولة ✔')+(L.hint?' · استُعمل التلميح':'')+
       '<div class="sub">'+q.w+'</div></div>';
   }).join("");
   const db=load();
@@ -630,7 +633,7 @@ $("go").addEventListener("click",start);
 $("nm").addEventListener("keydown",e=>{if(e.key==="Enter")start()});
 function start(){
   const v=$("nm").value.trim();
-  if(v.length<2){$("startErr").textContent="اكتبي اسمك أولًا 🙂";return}
+  if(v.length<2){$("startErr").textContent="اكتبا اسميكما أولًا 🙂";return}
   $("startErr").textContent="";
   S={name:v,i:0,pts:0,tries:0,used:false,log:[]};
   buildTiles();
@@ -639,7 +642,7 @@ function start(){
 
 /* ---------- ٩) تأثيرات بصرية وصوتية خفيفة ---------- */
 let FX = (function(){
-  try{ return localStorage.getItem("jofeh:fx")!=="0" }catch(e){ return true }
+  try{ return localStorage.getItem("dsg:jard:fx")!=="0" }catch(e){ return true }
 })();
 const fxBtn=document.createElement("button");
 fxBtn.className="fxbtn noprint";
@@ -648,7 +651,7 @@ fxBtn.addEventListener("click",()=>{
   FX=!FX;
   document.body.classList.toggle("fxoff",!FX);
   fxBtn.textContent=FX?"✨ الحركة: مفعّلة":"✨ الحركة: مخفّفة";
-  try{localStorage.setItem("jofeh:fx",FX?"1":"0")}catch(e){}
+  try{localStorage.setItem("dsg:jard:fx",FX?"1":"0")}catch(e){}
 });
 document.body.appendChild(fxBtn);
 document.body.classList.toggle("fxoff",!FX);
