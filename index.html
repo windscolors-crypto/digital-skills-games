@@ -75,6 +75,7 @@ body{background:var(--ground);color:var(--ink);font-family:var(--body);font-size
 .slot .body{padding:12px 16px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
 .slot ol{list-style-type:arabic-indic;margin:0;padding-inline-start:22px;font-weight:600}
 .slot ol li{margin:2px 0}
+.slot ul.rv{list-style:none;margin:0;padding:0;font-weight:600}.slot ul.rv li{margin:2px 0}.slot ul.rv li:before{content:"✓ ";color:var(--c)}
 .slot .st{margin-top:auto;font-weight:700;font-size:15px}
 .slot:not(.ready) .art{filter:grayscale(1);opacity:.45}
 .slot.ready{border:2px solid color-mix(in srgb,var(--c) 40%,var(--line));background:var(--surface);color:var(--ink);transition:transform .12s,box-shadow .12s}
@@ -234,6 +235,8 @@ function slotsOf(G,unit){
     out.push({a,b,names:unit.lessons.slice(i,i+2),art:unit.art,g:G.g,
       path:`g${G.g}/u${unit.u}-l${a}${b?"-"+b:""}.html`});
   }
+  out.push({review:true,names:["مراجعة الوحدة وغلقها","أسئلة الوحدة","التقويم الذاتي"],art:unit.art,g:G.g,
+    path:`g${G.g}/u${unit.u}-review.html`});
   return out;
 }
 
@@ -246,7 +249,9 @@ async function exists(path){
 }
 
 function inner(s){
-  const tag=s.b?`الدرسان ${ar(s.a)} و${ar(s.b)}`:`الدرس ${ar(s.a)}`;
+  const tag=s.review?"🏁 غلق الوحدة":s.b?`الدرسان ${ar(s.a)} و${ar(s.b)}`:`الدرس ${ar(s.a)}`;
+  if(s.review) return `<div class="art">${svg(s.art)}<span class="badge">${tag}</span></div>
+   <div class="body"><ul class="rv">${s.names.map(n=>`<li>${n}</li>`).join("")}</ul><span class="st">قريبًا</span></div>`;
   return `<div class="art">${svg(s.art)}<span class="badge">${tag}</span></div>
    <div class="body"><ol start="${s.a}">${s.names.map(n=>`<li>${n}</li>`).join("")}</ol><span class="st">قريبًا</span></div>`;
 }
