@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>لغز «رفّ المسابقة»</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--gc:#288C78;--cr:#FAF7F2;--ink:#2A2A2A;--mut:#6B6257;--line:#E2DBD2;--soft:#F3EEE7}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:'Cairo','Segoe UI','Tahoma',sans-serif;background:var(--cr);color:var(--ink);font-size:17px;line-height:1.75}
+.wrap{max-width:820px;margin:0 auto;padding:12px 12px 60px}
+.top{background:var(--gc);color:#fff;border-radius:16px;padding:16px 18px;margin-bottom:14px}
+.top h1{margin:0;font-size:24px;font-weight:800;line-height:1.4}
+.top .sub{opacity:.92;font-size:15px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+h2{font-size:20px;font-weight:800;margin:0 0 8px;color:var(--gc)}
+h3{font-size:17px;font-weight:800;margin:12px 0 6px}
+p{margin:6px 0}
+.mut{color:var(--mut);font-size:15px}
+ul.rules{margin:6px 0;padding-inline-start:20px}
+ul.rules li{margin-bottom:4px}
+input[type=text],textarea,select{font-family:inherit;font-size:17px;padding:10px 12px;border:2px solid var(--line);border-radius:12px;width:100%;background:#fff;color:var(--ink)}
+textarea{min-height:92px;resize:vertical;line-height:1.7}
+input:focus,textarea:focus,select:focus{outline:0;border-color:var(--gc)}
+label.f{display:block;font-weight:600;margin:10px 0 4px}
+.btn{font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;border:0;border-radius:12px;padding:10px 18px;background:var(--gc);color:#fff}
+.btn.sec{background:#fff;color:var(--gc);border:2px solid var(--gc)}
+.btn.sm{padding:6px 12px;font-size:15px}
+.btn:disabled{opacity:.45;cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:inherit;font-size:16px;padding:8px 14px;border-radius:999px;border:2px solid var(--line);background:#fff;cursor:pointer;color:var(--ink)}
+.chip.on{background:var(--gc);border-color:var(--gc);color:#fff;font-weight:700}
+.opt{display:flex;gap:10px;align-items:flex-start;border:2px solid var(--line);border-radius:12px;padding:10px 12px;margin:6px 0;cursor:pointer;background:#fff}
+.opt.on{border-color:var(--gc);background:var(--soft)}
+.opt input{margin-top:7px;accent-color:var(--gc);width:18px;height:18px;flex:none}
+table.t{border-collapse:collapse;width:100%;font-size:16px}
+table.t th,table.t td{border:1px solid var(--line);padding:7px 8px;text-align:right;vertical-align:top}
+table.t th{background:var(--soft);font-weight:800}
+.ev{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:6px 0;background:#fff}
+.ev b.code{display:inline-block;min-width:34px;text-align:center;background:var(--gc);color:#fff;border-radius:8px;margin-inline-end:8px}
+.ltr{direction:ltr;unicode-bidi:isolate;font-family:Consolas,'Courier New',monospace;white-space:nowrap;letter-spacing:1px}
+.prog{font-size:15px;color:var(--mut);margin-top:4px}
+.bar{height:8px;background:var(--soft);border-radius:999px;overflow:hidden;margin-top:6px}
+.bar>i{display:block;height:100%;width:0;background:var(--gc);transition:width .3s}
+.warn{background:#FFF6E5;border:1px solid #E9CF9B;border-radius:12px;padding:10px 12px;margin:8px 0;font-size:15px}
+.ok{background:#EEF6F0;border:1px solid #B9D8C2;border-radius:12px;padding:10px 12px;margin:8px 0;font-size:15px}
+.hide{display:none!important}
+.small{font-size:14px}
+.rub li{margin-bottom:4px}
+
+.shelf{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:6px 0 4px}
+.box{border:2px dashed var(--line);border-radius:12px;min-height:84px;padding:6px 4px;text-align:center;cursor:pointer;background:#fff;font-size:14px;line-height:1.5;display:flex;flex-direction:column;justify-content:center}
+.box .n{font-size:12px;color:var(--mut)}
+.box.full{border-style:solid;border-color:var(--gc);background:var(--soft);font-weight:700}
+.rowh{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-weight:800}
+.clsrow{display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:1px solid var(--line);padding:8px 0;flex-wrap:wrap}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top">
+  <h1>لغز «رفّ المسابقة»</h1>
+  <div class="sub">المهارات الرقمية · الصف السابع · الوحدة الأولى: أنظمة الحوسبة · مشروع فردي</div>
+  <div class="bar"><i id="pbar"></i></div>
+  <div class="sub" id="ptxt"></div>
+</div>
+
+<div class="card">
+  <h2>بياناتك</h2>
+  <label class="f" for="nm">اسمك الثلاثي</label>
+  <input type="text" id="nm" autocomplete="name">
+  <label class="f">شعبتك</label>
+  <div class="chips" id="secs"></div>
+</div>
+
+<div class="card">
+  <h2>قبل أن تبدئي</h2>
+  <ul class="rules">
+    <li>لهذا اللغز <b>أكثر من حل صحيح</b>. جرّبي أكثر من حل؛ المحاولة الخاطئة في خانات المحاولات لا تُنقص العلامة.</li>
+    <li>كل بند في سلّم العلامات يُصحَّح <b>وحده</b>؛ الخطأ في بند لا يُسقط علامة بند آخر.</li>
+    <li>عملك يُحفظ تلقائيًا على هذا الجهاز، فيمكنك إغلاق الصفحة والعودة إليها لاحقًا من الجهاز نفسه.</li>
+    <li>عند الانتهاء انزلي إلى آخر الصفحة وأرسلي إجاباتك.</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h2>الموقف</h2>
+  <p>غدًا تستضيف مدرستك مسابقة المهارات الرقمية. سافر فنّي المختبر فجأة، وترك مكوّنات جهاز التحكيم في خمسة صناديق على رفّ واحد، وطلب أن تُرتَّب وفق قاعدتين فقط. لا يوجد ترتيب واحد صحيح؛ ابحثي عن أكثر من ترتيب.</p>
+</div>
+
+<div class="card">
+  <h2>المهمة الأولى: رتّبي الرف</h2>
+  <p>الصناديق مرقّمة من 1 إلى 5 <b>من اليمين إلى اليسار</b>، وفي كل صندوق مكوّن واحد فقط.</p>
+  <p><b>قاعدتا الفنّي:</b></p>
+  <ul class="rules">
+    <li>(أ) الصندوقان في طرفَي الرف (1 و 5) فيهما مكوّنان من <b>الملحقات الخارجية</b>.</li>
+    <li>(ب) «دماغ الحاسوب» يجاوره من الجهتين مكوّنان <b>داخليان</b>.</li>
+  </ul>
+  <p class="mut">اختاري مكوّنًا من القائمة، ثم المسي الصندوق الذي تريدين وضعه فيه. للتفريغ المسي الصندوق مرة أخرى.</p>
+  <div class="chips" id="pal"></div>
+  <div id="rows"></div>
+  <div class="row" style="margin-top:8px"><button class="btn sec sm" id="addRow">إضافة محاولة</button></div>
+</div>
+
+<div class="card">
+  <h2>صنّفي المكوّنات</h2>
+  <p>لكل مكوّن: هل هو داخلي أم خارجي؟</p>
+  <div id="cls"></div>
+</div>
+
+<div class="card">
+  <h2>تحدٍّ إضافي (بلا علامة)</h2>
+  <p>كم ترتيبًا صحيحًا مختلفًا يمكن أن يوجد؟ وكيف تأكدتِ أنك لم تنسَي أي ترتيب؟</p>
+  <textarea data-k="extra" placeholder="اكتبي العدد وطريقتك في التأكد"></textarea>
+</div>
+
+<div class="card">
+  <h2>المهمة الثانية: جهاز لضيف المسابقة</h2>
+  <p>اختاري <b>ضيفًا واحدًا</b>، وصمّمي له جهازًا مناسبًا. أي اختيار مقبول إذا كان مبرَّرًا.</p>
+  <div data-r="guest"><label class="opt"><input type="radio" name="guest" value="محكّمة كفيفة"><span>محكّمة كفيفة تريد فتح ملفات المتسابقات وسماع محتواها.</span></label><label class="opt"><input type="radio" name="guest" value="طفلة زائرة"><span>طفلة زائرة لا تجيد القراءة بعد، تريد فتح لعبة.</span></label><label class="opt"><input type="radio" name="guest" value="مشرف الحاسوب"><span>مشرف الحاسوب في المنطقة يريد ضبط إعدادات أجهزة المختبر بسرعة.</span></label></div>
+  <h3>الإدخال</h3><input type="text" data-k="gin" placeholder="ما اخترتِه"><div style="height:6px"></div><textarea data-k="ginw" placeholder="لماذا؟" style="min-height:70px"></textarea>
+  <h3>الإخراج</h3><input type="text" data-k="gout" placeholder="ما اخترتِه"><div style="height:6px"></div><textarea data-k="goutw" placeholder="لماذا؟" style="min-height:70px"></textarea>
+  <h3>نوع واجهة المستخدم</h3><input type="text" data-k="gui" placeholder="ما اخترتِه"><div style="height:6px"></div><textarea data-k="guiw" placeholder="لماذا؟" style="min-height:70px"></textarea>
+</div>
+
+<div class="card">
+  <h2>سلّم العلامات (5 علامات)</h2>
+  <ol class="rub"><li>تصنيف المكوّنات الخمسة إلى داخلي/خارجي تصنيفًا صحيحًا.</li><li>ترتيب واحد على الأقل يحقق القاعدة (أ).</li><li>ترتيب واحد على الأقل يحقق القاعدة (ب).</li><li>ترتيب ثانٍ مختلف عن الأول ويحقق القاعدتين معًا.</li><li>جهاز الضيف: إدخال وإخراج وواجهة تناسب حاجته، مع سبب لكل اختيار.</li></ol>
+</div>
+
+<div class="card" id="sendCard">
+  <h2>إرسال الإجابات</h2>
+  <p>اضغطي «راجعي إجاباتك» لتري ما سيُرسل.</p>
+  <button class="btn" id="bRev">راجعي إجاباتك</button>
+  <div id="revBox" class="hide">
+    <div id="revWarn"></div>
+    <textarea id="revTxt" readonly style="min-height:220px;font-size:15px"></textarea>
+    <p><b>الخطوة 1:</b> اضغطي «نسخ الإجابات».<br><b>الخطوة 2:</b> اضغطي «فتح النموذج»، ثم الصقي الإجابات في خانة «الإجابات» واضغطي «إرسال» / Submit.<br><span class="mut">إذا سألك النموذج «هل تريد إنشاء مسودة جديدة؟» اختاري «مسودة جديدة» / New draft.</span></p>
+    <div class="row">
+      <button class="btn" id="bCopy">نسخ الإجابات</button>
+      <button class="btn sec" id="bForm">فتح النموذج</button>
+    </div>
+    <div id="sendMsg"></div>
+  </div>
+</div>
+</div>
+
+<script>
+/* ===================== إعدادات (تعدّلها المعلمة) ===================== */
+const FORM={ /* رابط نموذج Microsoft Forms «حلول الألغاز» وأرقام خاناته من الرابط المعبّأ مسبقًا */
+  url:"https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=QoWSx2QeIUimYh4GU_yQCXkPYNJN8CJDkPMMgh2Vy6tUN0NBSkdIUE9OWFBJQTFMM1EwUkJUVkNISS4u",
+  f:{name:"rda2ce92079f84f6cb24541fb1e26393b",cls:"rc4398ba76c5b4b7e8927fcb1f9382250",puzzle:"r727560b7729643f881c59d028b14ea28",answers:"r44b140fd379b419682b5e2759dd0a8ee"}
+};
+const GRADE="السابع";
+const SECTIONS=["أ", "ب", "ج"];
+const PUZZLE="لغز «رفّ المسابقة»";
+const KEY="pz_g7_u1";
+/* ==================================================================== */
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const INIT={"name": "", "sec": "", "t": {}, "shelf": [[null, null, null, null, null], [null, null, null, null, null]], "cls": {}};
+let S=(function(){let d=JSON.parse(JSON.stringify(INIT));try{const x=JSON.parse(localStorage.getItem(KEY)||"null");if(x&&typeof x==="object")for(const k in x)d[k]=x[k];}catch(e){}return d;})();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}progress();}
+const val=v=>v!=null&&String(v).trim()!=="";
+
+/* الحقول النصية البسيطة: data-k */
+function bindText(root){
+  (root||document).querySelectorAll("[data-k]").forEach(el=>{
+    const k=el.dataset.k; if(S.t[k]!=null)el.value=S.t[k];
+    el.addEventListener("input",()=>{S.t[k]=el.value;save();});
+    el.addEventListener("change",()=>{S.t[k]=el.value;save();});
+  });
+}
+/* أزرار الاختيار: data-r */
+function bindRadios(){
+  document.querySelectorAll("[data-r]").forEach(box=>{
+    const k=box.dataset.r;
+    box.querySelectorAll("input[type=radio]").forEach(inp=>{
+      if(S.t[k]===inp.value){inp.checked=true;inp.closest(".opt").classList.add("on");}
+      inp.addEventListener("change",()=>{S.t[k]=inp.value;box.querySelectorAll(".opt").forEach(o=>o.classList.remove("on"));inp.closest(".opt").classList.add("on");save();if(window.onRadio)onRadio(k);});
+    });
+  });
+}
+function renderSecs(){
+  $("secs").innerHTML=SECTIONS.map(s=>'<button type="button" class="chip'+(S.sec===s?" on":"")+'" data-s="'+s+'">'+GRADE+" "+s+'</button>').join("");
+  $("secs").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{S.sec=b.dataset.s;renderSecs();save();});
+}
+$("nm").value=S.name||"";
+$("nm").addEventListener("input",()=>{S.name=$("nm").value;save();});
+
+function progress(){
+  const parts=PARTS();const done=parts.filter(p=>p[1]).length;
+  $("pbar").style.width=Math.round(100*done/parts.length)+"%";
+  $("ptxt").textContent="أنجزتِ "+done+" من "+parts.length+" أجزاء";
+}
+
+function buildText(){
+  const L=["اللغز: "+PUZZLE,"الصف: "+GRADE+" "+(S.sec||"؟"),"الاسم: "+(S.name||"؟"),"—"];
+  return L.concat(SUMMARY()).join("\n");
+}
+$("bRev").onclick=()=>{
+  const miss=PARTS().filter(p=>!p[1]).map(p=>p[0]);
+  let w="";
+  if(!val(S.name)||!S.sec)w+='<div class="warn">اكتبي اسمك واختاري شعبتك في أعلى الصفحة قبل الإرسال.</div>';
+  if(miss.length)w+='<div class="warn">أجزاء لم تكتمل بعد: '+miss.map(esc).join("، ")+'. يمكنك الإرسال الآن أو إكمالها أولًا.</div>';
+  $("revWarn").innerHTML=w;
+  $("revTxt").value=buildText();
+  $("revBox").classList.remove("hide");
+  $("revTxt").scrollIntoView({behavior:"smooth",block:"center"});
+};
+async function copyText(t){
+  try{await navigator.clipboard.writeText(t);return true;}catch(e){}
+  try{const ta=$("revTxt");ta.removeAttribute("readonly");ta.focus();ta.select();ta.setSelectionRange(0,ta.value.length);const ok=document.execCommand("copy");ta.setAttribute("readonly","");return ok;}catch(e){return false;}
+}
+$("bCopy").onclick=async()=>{
+  const ok=await copyText($("revTxt").value);
+  $("sendMsg").innerHTML=ok?'<div class="ok">نُسخت الإجابات. الآن اضغطي «فتح النموذج» والصقيها في خانة «الإجابات».</div>'
+                           :'<div class="warn">لم يعمل النسخ التلقائي. اضغطي مطوّلًا داخل مربع الإجابات واختاري «تحديد الكل» ثم «نسخ».</div>';
+};
+$("bForm").onclick=()=>{
+  if(!FORM.url){$("sendMsg").innerHTML='<div class="warn">رابط النموذج لم يُضبط بعد. أخبري المعلمة.</div>';return;}
+  /* Forms لا يحوّل + إلى مسافة، لذلك نرمّز بـ encodeURIComponent (المسافة = %20) */
+  const q=(k,v)=>"&"+k+"="+encodeURIComponent(v);
+  let href=FORM.url;
+  if(FORM.f.name)href+=q(FORM.f.name,S.name||"");
+  if(FORM.f.cls)href+=q(FORM.f.cls,GRADE+" "+(S.sec||""));
+  if(FORM.f.puzzle)href+=q(FORM.f.puzzle,PUZZLE);
+  if(FORM.f.answers){const t=q(FORM.f.answers,$("revTxt").value);if((href+t).length<1900)href+=t;}
+  window.open(href,"_blank");
+};
+
+const COMP=["لوحة المفاتيح","الشاشة","وحدة المعالجة المركزية (CPU)","ذاكرة RAM","القرص SSD"];
+let pick=null;
+function renderPal(){
+  $("pal").innerHTML=COMP.map((c,i)=>'<button type="button" class="chip'+(pick===i?" on":"")+'" data-i="'+i+'">'+c+'</button>').join("");
+  $("pal").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{pick=(pick===+b.dataset.i)?null:+b.dataset.i;renderPal();});
+}
+function renderRows(){
+  $("rows").innerHTML=S.shelf.map((r,ri)=>'<div class="rowh"><span>المحاولة '+(ri+1)+'</span>'+(ri>=2?'<button class="btn sec sm" data-del="'+ri+'">حذف</button>':'')+'</div><div class="shelf">'+
+    r.map((c,bi)=>'<div class="box'+(c!=null?" full":"")+'" data-row="'+ri+'" data-b="'+bi+'"><span class="n">صندوق '+(bi+1)+'</span>'+(c!=null?COMP[c]:"—")+'</div>').join("")+'</div>').join("");
+  $("rows").querySelectorAll(".box").forEach(el=>el.onclick=()=>{
+    const r=S.shelf[+el.dataset.row],b=+el.dataset.b;
+    if(pick==null){r[b]=null;}
+    else{for(let i=0;i<5;i++)if(r[i]===pick)r[i]=null;r[b]=pick;}
+    save();renderRows();
+  });
+  $("rows").querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{S.shelf.splice(+b.dataset.del,1);save();renderRows();});
+  $("addRow").disabled=S.shelf.length>=4;
+}
+$("addRow").onclick=()=>{if(S.shelf.length<4){S.shelf.push([null,null,null,null,null]);save();renderRows();}};
+function renderCls(){
+  $("cls").innerHTML=COMP.map((c,i)=>'<div class="clsrow"><span>'+c+'</span><span class="chips">'+
+    ["داخلي","خارجي"].map(v=>'<button type="button" class="chip'+(S.cls[i]===v?" on":"")+'" data-i="'+i+'" data-v="'+v+'">'+v+'</button>').join("")+'</span></div>').join("");
+  $("cls").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{S.cls[b.dataset.i]=b.dataset.v;save();renderCls();});
+}
+renderPal();renderRows();renderCls();
+const rowFull=r=>r.every(c=>c!=null);
+function PARTS(){return [
+  ["الترتيب الأول",S.shelf[0]&&rowFull(S.shelf[0])],
+  ["الترتيب الثاني",S.shelf[1]&&rowFull(S.shelf[1])],
+  ["تصنيف المكوّنات",COMP.every((c,i)=>val(S.cls[i]))],
+  ["اختيار الضيف",val(S.t.guest)],
+  ["جهاز الضيف",["gin","ginw","gout","goutw","gui","guiw"].every(k=>val(S.t[k]))]
+];}
+function SUMMARY(){
+  const L=["[المهمة الأولى: ترتيبات الرف — الصندوق 1 هو الأيمن]"];
+  S.shelf.forEach((r,i)=>L.push("المحاولة "+(i+1)+": "+r.map((c,b)=>"ص"+(b+1)+" "+(c!=null?COMP[c]:"فارغ")).join(" | ")));
+  L.push("","[تصنيف المكوّنات]");
+  COMP.forEach((c,i)=>L.push(c+": "+(S.cls[i]||"لم يُحدَّد")));
+  L.push("","[التحدي الإضافي]",S.t.extra||"—","","[المهمة الثانية: جهاز الضيف]","الضيف: "+(S.t.guest||"—"),
+    "الإدخال: "+(S.t.gin||"—")+" — السبب: "+(S.t.ginw||"—"),
+    "الإخراج: "+(S.t.gout||"—")+" — السبب: "+(S.t.goutw||"—"),
+    "الواجهة: "+(S.t.gui||"—")+" — السبب: "+(S.t.guiw||"—"));
+  return L;
+}
+
+renderSecs();bindText();bindRadios();progress();
+</script>
+</body>
+</html>
