@@ -121,9 +121,9 @@ table.t th{background:var(--soft);font-weight:800}
   <h2>المهمة الثانية: جهاز لضيف المسابقة</h2>
   <p>اختاري <b>ضيفًا واحدًا</b>، وصمّمي له جهازًا مناسبًا. أي اختيار مقبول إذا كان مبرَّرًا.</p>
   <div data-r="guest"><label class="opt"><input type="radio" name="guest" value="محكّمة كفيفة"><span>محكّمة كفيفة تريد فتح ملفات المتسابقات وسماع محتواها.</span></label><label class="opt"><input type="radio" name="guest" value="طفلة زائرة"><span>طفلة زائرة لا تجيد القراءة بعد، تريد فتح لعبة.</span></label><label class="opt"><input type="radio" name="guest" value="مشرف الحاسوب"><span>مشرف الحاسوب في المنطقة يريد ضبط إعدادات أجهزة المختبر بسرعة.</span></label></div>
-  <h3>الإدخال</h3><input type="text" data-k="gin" placeholder="ما اخترتِه"><div style="height:6px"></div><textarea data-k="ginw" placeholder="لماذا؟" style="min-height:70px"></textarea>
-  <h3>الإخراج</h3><input type="text" data-k="gout" placeholder="ما اخترتِه"><div style="height:6px"></div><textarea data-k="goutw" placeholder="لماذا؟" style="min-height:70px"></textarea>
-  <h3>نوع واجهة المستخدم</h3><input type="text" data-k="gui" placeholder="ما اخترتِه"><div style="height:6px"></div><textarea data-k="guiw" placeholder="لماذا؟" style="min-height:70px"></textarea>
+  <h3>الإدخال</h3><p class="mut small">اختاري جهازًا واحدًا أو أكثر.</p><div class="chips" id="cIn"></div><div style="height:6px"></div><textarea data-k="ginw" placeholder="لماذا؟" style="min-height:70px"></textarea>
+  <h3>الإخراج</h3><p class="mut small">اختاري جهازًا واحدًا أو أكثر.</p><div class="chips" id="cOut"></div><div style="height:6px"></div><textarea data-k="goutw" placeholder="لماذا؟" style="min-height:70px"></textarea>
+  <h3>نوع واجهة المستخدم</h3><p class="mut small">اختاري نوعًا واحدًا.</p><div class="chips" id="cUi"></div><div style="height:6px"></div><textarea data-k="guiw" placeholder="لماذا؟" style="min-height:70px"></textarea>
 </div>
 
 <div class="card">
@@ -138,7 +138,7 @@ table.t th{background:var(--soft);font-weight:800}
   <div id="revBox" class="hide">
     <div id="revWarn"></div>
     <textarea id="revTxt" readonly style="min-height:220px;font-size:15px"></textarea>
-    <p><b>الخطوة 1:</b> اضغطي «نسخ الإجابات».<br><b>الخطوة 2:</b> اضغطي «فتح النموذج»، ثم الصقي الإجابات في خانة «الإجابات» واضغطي «إرسال» / Submit.<br><span class="mut">إذا سألك النموذج «هل تريد إنشاء مسودة جديدة؟» اختاري «مسودة جديدة» / New draft.</span></p>
+    <p><b>الخطوة 1:</b> اضغطي «نسخ الإجابات».<br><b>الخطوة 2:</b> اضغطي «فتح النموذج»، ثم الصقي الإجابات في خانة «الإجابات».<br><b>الخطوة 3:</b> في سؤال «صورة الحل» داخل النموذج، ارفعي لقطة شاشة لصفحة اللغز بعد حلّها (اختياري)، ثم اضغطي «إرسال» / Submit.<br><span class="mut">إذا سألك النموذج «هل تريد إنشاء مسودة جديدة؟» اختاري «مسودة جديدة» / New draft.</span></p>
     <div class="row">
       <button class="btn" id="bCopy">نسخ الإجابات</button>
       <button class="btn sec" id="bForm">فتح النموذج</button>
@@ -155,13 +155,13 @@ const FORM={ /* رابط نموذج Microsoft Forms «حلول الألغاز» 
   f:{name:"rda2ce92079f84f6cb24541fb1e26393b",cls:"rc4398ba76c5b4b7e8927fcb1f9382250",puzzle:"r727560b7729643f881c59d028b14ea28",answers:"r44b140fd379b419682b5e2759dd0a8ee"}
 };
 const GRADE="السابع";
-const SECTIONS=["أ", "ب", "ج"];
+const SECTIONS=["الشعبة 1", "الشعبة 2", "الشعبة 3"];
 const PUZZLE="لغز «رفّ المسابقة»";
 const KEY="pz_g7_u1";
 /* ==================================================================== */
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const INIT={"name": "", "sec": "", "t": {}, "shelf": [[null, null, null, null, null], [null, null, null, null, null]], "cls": {}};
+const INIT={"name": "", "sec": "", "t": {}, "g": {}, "shelf": [[null, null, null, null, null], [null, null, null, null, null]], "cls": {}};
 let S=(function(){let d=JSON.parse(JSON.stringify(INIT));try{const x=JSON.parse(localStorage.getItem(KEY)||"null");if(x&&typeof x==="object")for(const k in x)d[k]=x[k];}catch(e){}return d;})();
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}progress();}
 const val=v=>v!=null&&String(v).trim()!=="";
@@ -261,6 +261,18 @@ function renderCls(){
     ["داخلي","خارجي"].map(v=>'<button type="button" class="chip'+(S.cls[i]===v?" on":"")+'" data-i="'+i+'" data-v="'+v+'">'+v+'</button>').join("")+'</span></div>').join("");
   $("cls").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{S.cls[b.dataset.i]=b.dataset.v;save();renderCls();});
 }
+const INS=["لوحة المفاتيح","الفأرة","شاشة اللمس","الميكروفون","الماسح الضوئي","الكاميرا"];
+const OUTS=["الشاشة","السماعات","الطابعة","جهاز العرض (البروجكتر)"];
+const UIS=["الرسومية (GUI)","النصية (CLI)","الصوتية (VUI)","الواقع الافتراضي (VR)","الواقع المعزّز (AR)"];
+function chipSet(id,arr,key,multi){
+  const cur=()=>multi?(S.g[key]||[]):S.g[key];
+  $(id).innerHTML=arr.map(o=>{const on=multi?cur().includes(o):cur()===o;return '<button type="button" class="chip'+(on?" on":"")+'">'+o+'</button>';}).join("");
+  $(id).querySelectorAll(".chip").forEach((b,i)=>b.onclick=()=>{const o=arr[i];
+    if(multi){const a=cur().slice();const j=a.indexOf(o);if(j>=0)a.splice(j,1);else a.push(o);S.g[key]=a;}else{S.g[key]=(S.g[key]===o)?"":o;}
+    save();chipSet(id,arr,key,multi);});
+}
+if(!S.g)S.g={};
+chipSet("cIn",INS,"in",true);chipSet("cOut",OUTS,"out",true);chipSet("cUi",UIS,"ui",false);
 renderPal();renderRows();renderCls();
 const rowFull=r=>r.every(c=>c!=null);
 function PARTS(){return [
@@ -268,7 +280,7 @@ function PARTS(){return [
   ["الترتيب الثاني",S.shelf[1]&&rowFull(S.shelf[1])],
   ["تصنيف المكوّنات",COMP.every((c,i)=>val(S.cls[i]))],
   ["اختيار الضيف",val(S.t.guest)],
-  ["جهاز الضيف",["gin","ginw","gout","goutw","gui","guiw"].every(k=>val(S.t[k]))]
+  ["جهاز الضيف",(S.g.in||[]).length>0&&(S.g.out||[]).length>0&&val(S.g.ui)&&["ginw","goutw","guiw"].every(k=>val(S.t[k]))]
 ];}
 function SUMMARY(){
   const L=["[المهمة الأولى: ترتيبات الرف — الصندوق 1 هو الأيمن]"];
@@ -276,9 +288,9 @@ function SUMMARY(){
   L.push("","[تصنيف المكوّنات]");
   COMP.forEach((c,i)=>L.push(c+": "+(S.cls[i]||"لم يُحدَّد")));
   L.push("","[التحدي الإضافي]",S.t.extra||"—","","[المهمة الثانية: جهاز الضيف]","الضيف: "+(S.t.guest||"—"),
-    "الإدخال: "+(S.t.gin||"—")+" — السبب: "+(S.t.ginw||"—"),
-    "الإخراج: "+(S.t.gout||"—")+" — السبب: "+(S.t.goutw||"—"),
-    "الواجهة: "+(S.t.gui||"—")+" — السبب: "+(S.t.guiw||"—"));
+    "الإدخال: "+((S.g.in||[]).join("، ")||"—")+" — السبب: "+(S.t.ginw||"—"),
+    "الإخراج: "+((S.g.out||[]).join("، ")||"—")+" — السبب: "+(S.t.goutw||"—"),
+    "الواجهة: "+(S.g.ui||"—")+" — السبب: "+(S.t.guiw||"—"));
   return L;
 }
 
