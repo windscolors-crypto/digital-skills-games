@@ -73,10 +73,8 @@ table.t th{background:var(--soft);font-weight:800}
 </div>
 
 <div class="card">
-  <h2>بياناتك</h2>
-  <label class="f" for="nm">اسمك الثلاثي</label>
-  <input type="text" id="nm" autocomplete="name">
-  <label class="f">شعبتك</label>
+  <h2>شعبتك</h2>
+  <p class="mut">اختاري شعبتك. اسمك يُسجَّل تلقائيًا من حساب المدرسة عند الإرسال.</p>
   <div class="chips" id="secs"></div>
 </div>
 
@@ -181,8 +179,6 @@ function renderSecs(){
   $("secs").innerHTML=SECTIONS.map(s=>'<button type="button" class="chip'+(S.sec===s?" on":"")+'" data-s="'+s+'">'+GRADE+" "+s+'</button>').join("");
   $("secs").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{S.sec=b.dataset.s;renderSecs();save();});
 }
-$("nm").value=S.name||"";
-$("nm").addEventListener("input",()=>{S.name=$("nm").value;save();});
 
 function progress(){
   const parts=PARTS();const done=parts.filter(p=>p[1]).length;
@@ -191,13 +187,13 @@ function progress(){
 }
 
 function buildText(){
-  const L=["اللغز: "+PUZZLE,"الصف: "+GRADE+" "+(S.sec||"؟"),"الاسم: "+(S.name||"؟"),"—"];
+  const L=["اللغز: "+PUZZLE,"الصف: "+GRADE+" "+(S.sec||"؟"),"—"];
   return L.concat(SUMMARY()).join("\n");
 }
 $("bRev").onclick=()=>{
   const miss=PARTS().filter(p=>!p[1]).map(p=>p[0]);
   let w="";
-  if(!val(S.name)||!S.sec)w+='<div class="warn">اكتبي اسمك واختاري شعبتك في أعلى الصفحة قبل الإرسال.</div>';
+  if(!S.sec)w+='<div class="warn">اختاري شعبتك في أعلى الصفحة قبل الإرسال.</div>';
   if(miss.length)w+='<div class="warn">أجزاء لم تكتمل بعد: '+miss.map(esc).join("، ")+'. يمكنك الإرسال الآن أو إكمالها أولًا.</div>';
   $("revWarn").innerHTML=w;
   $("revTxt").value=buildText();
@@ -209,9 +205,9 @@ async function copyText(t){
   try{const ta=$("revTxt");ta.removeAttribute("readonly");ta.focus();ta.select();ta.setSelectionRange(0,ta.value.length);const ok=document.execCommand("copy");ta.setAttribute("readonly","");return ok;}catch(e){return false;}
 }
 function needId(){
-  if(val(S.name)&&S.sec)return false;
-  $("sendMsg").innerHTML='<div class="warn">اكتبي اسمك واختاري شعبتك في أعلى الصفحة أولًا، ثم اضغطي «راجعي إجاباتك» مرة أخرى.</div>';
-  $("nm").scrollIntoView({behavior:"smooth",block:"center"});
+  if(S.sec)return false;
+  $("sendMsg").innerHTML='<div class="warn">اختاري شعبتك في أعلى الصفحة أولًا، ثم اضغطي «راجعي إجاباتك» مرة أخرى.</div>';
+  $("secs").scrollIntoView({behavior:"smooth",block:"center"});
   return true;
 }
 $("bCopy").onclick=async()=>{
@@ -226,7 +222,6 @@ $("bForm").onclick=()=>{
   /* Forms لا يحوّل + إلى مسافة، لذلك نرمّز بـ encodeURIComponent (المسافة = %20) */
   const q=(k,v)=>"&"+k+"="+encodeURIComponent(v);
   let href=FORM.url;
-  if(FORM.f.name)href+=q(FORM.f.name,S.name||"");
   if(FORM.f.cls)href+=q(FORM.f.cls,GRADE+" "+(S.sec||""));
   if(FORM.f.puzzle)href+=q(FORM.f.puzzle,PUZZLE);
   if(FORM.f.answers){const t=q(FORM.f.answers,$("revTxt").value);if((href+t).length<1900)href+=t;}
