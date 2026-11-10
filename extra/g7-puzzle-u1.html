@@ -217,12 +217,20 @@ async function copyText(t){
   try{await navigator.clipboard.writeText(t);return true;}catch(e){}
   try{const ta=$("revTxt");ta.removeAttribute("readonly");ta.focus();ta.select();ta.setSelectionRange(0,ta.value.length);const ok=document.execCommand("copy");ta.setAttribute("readonly","");return ok;}catch(e){return false;}
 }
+function needId(){
+  if(val(S.name)&&S.sec)return false;
+  $("sendMsg").innerHTML='<div class="warn">اكتبي اسمك واختاري شعبتك في أعلى الصفحة أولًا، ثم اضغطي «راجعي إجاباتك» مرة أخرى.</div>';
+  $("nm").scrollIntoView({behavior:"smooth",block:"center"});
+  return true;
+}
 $("bCopy").onclick=async()=>{
+  if(needId())return;
   const ok=await copyText($("revTxt").value);
   $("sendMsg").innerHTML=ok?'<div class="ok">نُسخت الإجابات. الآن اضغطي «فتح النموذج» والصقيها في خانة «الإجابات».</div>'
                            :'<div class="warn">لم يعمل النسخ التلقائي. اضغطي مطوّلًا داخل مربع الإجابات واختاري «تحديد الكل» ثم «نسخ».</div>';
 };
 $("bForm").onclick=()=>{
+  if(needId())return;
   if(!FORM.url){$("sendMsg").innerHTML='<div class="warn">رابط النموذج لم يُضبط بعد. أخبري المعلمة.</div>';return;}
   /* Forms لا يحوّل + إلى مسافة، لذلك نرمّز بـ encodeURIComponent (المسافة = %20) */
   const q=(k,v)=>"&"+k+"="+encodeURIComponent(v);
