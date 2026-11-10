@@ -41,6 +41,7 @@ ul.rules li{margin-bottom:6px}
 .top{position:sticky;top:6px;z-index:5;background:#fff;border:1px solid var(--line);border-radius:18px;padding:10px 14px;margin-bottom:12px;box-shadow:0 4px 14px rgba(0,0,0,.06)}
 .topr{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .turn{font-size:20px;font-weight:800;padding:3px 16px;border-radius:12px;color:#fff}
+.qtm{font-size:14px;font-weight:700;color:#555;margin:4px 0}.qtm.low{color:#C0392B}.qtm .bk{background:#FFF3CD;border-radius:8px;padding:2px 8px;margin-inline-start:6px;color:#8a6d00}
 .turn.A{background:var(--a)}.turn.B{background:var(--b)}
 .pill{background:#F6EEE4;border-radius:999px;padding:3px 12px;font-weight:700;font-size:15px}
 .timer{font-variant-numeric:tabular-nums;font-weight:800;font-size:19px;padding:3px 14px;border-radius:999px;background:#EAF2F9;color:var(--pri)}
@@ -201,13 +202,14 @@ select.done{border-color:var(--gd);background:#FFFBEF}
   <div class="card qcard" id="qCard">
     <div class="who A" id="qWho">—</div>
     <div class="qtype" id="qType">—</div>
+    <div class="qtm" id="qTm"></div>
     <div class="q" id="qText">—</div>
     <div class="tip" id="qTip"></div>
     <div id="qBody"></div>
     <div class="go">
       <button class="btn" id="btnNext" disabled>✔ اعتماد الإجابة والانتقال</button>
       <button class="btn sec sm" id="btnSkip">⏭ تخطّي السؤال</button>
-      <span class="note"><b>التخطّي: السؤال لن يرجع، وعلامته صفر.</b> ولا يمكن الرجوع بعد الاعتماد.</span>
+      <span class="note" id="skipNote"><b>التخطّي:</b> ينتقل السؤال لآخر الامتحان ويرجع لكِ مرة واحدة إذا بقي وقت. إذا تخطّيتِه مرة ثانية أو انتهى وقته مرة ثانية، علامته صفر. لا رجوع للأسئلة بعد اعتمادها.</span>
     </div>
   </div>
 </section>
@@ -331,9 +333,9 @@ const GC={
  "color": "#5B7FA6",
  "color2": "#3F5E80",
  "pinHash": {
-  "s": "dhefS0ncBeNmCihz9D0sbw==",
+  "s": "KD8Fen9mN9MT3D1U+7v1fA==",
   "n": 300000,
-  "h": "prQkt5jXf1307+cgfI21MnhK0lN0lS6cnf3M7pR75C8="
+  "h": "aNvcIg3OB2YzuQxV+FFwdSoLAQCzBGxqlVd/urhLCJA="
  }
 };
 if(GC.color){document.documentElement.style.setProperty("--gc",GC.color);document.documentElement.style.setProperty("--gc2",GC.color2||GC.color);}
@@ -357,7 +359,7 @@ const LESSONS=GC.lessons;
 const LKEYS=Object.keys(LESSONS).map(Number);
 const TYPE_NAME={mcq:"اختيار من متعدد",tf:"صح أم خطأ",match:"توصيل",shot:"سؤال على صورة شاشة",task:"📸 مهمة عملية: لقطة شاشة من جهازك",easy:"اختيار من متعدد",easytf:"صح أم خطأ",app:"🧩 موقف تطبيقي",order:"🔢 ترتيب الخطوات"};
 
-const DATA=(()=>{const k="jofeh-106507",b=atob("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");let o="";for(let i=0;i<b.length;i++)o+=String.fromCharCode(b.charCodeAt(i)^k.charCodeAt(i%k.length));return JSON.parse(decodeURIComponent(escape(o)));})();
+const DATA=(()=>{const k="jofeh-979617",b=atob("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");let o="";for(let i=0;i<b.length;i++)o+=String.fromCharCode(b.charCodeAt(i)^k.charCodeAt(i%k.length));return JSON.parse(decodeURIComponent(escape(o)));})();
 const BANK=DATA.bank.concat(DATA.easy||[]), ROSTER_PLAIN=DATA.roster||{}, BONUS=DATA.bonus||[], EASY=DATA.easy||[];
 let ROSTER=ROSTER_PLAIN;
 const RKEY=GC.key+"_rost";
@@ -509,13 +511,25 @@ function runExam(){
   renderQ();
 }
 
+const QLIM=t=>(t==="task"||t==="match"||t==="order")?180000:120000;
 function tick(){
   if(!S||S.done)return;
   const left=Math.max(0,S.deadline-NOW());
   const m=Math.floor(left/60000), s=Math.floor(left%60000/1000);
   $("tTimer").textContent="⏳ "+AR(String(m).padStart(2,"0"))+":"+AR(String(s).padStart(2,"0"));
   $("tTimer").classList.toggle("low",left<5*60000);
-  if(left<=0) finish(true);
+  if(left<=0){finish(true);return;}
+  if(CUR&&S.qIdx===S.idx&&S.qt0){
+    const ql=Math.max(0,QLIM(CUR.q.t)-(NOW()-S.qt0));
+    const qm=Math.floor(ql/60000),qs=Math.floor(ql%60000/1000);
+    $("qTm").innerHTML="⏱ وقت هذا السؤال: "+AR(qm)+":"+AR(String(qs).padStart(2,"0"))+(CUR.it.back?'<span class="bk">↩️ سؤال مؤجَّل — آخر فرصة</span>':"");
+    $("qTm").classList.toggle("low",ql<30000);
+    if(ql<=0&&!tick.busy){tick.busy=true;$("cfBox").classList.add("hide");
+      if(CUR.val!==null){toast("⏱ انتهى وقت السؤال، واعتُمدت الإجابة المختارة");commitQ(false);}
+      else if(!CUR.it.back){toast("⏱ انتهى وقت السؤال، وسيرجع لكِ في آخر الامتحان");deferQ();}
+      else{toast("⏱ انتهى وقت السؤال المؤجَّل");commitQ(true);}
+      tick.busy=false;}
+  }
 }
 
 const CHEER=["✔ تمّ حفظ الإجابة. السؤال التالي لـ{o}","✔ حُفظت الإجابة. دور {o} الآن","📘 تذكير: الكتاب معكما، استعينا به","👀 نصيحة: اقرئي السؤال للآخر قبل الاختيار","⏳ راقبا الوقت في الأعلى، وتابعا بهدوء","🤝 نصيحة: تناقشا قبل اعتماد الإجابة","🌬️ خذي نفسًا عميقًا وتابعي","🔍 نصيحة: ابحثي عن الكلمة المفتاحية في السؤال"];
@@ -538,6 +552,7 @@ function renderQ(){
   $("qType").textContent=TYPE_NAME[q.t];
   $("qText").textContent=(q.t==="tf"||q.t==="easytf")?"ضعي إشارة (صح) أو (خطأ) للعبارة الآتية:":q.t==="task"?"نفّذي الخطوات على جهازك، ثم أجيبي من لقطتك:":iso(q.q);
   CUR={it,q,val:null};
+  if(S.qIdx!==S.idx||!S.qt0){S.qIdx=S.idx;S.qt0=NOW();save();}
   const body=$("qBody");body.innerHTML="";
   const btn=$("btnNext");btn.disabled=true;
   if(q.t==="tf"||q.t==="easytf"){
@@ -564,7 +579,9 @@ function renderQ(){
       b.onclick=()=>{box.querySelectorAll(".opt").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");CUR.val=ci;btn.disabled=false;};
       box.appendChild(b);});
     const qq=document.createElement("div");qq.className="q";qq.style.marginTop="12px";qq.textContent="٤. "+iso(q.q);
-    body.appendChild(qq);body.appendChild(lk);body.appendChild(box);
+    const ns=document.createElement("button");ns.className="btn sec sm";ns.style.marginTop="8px";ns.textContent="🙋 لا أعرف كيف آخذ لقطة شاشة";
+    ns.onclick=()=>{CUR.noShot=true;box.classList.remove("locked");box.querySelectorAll(".opt").forEach(x=>x.disabled=false);lk.classList.add("hide");ns.remove();$("drop").classList.add("hide");};
+    body.appendChild(qq);body.appendChild(lk);body.appendChild(ns);body.appendChild(box);
     const setImg=f=>{if(!f||!/^image\//.test(f.type))return;const r=new FileReader();r.onload=()=>{const p=$("shotPrev");p.src=r.result;thumb(r.result,t=>CUR.shot=t);p.classList.remove("hide");$("drop").classList.add("ok");$("drop").firstChild.textContent="✅ تم لصق اللقطة (يمكن لصق غيرها)";box.classList.remove("locked");box.querySelectorAll(".opt").forEach(x=>x.disabled=false);lk.classList.add("hide");};r.readAsDataURL(f);};
     $("shotFile").onchange=e=>setImg(e.target.files[0]);
     CUR.paste=e=>{const it2=[...(e.clipboardData||{}).items||[]].find(x=>x.type&&x.type.startsWith("image/"));if(it2){setImg(it2.getAsFile());e.preventDefault();}};
@@ -620,8 +637,20 @@ function grade(it,val){
 
 $("btnSkip").onclick=()=>{
   if(!S||S.done||!CUR)return;
-  ask("تخطّي هذا السؤال يعني علامة صفر عليه، ولا يمكن الرجوع إليه. هل تريدين التخطّي؟",()=>commitQ(true));
+  const i0=S.idx, it0=CUR.it, ok=()=>S&&!S.done&&S.idx===i0&&CUR&&CUR.it===it0;
+  if(it0.back) ask("هذا سؤال مؤجَّل وهذه آخر فرصة له. تخطّيه الآن يعني علامة صفر عليه. هل تريدين التخطّي؟",()=>{if(ok())commitQ(true);});
+  else ask("سينتقل هذا السؤال لآخر الامتحان، ويرجع لكِ مرة واحدة إذا بقي وقت. هل تريدين التخطّي؟",()=>{if(ok())deferQ();});
 };
+function deferQ(){
+  if(!S||S.done||!CUR)return;
+  if(NOW()>S.deadline){finish(true);return;}
+  const it=S.seq.splice(S.idx,1)[0];
+  S.seq.push(Object.assign({},it,{back:true}));
+  S.qt0=0;save();
+  const nx=S.seq[S.idx];
+  toast("↪️ نُقل السؤال لآخر الامتحان. السؤال التالي لـ"+S.names[nx.s].split(" ")[0]);
+  renderQ();
+}
 $("btnNext").onclick=()=>{
   if(!S||S.done||!CUR||CUR.val===null)return;
   commitQ(false);
@@ -631,7 +660,8 @@ function commitQ(skip){
   if(NOW()>S.deadline){finish(true);return;}
   const who=CUR.it.s, first=S.names[who].split(" ")[0];
   if(!skip&&CUR.shot){S.shots=S.shots||{};S.shots[CUR.it.s]=CUR.shot;}
-  S.ans[S.idx]=skip?"SKIP":CUR.val; S.idx++;
+  if(!skip&&CUR.noShot){S.noShot=S.noShot||{};S.noShot[who]=(S.noShot[who]||0)+1;}
+  S.ans[S.idx]=skip?"SKIP":CUR.val; S.idx++; S.qt0=0;
   const myDone=S.seq.slice(0,S.idx).filter(x=>x.s===who).length, tot=S.seq.filter(x=>x.s===who).length;
   if(!CFG.practice&&EASY.length&&myDone===EASY_AFTER&&!(S.easy&&S.easy[who])){
     const sc=S.seq.slice(0,S.idx).reduce((a,it,i)=>a+(it.s===who?grade(it,S.ans[i]):0),0);
