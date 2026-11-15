@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مقدمة في برمجية سكراتش — الصف الثامن</title>
+<style>
+:root{--ink:#1f2a24;--muted:#5d6b62;--bg:#f6f3ea;--card:#fff;--olive:#4f6b2c;--olive2:#e7eedb;--red:#a3262b;--red2:#f6e1e1;--gold:#c88a12;--gold2:#fbf0d6;--blue:#2d5b8f;--blue2:#e3ecf6;--ok:#2e7d32;--ok2:#e3f2e4;--bad:#c62828;--line:#ddd6c4}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,"Noto Naskh Arabic",Arial,sans-serif;font-size:17px;line-height:1.75}
+header.top{background:var(--olive);color:#fff;padding:14px 16px 10px;position:sticky;top:0;z-index:20;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+header.top h1{margin:0;font-size:19px}
+header.top .sub{font-size:13px;opacity:.9}
+.tatreez{height:8px;background:repeating-linear-gradient(90deg,var(--red) 0 8px,transparent 8px 12px,var(--red) 12px 14px,transparent 14px 22px);opacity:.85}
+.rail{display:flex;gap:4px;margin-top:8px;overflow-x:auto}
+.rail button{flex:1 0 auto;border:0;border-radius:14px;padding:3px 9px;font:inherit;font-size:12px;background:rgba(255,255,255,.18);color:#fff;cursor:pointer;white-space:nowrap}
+.rail button.done{background:#fff;color:var(--olive);font-weight:700}
+.rail button.cur{outline:2px solid #fff}
+.rail button:disabled{opacity:.45;cursor:default}
+.score{float:left;background:#fff;color:var(--olive);border-radius:12px;padding:1px 10px;font-weight:700;font-size:14px}
+main{max-width:760px;margin:0 auto;padding:12px}
+.intro,.sec,.final{background:var(--card);border-radius:16px;padding:16px;margin:14px 0;box-shadow:0 1px 4px rgba(0,0,0,.07);border:1px solid var(--line)}
+.sec.locked{opacity:.55}
+.sec.locked .body{display:none}
+.lockmsg{display:none;color:var(--muted);font-size:15px}
+.sec.locked .lockmsg{display:block}
+.sechead{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:6px}
+.station{background:var(--red);color:#fff;border-radius:10px;padding:2px 10px;font-size:13px;white-space:nowrap}
+.sechead h2{margin:0;font-size:20px;color:var(--olive)}
+.pg{color:var(--muted);font-size:13px;margin-inline-start:auto;white-space:nowrap}
+h4{margin:12px 0 4px;color:var(--blue)}
+ul,ol{padding-inline-start:22px;margin:6px 0}
+.note{background:var(--gold2);border-inline-start:5px solid var(--gold);border-radius:10px;padding:10px 12px;margin:10px 0}
+.note.citizen{background:var(--blue2);border-color:var(--blue)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:620px){.two{grid-template-columns:1fr}}
+.box{background:var(--olive2);border-radius:10px;padding:10px 12px}
+.tryit{background:#eef6f7;border:1px dashed #3c8b94;border-radius:10px;padding:8px 12px;margin:10px 0;font-size:15px}
+.tryit b{color:#2b6f77}
+.small{font-size:13px;color:var(--muted)}
+.gamebox{margin-top:14px;border-top:3px dotted var(--line);padding-top:12px}
+.gamebar{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted);margin-bottom:6px}
+.dots{display:flex;gap:4px}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--line);display:inline-block}
+.dots i.ok{background:var(--ok)}
+.dots i.now{background:var(--gold)}
+.q{font-weight:700;margin:6px 0 10px;font-size:17.5px}
+.opts{display:grid;gap:8px}
+.opt,.chip,.bin{font:inherit;font-size:16px;text-align:right;background:#fff;border:2px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer;color:var(--ink);transition:transform .15s}
+.opt:hover,.chip:hover,.bin:hover{border-color:var(--olive)}
+.opt.wrong,.chip.wrong,.bin.wrong{border-color:var(--bad);background:#fdecec}
+.opt.right{border-color:var(--ok);background:var(--ok2)}
+.opt:disabled{cursor:default}
+.shake{animation:sh .35s}
+@keyframes sh{25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-3px)}}
+.seq{list-style:none;padding:0;margin:0 0 10px;display:grid;gap:6px}
+.seq li{background:var(--ok2);border:2px solid var(--ok);border-radius:12px;padding:8px 12px}
+.seq li.empty{background:#fafafa;border:2px dashed var(--line);color:#aaa}
+.pool{display:grid;gap:8px}
+.card{background:var(--blue2);border:2px solid var(--blue);border-radius:14px;padding:12px;text-align:center;font-weight:700;font-size:18px;margin-bottom:10px}
+.card .lab{display:block;font-size:12px;font-weight:400;color:var(--muted)}
+.bins{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.bin{text-align:center;font-weight:700}
+.bin .cnt{display:block;font-weight:400;font-size:13px;color:var(--muted);min-height:1.2em}
+.feedback{margin-top:10px;border-radius:12px;padding:10px 12px;display:none}
+.feedback.show{display:block;background:var(--ok2);border:1px solid var(--ok)}
+.btn{font:inherit;border:0;border-radius:12px;padding:10px 18px;background:var(--olive);color:#fff;font-weight:700;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--olive);border:2px solid var(--olive)}
+.btn:disabled{opacity:.5}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.hintbox{font-size:14px;color:var(--muted);margin-top:6px;display:none}
+.done-banner{background:var(--ok2);border:2px solid var(--ok);border-radius:12px;padding:10px 12px;font-weight:700;color:var(--ok)}
+svg.scr{width:100%;height:auto;display:block;border-radius:10px;border:1px solid #c9c9c9;background:#fff;touch-action:manipulation}
+svg.scr [data-r]{cursor:pointer}
+svg.scr .hl{stroke:#e0a800;stroke-width:3}
+svg.scr .bad{stroke:var(--bad);stroke-width:3}
+svg.scr .good{stroke:var(--ok);stroke-width:3}
+.explore-out{background:var(--olive2);border-radius:10px;padding:8px 12px;margin-top:8px;min-height:3em}
+.final h2{color:var(--olive);margin-top:0}
+.final input,.final select{font:inherit;padding:8px 10px;border:2px solid var(--line);border-radius:10px;width:100%;margin:4px 0 8px}
+.cert{border:3px double var(--olive);border-radius:14px;padding:14px;text-align:center;background:#fffdf6;margin-top:10px}
+.cert .big{font-size:34px;font-weight:800;color:var(--olive)}
+@media(max-width:620px){header.top .sub{display:none}header.top h1{font-size:17px}}
+.sec,.final{scroll-margin-top:110px}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
+body.calm *{animation:none!important;transition:none!important}
+</style>
+</head>
+<body>
+<header class="top">
+  <span class="score" id="score">0</span>
+  <h1>مقدمة في برمجية سكراتش</h1>
+  <div class="sub">الصف الثامن · الوحدة الثانية · الدرس الأول · Introduction to Scratch</div>
+  <div class="rail" id="rail"></div>
+</header>
+<div class="tatreez"></div>
+<main id="main">
+  <section class="intro">
+    <b>رحلة المحطّات السبع 🫒</b>
+    <p style="margin:6px 0">في كل محطّة: اقرآ الشرح، ثم العبا اللعبة القصيرة تحتها. لا تنتقلان للسؤال التالي حتى تكون الإجابة صحيحة، والنقاط تقلّ مع كل محاولة خاطئة. عند إنهاء المحطّة تُفتح المحطّة التالية.</p>
+    <div class="row"><button class="btn ghost" id="calm" type="button">تخفيف الحركة</button><button class="btn ghost" id="reset" type="button">البدء من جديد</button></div>
+  </section>
+  <div id="secs"></div>
+  <section class="final sec locked" id="final">
+    <div class="sechead"><span class="station">المحطّة الأخيرة</span><h2>بطاقة الإنجاز</h2></div>
+    <div class="lockmsg">🔒 تُفتح بعد إنهاء المحطّات كلها.</div>
+    <div class="body">
+      <label>اسم الطالب/ـة الأول/ى<input id="n1" autocomplete="off"></label>
+      <label>اسم الطالب/ـة الثاني/ة<input id="n2" autocomplete="off"></label>
+      <label>الشعبة<select id="cls"><option value="">— اختارا الشعبة —</option><option>الثامن أ</option><option>الثامن ب</option><option>الثامن ج</option></select></label>
+      <div class="cert" id="cert"></div>
+      <p class="small">صوّرا البطاقة: على الحاسوب <b dir="ltr">Win + Shift + S</b>، وعلى الهاتف لقطة شاشة عادية.</p>
+    </div>
+  </section>
+</main>
+<footer>المحتوى من كتاب الطالب — المهارات الرقمية، الصف الثامن، الفصل الأول، ص ٩٨–١١٠</footer>
+
+<script>
+// بيانات درس «مقدمة في برمجية سكراتش» — الصف الثامن، الوحدة الثانية، الدرس الأول (ص ٩٨–١١٠)
+const LESSON = {
+  key: "jofeh:g8u2l1:v1",
+  title: "مقدمة في برمجية سكراتش",
+  en: "Introduction to Scratch",
+  sections: [
+  {
+    id: "s0", city: "يافا", title: "التعليمات والأوامر البرمجية", p: "ص ٩٩",
+    explain: `
+<p>هل تساءلتما كيف تفهم الأجهزة والبرامج أوامرنا وتنفّذها بسرعة؟</p>
+<p>تمامًا كما نحتاج إلى <b>خطوات دقيقة وواضحة</b> لتنفيذ نشاطنا اليومي، تعتمد البرمجيات على سلسلة من التعليمات الدقيقة لتنفيذ المهام المطلوبة، تُعرف بـ<b>الأوامر البرمجية أو الكود</b>.</p>
+<p>هذه الأوامر هي <b>الوسيلة التي يتواصل بها المبرمج مع الأجهزة</b>؛ مما يتيح لها أداء وظائفها بدقة وفعالية.</p>
+<div class="note"><b>إثراء — المبرمج:</b> هو الشخص الذي يقوم بتطوير البرمجيات عن طريق كتابة التعليمات البرمجية بلغة برمجة معيّنة. يشمل عمله: <b>تحليل المتطلبات، وتصميم البرمجيات، وكتابة الكود، واختبار البرامج، وصيانة الأنظمة</b>.</div>
+<p>التعليمات الجيدة تكون: <b>واضحة، ومرتّبة، ومقسّمة إلى خطوات صغيرة</b>.</p>`,
+    tryit: "نشاط تمهيدي (ص ٩٩): اختارا نشاطًا يوميًا واكتبا تعليماته خطوةً خطوة كأنكما توجّهان جهازًا إلكترونيًا. ثم ناقشا: ماذا يحدث إذا نسينا خطوة؟",
+    qs: [
+      {t:"order", q:"رتّبا تعليمات الاستيقاظ كما في مثال الكتاب، كأنكما توجّهان جهازًا إلكترونيًا:",
+        items:["أضبط المنبّه للاستيقاظ","أوقف المنبّه عند سماعه","أنهض من فراشي"],
+        why:"الجهاز ينفّذ التعليمات بالترتيب؛ لذلك يجب أن تكون مرتّبة ومقسّمة إلى خطوات صغيرة."},
+      {t:"mcq", q:"ماذا تُسمّى سلسلة التعليمات الدقيقة التي تعتمد عليها البرمجيات لتنفيذ المهام المطلوبة؟",
+        c:["الأوامر البرمجية أو الكود","المكوّنات المادية للجهاز وملحقاته الخارجية","نظام التشغيل وواجهة المستخدم الرسومية","ملفات التثبيت ونوافذ الإعداد والتنزيل"], a:0,
+        why:"التعليمات الدقيقة تُعرف بالأوامر البرمجية أو الكود، وهي وسيلة تواصل المبرمج مع الأجهزة."},
+      {t:"mcq", q:"أيّ مجموعة كلّها من عمل المبرمج كما وردت في الكتاب؟",
+        c:["تحليل المتطلبات وكتابة الكود واختبار البرامج","تجميع قطع الحاسوب وتركيب الذاكرة وتنظيف الصندوق من الغبار","تحليل المتطلبات وبيع الأجهزة وتوصيل الطابعات بالشبكة","كتابة الكود وطباعة الكتب المدرسية وتصوير الأوراق للطلبة"], a:0,
+        why:"عمل المبرمج: تحليل المتطلبات، وتصميم البرمجيات، وكتابة الكود، واختبار البرامج، وصيانة الأنظمة."}
+    ]
+  },
+  {
+    id: "s1", city: "عكّا", title: "ما سكراتش؟ وكيف نشغّلها؟", p: "ص ١٠٠–١٠١",
+    explain: `
+<p><b>سكراتش (Scratch)</b> هي منصة برمجية تعتمد على <b>لغة برمجة مرئية (كائنية)</b>. تعتمد البرمجة فيها على <b>اللبنات البرمجية (Blocks)</b> التي يمكن ربطها معًا بطريقة تشبه <b>تركيب قطع الأحجية (Puzzles)</b>؛ مما يجعل البرمجة أقلّ تعقيدًا ومناسبة للمبتدئين.</p>
+<p>باستخدام Scratch يمكن إنشاء مشروعات متنوّعة مثل: <b>الألعاب التفاعلية، والقصص البصرية، والرسوم المتحركة</b>، والأنشطة الإبداعية الأخرى.</p>
+<h4>يمكن استخدام سكراتش بطريقتين:</h4>
+<div class="two">
+<div class="box"><b>١) البرنامج المثبّت على الجهاز</b><ul><li>أثبّت برمجية سكراتش من موقعها الرسمي.</li><li>أبحث عن أيقونة Scratch على سطح المكتب أو ضمن قائمة البرامج.</li><li>أنقر الأيقونة لتشغيل البرنامج.</li></ul></div>
+<div class="box"><b>٢) عبر الموقع الإلكتروني (السحابة)</b> — دون الحاجة إلى تنزيلها:<ul><li>أفتح متصفّح الإنترنت.</li><li>أذهب إلى <span dir="ltr">https://scratch.mit.edu</span> أو أبحث عن سكراتش بمحرّك البحث.</li><li>أسجّل الدخول بحسابي، أو أنشئ حسابًا جديدًا إذا لم يكن لديّ حساب.</li></ul></div>
+</div>
+<div class="note"><b>إضاءة — تثبيت Scratch على الحاسوب:</b>
+<ol><li>أفتح متصفّح الإنترنت وأنتقل إلى الموقع الرسمي <span dir="ltr">https://scratch.mit.edu</span></li>
+<li>أبحث عن رابط «تثبيت سكراتش» أو <span dir="ltr">Download Scratch</span>.</li>
+<li>أختار الإصدار المتوافق مع نظام التشغيل: Windows 10 والإصدارات الأحدث، أو MacOS.</li>
+<li>أنقر زر «تنزيل»، فيُحمَّل ملف التثبيت إلى جهازي.</li>
+<li>أنتقل إلى المجلد الذي حُمِّل الملف إليه وأنقر ملف التثبيت، وأتّبع التعليمات: قبول شروط الاستخدام، واختيار موقع التثبيت.</li>
+<li>بعد اكتمال التثبيت أنقر «إنهاء» (Finish).</li></ol>
+<b>على الأجهزة المحمولة:</b> أفتح متجر التطبيقات (Google Play أو App Store)، أبحث عن Scratch، ثم أنزّل التطبيق وأثبّته.</div>`,
+    qs: [
+      {t:"mcq", q:"على ماذا تعتمد البرمجة في منصة سكراتش؟",
+        c:["لبنات برمجية تُربط معًا كقطع الأحجية","كتابة الأوامر حرفًا حرفًا بلغة إنجليزية طويلة ومعقّدة","رسم الدوائر الكهربائية للجهاز على ورق خاص","تسجيل الأوامر بالصوت عبر الميكروفون فقط"], a:0,
+        why:"سكراتش لغة برمجة مرئية تعتمد على اللبنات البرمجية (Blocks) التي تُربط كقطع الأحجية؛ لذلك تناسب المبتدئين."},
+      {t:"sort", q:"صنّفا كل عبارة: لأيّ طريقة من طريقتي استخدام سكراتش تنتمي؟",
+        bins:["البرنامج المثبّت على الجهاز","عبر الموقع الإلكتروني (السحابة)"],
+        items:[["أبحث عن أيقونة Scratch على سطح المكتب",0],["أنقر الأيقونة لتشغيل البرنامج",0],["أستخدمها دون الحاجة إلى تنزيلها",1],["أسجّل الدخول بحسابي على scratch.mit.edu",1],["أبحث عنها ضمن قائمة البرامج",0]],
+        why:"البرنامج المثبّت يُشغَّل من أيقونته على الجهاز، أما الموقع فيُستخدم من المتصفّح دون تنزيل."},
+      {t:"order", q:"رتّبا خطوات تثبيت Scratch على جهاز الحاسوب:",
+        items:["أنتقل إلى الموقع الرسمي scratch.mit.edu","أبحث عن رابط «تثبيت سكراتش» Download Scratch","أختار الإصدار المتوافق مع نظام التشغيل","أنقر زر «تنزيل»","أفتح ملف التثبيت وأتّبع التعليمات","أنقر «إنهاء» Finish"],
+        why:"موقع ← رابط التثبيت ← اختيار الإصدار ← تنزيل ← تشغيل ملف التثبيت ← إنهاء."},
+      {t:"mcq", q:"حسب الكتاب، من أين يُثبَّت تطبيق Scratch على الأجهزة المحمولة؟",
+        c:["من متجر التطبيقات Google Play أو App Store","من قرص مدمج يُوصَل بالجهاز المحمول عبر منفذ خاص","من إعدادات الشاشة في نظام تشغيل الجهاز المحمول","من رسالة نصية يرسلها مزوّد خدمة الاتصالات"], a:0,
+        why:"أفتح متجر التطبيقات، وأبحث عن Scratch، ثم أنزّل التطبيق وأثبّته."}
+    ]
+  },
+  {
+    id: "s2", city: "حيفا", title: "إنشاء حساب على سكراتش", p: "ص ١٠٢، ١٠٨",
+    explain: `
+<ol class="steps">
+<li>في الصفحة الرئيسية لموقع Scratch أبحث عن زرّ <b>«انضمّ إلى سكراتش» (Join Scratch)</b> في الزاوية العليا اليمنى، ثم أنقره.</li>
+<li>تظهر نافذة نموذج التسجيل، فأُدخل المعلومات المطلوبة:
+ <ul>
+ <li><b>اسم المستخدم (Username):</b> أختار اسمًا فريدًا وسهل التذكّر.</li>
+ <li><b>كلمة المرور (Password):</b> أنشئ كلمة مرور قوية وأسجّلها في مكان آمن.</li>
+ <li><b>البلد:</b> أختار (Jordan) من القائمة.</li>
+ <li><b>تاريخ الميلاد (Birthday):</b> أحدّد تاريخ ميلادي.</li>
+ <li><b>البريد الإلكتروني (Email):</b> أُدخل بريدًا صالحًا يمكن الوصول إليه.</li>
+ </ul></li>
+<li>أقرأ شروط الخدمة وسياسة الخصوصية، ثم أضع علامة في المربع للموافقة.</li>
+<li>بعد التأكّد من صحة المعلومات أنقر زرّ <b>«إنشاء حساب» (Create Account)</b>.</li>
+<li>أنتقل إلى بريدي الإلكتروني، فأجد <b>رسالة تأكيد</b> من Scratch، أفتحها وأنقر الرابط الموجود فيها <b>لتفعيل حسابي</b>.</li>
+</ol>
+<p><b>لتسجيل الدخول:</b> بعد تفعيل الحساب أعود إلى موقع Scratch، وأستخدم اسم المستخدم وكلمة المرور.</p>
+<div class="note citizen"><b>المواطنة الرقمية (ص ١٠٨):</b>
+<ul><li><b>إنشاء حسابات آمنة:</b> كلمات مرور قوية ومميّزة، ولا أشارك كلمة المرور مع أيّ شخص آخر.</li>
+<li><b>الاحتفاظ بسجلّ حساباتي:</b> أدوّن أسماء المستخدمين وكلمات المرور في مكان آمن، ويمكن استخدام تطبيقات إدارة كلمات المرور.</li>
+<li><b>الملكية الفكرية:</b> أراعي حقوق الملكية الفكرية عند استخدام المشروعات الجاهزة.</li></ul></div>`,
+    tryit: "نشاط عملي (ص ١٠٢): طبّقا خطوات إنشاء حساب على موقع سكراتش الرسمي، واطلبا المساعدة من المعلّم/ـة إذا واجهتكما صعوبة، وتأكّدا من إدخال البريد الإلكتروني الصحيح.",
+    qs: [
+      {t:"match", q:"طابقا كل خانة في نموذج التسجيل مع ما يُكتب فيها:",
+        pairs:[["اسم المستخدم Username","اسم فريد وسهل التذكّر"],["كلمة المرور Password","قوية وأسجّلها في مكان آمن"],["البلد","Jordan من القائمة"],["البريد الإلكتروني Email","بريد صالح يمكن الوصول إليه"],["تاريخ الميلاد Birthday","تاريخ ميلادي"]],
+        why:"كل خانة لها شرط: الاسم فريد، وكلمة المرور قوية، والبريد صالح نصل إليه."},
+      {t:"order", q:"رتّبا خطوات إنشاء الحساب:",
+        items:["أنقر «انضمّ إلى سكراتش» Join Scratch","أُدخل المعلومات في نموذج التسجيل","أقرأ الشروط وأضع علامة الموافقة","أنقر «إنشاء حساب» Create Account","أنقر رابط رسالة التأكيد في بريدي"],
+        why:"الانضمام ← النموذج ← الموافقة على الشروط ← إنشاء الحساب ← التفعيل من البريد."},
+      {t:"mcq", q:"لماذا نفتح رسالة التأكيد التي تصل إلى البريد الإلكتروني من Scratch؟",
+        c:["لننقر الرابط فيها ونفعّل الحساب","لنحذف حسابنا القديم وننشئ حسابًا آخر غيره","لنرسل كلمة المرور إلى أصدقائنا في الصف","لننزّل ملف تثبيت جديدًا للبرنامج على الجهاز"], a:0,
+        why:"الرابط الموجود في رسالة التأكيد يفعّل الحساب، وبعدها نسجّل الدخول."},
+      {t:"mcq", q:"طلب منكما شخص كلمة المرور الخاصة بحسابكما على سكراتش ليجرّب مشروعًا. ما التصرّف الصحيح؟",
+        c:["لا نشاركها مع أيّ شخص آخر","نعطيه إياها لأنه سيجرّب مشروعًا واحدًا ثم يخرج","نكتبها له في تعليق على مشروعنا ليراها بسهولة","نغيّرها إلى كلمة قصيرة سهلة ثم نعطيه إياها"], a:0,
+        why:"من المواطنة الرقمية: كلمة المرور قوية ولا نشاركها مع أيّ شخص آخر؛ حمايةً للخصوصية وأمان الحساب."},
+      {t:"mcq", q:"أيّ تصرّف يراعي حقوق الملكية الفكرية عند استخدام المشروعات الجاهزة؟",
+        c:["أحترم حقوق صاحب المشروع","أنسب المشروع الجاهز إلى نفسي كأنني صنعته من البداية","أنسخ المشروع وأحذف اسم منشئه الأصلي قبل نشره","أنشر المشروع باسمي وأمنع صاحبه من التعليق عليه"], a:0,
+        why:"أراعي حقوق الملكية الفكرية عند استخدام المشروعات الجاهزة في سكراتش."}
+    ]
+  },
+  {
+    id: "s3", city: "الناصرة", title: "مكوّنات الشاشة الرئيسة", p: "ص ١٠٣–١٠٤", screen: true,
+    explain: `
+<p>الشاشة الرئيسة لبرمجية Scratch هي الواجهة الأساسية لإنشاء المشروعات البرمجية وإدارتها. <b>اضغطا على أيّ جزء من الشاشة أدناه</b> لتعرفا اسمه ووظيفته.</p>
+<div class="screen-wrap" data-mode="explore"></div>
+<div id="explore-out" class="explore-out">اضغطا على جزء من الشاشة…</div>
+<p class="small">ملاحظة من الكتاب: مكوّنات الواجهة الأمامية قد تختلف باختلاف إصدار البرنامج.</p>`,
+    tryit: "نشاط فردي (ص ١٠٣): افتحا سكراتش على جهاز المختبر، وتعرّفا مكوّنات الشاشة مستعينين بهذه الصورة، ثم شاركا ملاحظاتكما مع الصف.",
+    qs: [
+      {t:"hot", q:"اضغطا على «منطقة البرمجة» (Scripting Area):", target:"script", why:"منطقة البرمجة: المكان الذي تُجمَّع فيه اللبنات البرمجية وتُرتَّب لإنشاء الأكواد."},
+      {t:"hot", q:"اضغطا على «لوحة اللبنات البرمجية» (Blocks Palette):", target:"palette", why:"لوحة اللبنات: مجموعة أوامر مصنّفة إلى فئات مثل الحركة والمظاهر والصوت والتحكّم."},
+      {t:"hot", q:"اضغطا على «المنصّة» (Stage):", target:"stage", why:"المنصّة: شاشة العرض التي تعرض التفاعلات بين الكائنات والخلفيات."},
+      {t:"hot", q:"اضغطا على «لوحة الكائنات» (Sprites Pane):", target:"sprites", why:"لوحة الكائنات: تُظهر الكائنات المستخدمة في المشروع، ومنها نضيف كائنات أو نحذفها أو نعدّلها."},
+      {t:"hot", q:"اضغطا على «زرّ تسجيل الدخول» (Login Button):", target:"login", why:"زرّ تسجيل الدخول: للدخول إلى الحساب الشخصي؛ فنحفظ مشروعاتنا ونشاركها."},
+      {t:"match", q:"طابقا كل مكوّن مع وظيفته:",
+        pairs:[["القائمة Menu","إنشاء مشروع جديد أو فتح مشروع مخزّن أو حفظه"],["لوحة اللبنات البرمجية","مجموعة أوامر مصنّفة إلى فئات"],["منطقة البرمجة","تجميع اللبنات وترتيبها لإنشاء الأكواد"],["المنصّة Stage","شاشة العرض لتصوّر النتائج النهائية"],["تكبير/تصغير اللبنات","التحكّم في حجم اللبنات البرمجية"]],
+        why:"لكل مكوّن دور: القائمة للملفات، واللوحة للأوامر، والمنطقة للتجميع، والمنصّة للعرض."},
+      {t:"mcq", q:"ما الكائن (Sprite)؟",
+        c:["العنصر التفاعلي الذي يمثّل الشخصيات في المشروع","الزرّ الذي يُستخدم لتسجيل الدخول إلى الحساب الشخصي على الموقع","المكان الذي تُجمَّع فيه اللبنات البرمجية وتُرتَّب لإنشاء الأكواد","الأداة المرنة التي تتحكّم في حجم اللبنات البرمجية على الشاشة"], a:0,
+        why:"الكائن: العنصر التفاعلي الذي يمثّل الشخصيات أو العناصر التي تتحرك أو تتفاعل مع المستخدمين، ويمكن تخصيص ألوانه وأشكاله وخصائصه."}
+    ]
+  },
+  {
+    id: "s4", city: "القدس", title: "المشروع ومكوّناته", p: "ص ١٠٤–١٠٦",
+    explain: `
+<p><b>المشروع في سكراتش</b> هو إنشاء تفاعلي يتيح للمستخدمين المجال لدمج البرمجة بالإبداع. يمكن أن يتخذ أشكالًا مختلفة:</p>
+<ul>
+<li><b>الألعاب:</b> أنشطة ممتعة تتضمّن تفاعل اللاعبين مع الشخصيات، والقواعد، والنقاط، والمستويات.</li>
+<li><b>الرسوم المتحركة:</b> قصص أو مشاهد متحركة تروي سردًا بصريًا باستخدام الكائنات والخلفيات.</li>
+<li><b>القصص التفاعلية:</b> روايات تتغيّر وفقًا لقرارات المستخدم.</li>
+<li><b>مشروعات الفن:</b> تصميم رسومات وأعمال فنية إبداعية باستخدام أدوات الرسم مع إمكانية التفاعل.</li>
+</ul>
+<h4>مكوّنات مشروع سكراتش</h4>
+<div class="two">
+<div class="box"><b>١) عناصر التصميم (Design Elements)</b> — الجوانب المرئية والجمالية:
+<ul><li><b>الكائنات (Sprites):</b> الشخصيات أو العناصر التفاعلية. أمثلة: <span dir="ltr">Cat · Dove · Earth</span></li>
+<li><b>الخلفيات (Backdrops):</b> البيئة التي تدور فيها أحداث المشروع. أمثلة: <span dir="ltr">Flowers · Forest · Galaxy</span>. يمكن تعديل خلفية جاهزة، أو رسم خلفية جديدة بأدوات الرسم، أو تحميل خلفية جاهزة، أو اختيار الخلفيات المدمجة.</li>
+<li><b>الأصوات (Sounds):</b> تعزّز تجربة المستخدم وتجعل المشروع أكثر تفاعلية. أمثلة: <span dir="ltr">A Bass · A Elec Bass · A Elec Guitar · A Elec Piano</span>. يمكن تسجيل الأصوات أو استخدامها أو إضافة ملفات صوتية جاهزة.</li></ul></div>
+<div class="box"><b>٢) عناصر البرمجة (Code Elements)</b> — تتحكّم في تصرّف الكائنات وتفاعلها، باستخدام اللبنات البرمجية التي تُسحب وتُفلت إلى منطقة البرمجة:
+<ul><li><b>لبنات الحركة (Motion):</b> للتحكّم في حركة الكائنات.</li>
+<li><b>لبنات التحكّم (Control):</b> لتنظيم تسلسل الأحداث وتحديد الحلقات والقرارات الشرطية.</li>
+<li><b>لبنات الأحداث (Events):</b> لبدء الأنشطة بناءً على أحداث معيّنة.</li>
+<li><b>لبنات المظاهر (Looks):</b> لتعديل مظهر الكائنات والتفاعل البصري.</li></ul></div>
+</div>
+<p>كل مشروع في سكراتش يتكوّن من <b>مزيج متكامل</b> من عناصر التصميم (design) وعناصر البرمجة (Code).</p>`,
+    tryit: "نشاط عملي (ص ١٠٦): سجّلا الدخول، واستعرضا الكائنات والخلفيات والأصوات واللبنات البرمجية، ودوّنا ملاحظاتكما عن دور كل مكوّن.",
+    qs: [
+      {t:"match", q:"طابقا كل شكل من أشكال المشروع مع وصفه:",
+        pairs:[["الألعاب","شخصيات وقواعد ونقاط ومستويات"],["الرسوم المتحركة","مشاهد متحركة تروي سردًا بصريًا"],["القصص التفاعلية","روايات تتغيّر وفقًا لقرارات المستخدم"],["مشروعات الفن","رسومات وأعمال فنية مع إمكانية التفاعل"]],
+        why:"أشكال المشروع: ألعاب، ورسوم متحركة، وقصص تفاعلية، ومشروعات فن."},
+      {t:"sort", q:"صنّفا كل عنصر من أمثلة الكتاب:",
+        bins:["كائن Sprite","خلفية Backdrop","صوت Sound"],
+        items:[["Cat",0],["Galaxy",1],["A Elec Piano",2],["Dove",0],["Forest",1],["A Bass",2],["Earth",0],["Flowers",1]],
+        why:"الكائنات: Cat وDove وEarth. الخلفيات: Flowers وForest وGalaxy. الأصوات: A Bass وA Elec Piano…"},
+      {t:"sort", q:"صنّفا: هل هذا من عناصر التصميم أم من عناصر البرمجة؟",
+        bins:["عناصر التصميم","عناصر البرمجة"],
+        items:[["الكائنات",0],["لبنات الحركة Motion",1],["الخلفيات",0],["لبنات المظاهر Looks",1],["الأصوات",0],["لبنات الأحداث Events",1],["لبنات التحكّم Control",1]],
+        why:"انتبها: لبنات المظاهر (Looks) لبنات برمجية تعدّل المظهر، فهي من عناصر البرمجة لا التصميم."},
+      {t:"match", q:"طابقا كل نوع من اللبنات مع دوره:",
+        pairs:[["الحركة Motion","التحكّم في حركة الكائنات"],["التحكّم Control","تنظيم تسلسل الأحداث والحلقات والقرارات الشرطية"],["الأحداث Events","بدء الأنشطة بناءً على أحداث معيّنة"],["المظاهر Looks","تعديل مظهر الكائنات والتفاعل البصري"]],
+        why:"أربعة أنواع أساسية من اللبنات: الحركة، والتحكّم، والأحداث، والمظاهر."},
+      {t:"mcq", q:"ما الخلفية (Backdrop) في مشروع سكراتش؟",
+        c:["البيئة التي تدور فيها أحداث المشروع","الشخصية التي تتحرك وتتفاعل مع المستخدمين في المشروع","الملف الصوتي الذي يُضاف لجعل المشروع أكثر جاذبية وتفاعلًا","اللبنة البرمجية التي تبدأ الأنشطة بناءً على أحداث معيّنة"], a:0,
+        why:"الخلفيات: البيئة التي تدور فيها أحداث المشروع، مثل Flowers وForest وGalaxy."}
+    ]
+  },
+  {
+    id: "s5", city: "الخليل", title: "استكشاف مشروعات الآخرين", p: "ص ١٠٧–١٠٨",
+    explain: `
+<p>تُعدّ منصة Scratch أداة رائعة تتيح استكشاف المشروعات التي أنشأها الآخرون؛ مما يساعد على فهم كيفية تطبيق الأفكار البرمجية في مشروعات واقعية، ويوسّع آفاق التفكير ويعزّز الإبداع.</p>
+<ol class="steps">
+<li>أتوجّه إلى موقع Scratch عبر الرابط <span dir="ltr">https://scratch.mit.edu</span></li>
+<li>أسجّل الدخول باسم المستخدم وكلمة المرور. <b>ويمكن التصفّح كزائر دون الحاجة إلى تسجيل الدخول</b>.</li>
+<li>أنقر خيار <b>«استكشاف» (Explore)</b> في القائمة العلوية للوصول إلى مجموعة واسعة من المشروعات.</li>
+<li>أستعرض المشروعات باستخدام الفئات، مثل: <b>«الأكثر شعبية» (Popular)</b> و<b>«الأحدث» (Recent)</b>، ويمكن استخدام شريط البحث.</li>
+<li>أختار مشروعًا فتظهر صفحة فيها معلومات المشروع: وصفه، ومنشئه، واللبنات البرمجية المستخدمة.</li>
+<li>أنقر زرّ <b>«العلم» (Flag)</b> لتشغيل المشروع والتفاعل معه.</li>
+<li>لمعرفة كيفية عمل المشروع أنقر <b>«الاطّلاع على المشروع» (See inside)</b>، فأستعرض اللبنات المستخدمة وترتيبها.</li>
+<li>يمكن الاحتفاظ بالمشروع بالنقر على <b>«الحفظ إلى حاسوبك» (Save to your computer)</b> من قائمة <b>«ملف» (File)</b> إذا كان ذلك مسموحًا.</li>
+<li>إذا أعجبني المشروع أدعم منشئه بتعليقات إيجابية أو أسئلة من خلال زرّ <b>«التعليقات» (Comments)</b>.</li>
+</ol>`,
+    tryit: "نشاط فردي (ص ١٠٧) ونشاط جماعي (ص ١٠٨): استكشفا مشروعين جاهزين، ثم ناقشا مع المجموعة خصائص الاسم المناسب للمشروع بناءً على أسماء المشروعات التي رأيتماها.",
+    qs: [
+      {t:"match", q:"طابقا كل زرّ أو خيار مع ما يفعله:",
+        pairs:[["استكشاف Explore","الوصول إلى مجموعة واسعة من المشروعات"],["العلم Flag","تشغيل المشروع والتفاعل معه"],["See inside","استعراض اللبنات المستخدمة وترتيبها"],["Save to your computer","الاحتفاظ بالمشروع للعودة إليه لاحقًا"],["التعليقات Comments","دعم المنشئ بتعليقات إيجابية أو أسئلة"]],
+        why:"Explore للتصفّح، والعلم للتشغيل، وSee inside لرؤية اللبنات، والحفظ للاحتفاظ، والتعليقات للتواصل."},
+      {t:"mcq", q:"أين نجد خيار «الحفظ إلى حاسوبك» (Save to your computer)؟",
+        c:["في قائمة «ملف» File","في لوحة الكائنات أسفل المنصّة مباشرة","بجانب زرّ العلم الأخضر فوق المنصّة","في شريط البحث داخل صفحة الاستكشاف"], a:0,
+        why:"خيار الحفظ إلى الحاسوب موجود في قائمة «ملف» (File)، ويُستخدم إذا كان ذلك مسموحًا."},
+      {t:"mcq", q:"هل يمكن تصفّح مشروعات سكراتش دون تسجيل الدخول؟",
+        c:["نعم، يمكن التصفّح كزائر","لا، التصفّح ممنوع تمامًا قبل تفعيل الحساب","نعم، ولكن بعد تثبيت التطبيق على الهاتف فقط","لا، إلا إذا أرسلنا رسالة إلى منشئ المشروع"], a:0,
+        why:"يمكن التصفّح كزائر دون الحاجة إلى تسجيل الدخول، لمن يرغب في الحفاظ على الخصوصية."},
+      {t:"mcq", q:"ما الفئتان اللتان ذكرهما الكتاب لاستعراض المشروعات؟",
+        c:["الأكثر شعبية Popular والأحدث Recent","المحذوفة Deleted والمخفية Hidden عن الزوّار","المدفوعة Paid والمجانية Free لكل المستخدمين","المثبّتة Installed وغير المثبّتة على الجهاز"], a:0,
+        why:"نستعرض المشروعات بالفئات، مثل «الأكثر شعبية» (Popular) و«الأحدث» (Recent)."}
+    ]
+  },
+  {
+    id: "s6", city: "غزّة", title: "إنشاء مشروع جديد وحفظه", p: "ص ١٠٨",
+    explain: `
+<ol class="steps">
+<li>أفتح موقع Scratch عبر الرابط <span dir="ltr">https://scratch.mit.edu</span>، أو أفتح تطبيق Scratch إذا كان مثبّتًا على جهاز الحاسوب.</li>
+<li>أسجّل الدخول باستخدام اسم المستخدم وكلمة المرور الخاصّة بي.</li>
+<li>أنقر زرّ <b>«إنشاء» (Create)</b> في الشريط العلوي لفتح واجهة المشروع.</li>
+<li>أنقر <b>الاسم الافتراضي للمشروع (Untitled-1)</b> في الجزء العلوي من الصفحة، وأعيد تسمية المشروع باسم جديد يعبّر عن فكرته، مع مراعاة خصائص الاسم المناسب التي نوقشت.</li>
+<li>أنقر زرّ <b>«الحفظ الآن» (Save Now)</b> لضمان حفظ العمل.</li>
+<li>أبدأ بإعداد مشروعي الخاص، وأترك التفاصيل والتعديلات الإضافية للدروس القادمة.</li>
+</ol>`,
+    tryit: "نشاط فردي (ص ١٠٨): أنشئا مشروعًا جديدًا، وسمّياه باسم يعبّر عن فكرته، ثم احفظاه بزرّ Save Now.",
+    qs: [
+      {t:"order", q:"رتّبا خطوات إنشاء مشروع جديد وحفظه:",
+        items:["أفتح موقع Scratch أو التطبيق المثبّت","أسجّل الدخول باسم المستخدم وكلمة المرور","أنقر زرّ «إنشاء» Create","أعيد تسمية المشروع بدل Untitled-1","أنقر «الحفظ الآن» Save Now"],
+        why:"فتح ← تسجيل دخول ← إنشاء ← تسمية ← حفظ."},
+      {t:"mcq", q:"ما الاسم الافتراضي الذي يظهر للمشروع الجديد؟",
+        c:["Untitled-1","Project-New-Scratch-1","My-First-Scratch-Game","Scratch-Home-Page-01"], a:0,
+        why:"الاسم الافتراضي للمشروع هو Untitled-1، ونعيد تسميته باسم يعبّر عن الفكرة."},
+      {t:"mcq", q:"لماذا ننقر زرّ «الحفظ الآن» (Save Now)؟",
+        c:["لضمان حفظ العمل","لنشر المشروع فورًا لكل مستخدمي الموقع","لحذف الاسم الافتراضي وإنشاء حساب جديد","لتشغيل المشروع والتفاعل مع شخصياته"], a:0,
+        why:"زرّ «الحفظ الآن» يضمن حفظ العمل."},
+      {t:"mcq", q:"عند إعادة تسمية المشروع، يجب أن يكون الاسم الجديد:",
+        c:["معبّرًا عن فكرة المشروع","هو كلمة المرور الخاصّة بحسابنا على الموقع","هو Untitled-1 نفسه دون أيّ تغيير عليه","هو عنوان البريد الإلكتروني الذي سجّلنا به"], a:0,
+        why:"نسمّي المشروع باسم جديد يعبّر عن فكرته، مع مراعاة خصائص الاسم المناسب."}
+    ]
+  }
+  ]
+};
+if (typeof module !== "undefined") module.exports = LESSON;
+
+</script>
+<script>
+(function(){
+const L = LESSON, S = L.sections;
+const LADDER=[10,7,5,3,2];
+let st = {open:0, pts:{}, done:{}, start:Date.now(), end:null, n1:"", n2:"", cls:""};
+function load(){try{const s=JSON.parse(localStorage.getItem(L.key)||"null");if(s&&s.pts)st=Object.assign(st,s);}catch(e){}}
+function save(){try{localStorage.setItem(L.key,JSON.stringify(st));}catch(e){}}
+load();
+const $=(s,r=document)=>r.querySelector(s);
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function shake(e){e.classList.remove("shake");void e.offsetWidth;e.classList.add("shake");}
+const total=S.reduce((a,s)=>a+s.qs.length*10,0);
+function score(){return Object.values(st.pts).reduce((a,b)=>a+b,0);}
+function upScore(){$("#score").textContent=score()+" / "+total;}
+
+/* ---------- شاشة سكراتش المبسّطة ---------- */
+const PARTS={
+ menu:["القائمة (Menu)","توفّر خيارات متعددة مثل إنشاء مشروع جديد، وفتح مشروع مخزّن مسبقًا، أو حفظ المشروع الحالي، والوصول إلى دروس المساعدة."],
+ login:["زرّ تسجيل الدخول (Login Button)","يُستخدم لتسجيل الدخول إلى الحساب الشخصي على موقع Scratch؛ مما يسمح بحفظ المشروعات ومشاركتها والانضمام إلى مجتمع Scratch."],
+ palette:["لوحة اللبنات البرمجية (Blocks Palette)","تحتوي مجموعة متنوّعة من الأوامر المصنّفة إلى فئات مثل: الحركة (Motion)، والمظاهر (Looks)، والصوت (Sound)، والتحكّم (Control). تُسحب منها اللبنات إلى منطقة البرمجة."],
+ script:["منطقة البرمجة (Scripting Area)","المكان الذي تُجمَّع فيه اللبنات البرمجية وتُرتَّب لإنشاء المقاطع البرمجية (الأكواد) التي تحدّد سلوك الكائنات."],
+ sprite:["الكائن (Sprite)","العنصر التفاعلي في المشروع، يمثّل الشخصيات أو العناصر التي تتحرك أو تتفاعل مع المستخدمين، ويمكن تخصيص ألوانه وأشكاله وخصائصه."],
+ sprites:["لوحة الكائنات (Sprites Pane)","تُظهر الكائنات المستخدمة في المشروع، ومنها تُضاف كائنات جديدة، وتُحذف أو تُعدَّل الكائنات الحالية."],
+ stage:["المنصّة (Stage)","تمثّل شاشة العرض؛ تُعرض فيها التفاعلات بين الكائنات والخلفيات، فنتصوّر النتائج النهائية للمشروع."],
+ zoom:["تكبير/تصغير اللبنات (Zoom Blocks)","أدوات للتحكّم في حجم اللبنات البرمجية؛ مما يسهّل قراءة التعليمات ويجعل البرمجة أوضح وأكثر تنظيمًا."],
+ info:["بيانات الكائن","تظهر فيها بيانات الكائن المحدّد، كما في الشكل (١–١) في الكتاب."]
+};
+function screenSVG(){
+ return `<svg class="scr" viewBox="0 0 360 250" xmlns="http://www.w3.org/2000/svg" font-family="Tahoma,Arial" direction="rtl">
+ <rect x="0" y="0" width="360" height="20" fill="#855cd6"/>
+ <g data-r="menu"><rect x="200" y="1" width="158" height="18" rx="3" fill="#855cd6"/><rect x="318" y="4" width="36" height="12" rx="3" fill="#ffab19"/><text x="336" y="13" font-size="7" fill="#fff" text-anchor="middle">Scratch</text><text x="300" y="13" font-size="8" fill="#fff" text-anchor="middle">ملف</text><text x="275" y="13" font-size="8" fill="#fff" text-anchor="middle">تحرير</text><text x="240" y="13" font-size="8" fill="#fff" text-anchor="middle">الدروس</text></g>
+ <g data-r="login"><rect x="3" y="3" width="64" height="14" rx="3" fill="#7346c7"/><text x="35" y="13" font-size="8" fill="#fff" text-anchor="middle">تسجيل الدخول</text></g>
+ <g data-r="palette"><rect x="270" y="22" width="88" height="226" fill="#f4f6fb" stroke="#ddd"/>
+  <circle cx="349" cy="36" r="5" fill="#4c97ff"/><circle cx="349" cy="54" r="5" fill="#9966ff"/><circle cx="349" cy="72" r="5" fill="#cf63cf"/><circle cx="349" cy="90" r="5" fill="#ffbf00"/><circle cx="349" cy="108" r="5" fill="#ffab19"/><circle cx="349" cy="126" r="5" fill="#5cb1d6"/><circle cx="349" cy="144" r="5" fill="#59c059"/><circle cx="349" cy="162" r="5" fill="#ff8c1a"/>
+  <rect x="276" y="32" width="60" height="10" rx="3" fill="#4c97ff"/><rect x="276" y="47" width="50" height="10" rx="3" fill="#4c97ff"/><rect x="276" y="62" width="58" height="10" rx="3" fill="#4c97ff"/><rect x="276" y="82" width="52" height="10" rx="3" fill="#9966ff"/><rect x="276" y="97" width="44" height="10" rx="3" fill="#9966ff"/><rect x="276" y="117" width="56" height="10" rx="3" fill="#cf63cf"/><rect x="276" y="137" width="48" height="10" rx="3" fill="#ffbf00"/><rect x="276" y="157" width="58" height="10" rx="3" fill="#ffab19"/><rect x="276" y="177" width="50" height="10" rx="3" fill="#5cb1d6"/><rect x="276" y="197" width="54" height="10" rx="3" fill="#59c059"/><rect x="276" y="217" width="46" height="10" rx="3" fill="#ff8c1a"/></g>
+ <g data-r="script"><rect x="152" y="22" width="116" height="226" fill="#f9f9f9" stroke="#ddd"/>
+  <path d="M175 70 h50 v14 h-50 z" fill="#ffbf00"/><path d="M175 62 q25 -10 50 0 v8 h-50 z" fill="#ffbf00"/><text x="200" y="80" font-size="5.5" fill="#fff" text-anchor="middle">عند نقر العلم</text>
+  <rect x="175" y="84" width="58" height="13" rx="2" fill="#4c97ff"/><rect x="175" y="97" width="52" height="13" rx="2" fill="#4c97ff"/></g>
+ <g data-r="zoom"><rect x="155" y="186" width="20" height="58" rx="6" fill="#f9f9f9"/><circle cx="165" cy="196" r="7" fill="#fff" stroke="#9aa"/><text x="165" y="199" font-size="9" text-anchor="middle" fill="#567">+</text><circle cx="165" cy="214" r="7" fill="#fff" stroke="#9aa"/><text x="165" y="217" font-size="9" text-anchor="middle" fill="#567">−</text><circle cx="165" cy="232" r="7" fill="#fff" stroke="#9aa"/><text x="165" y="235" font-size="8" text-anchor="middle" fill="#567">=</text></g>
+ <g data-r="stage"><rect x="2" y="22" width="148" height="112" fill="#fff" stroke="#ccc"/><circle cx="130" cy="29" r="3.5" fill="#59c059"/><circle cx="120" cy="29" r="3.5" fill="#e04848"/></g>
+ <g data-r="sprite"><circle cx="72" cy="80" r="18" fill="#ffb347" stroke="#c77a12"/><circle cx="66" cy="76" r="3" fill="#333"/><circle cx="79" cy="76" r="3" fill="#333"/><path d="M64 87 q8 6 16 0" stroke="#333" fill="none" stroke-width="1.6"/><path d="M58 64 l4 6 M86 64 l-4 6" stroke="#c77a12" stroke-width="2"/></g>
+ <g data-r="info"><rect x="2" y="136" width="148" height="30" fill="#f3f3f3" stroke="#ddd"/><rect x="10" y="142" width="40" height="8" rx="3" fill="#fff" stroke="#ccc"/><rect x="58" y="142" width="22" height="8" rx="3" fill="#fff" stroke="#ccc"/><rect x="86" y="142" width="22" height="8" rx="3" fill="#fff" stroke="#ccc"/><rect x="10" y="154" width="22" height="8" rx="3" fill="#fff" stroke="#ccc"/></g>
+ <g data-r="sprites"><rect x="2" y="168" width="148" height="80" fill="#e9eef7" stroke="#ccc"/><rect x="104" y="176" width="36" height="36" rx="5" fill="#fff" stroke="#855cd6" stroke-width="2"/><circle cx="122" cy="192" r="9" fill="#ffb347"/><circle cx="20" cy="232" r="10" fill="#855cd6"/><text x="20" y="236" font-size="12" fill="#fff" text-anchor="middle">+</text></g>
+</svg>`;
+}
+function markPart(svg,r,cls){const g=svg.querySelector(`[data-r="${r}"]`);if(!g)return;const first=g.querySelector("rect,circle,path");if(!first)return;first.classList.add(cls);setTimeout(()=>first.classList.remove(cls),cls==="good"?100000:700);}
+function hitPart(ev){const t=ev.target.closest("[data-r]");return t?t.dataset.r:null;}
+
+/* ---------- محرّك الأسئلة ---------- */
+function runGame(sec, box, si){
+  let qi=0;
+  const bar=el("div","gamebar"), dots=el("span","dots"), lab=el("span");
+  bar.append("🎮 لعبة المحطّة",dots,lab);
+  const area=el("div");
+  box.append(bar,area);
+  function drawDots(){dots.innerHTML="";sec.qs.forEach((q,i)=>{const d=el("i");if(st.pts[sec.id+":"+i]!=null)d.className="ok";else if(i===qi)d.className="now";dots.append(d);});lab.textContent=`السؤال ${Math.min(qi+1,sec.qs.length)} من ${sec.qs.length}`;}
+  // استئناف
+  while(qi<sec.qs.length && st.pts[sec.id+":"+qi]!=null) qi++;
+  function next(){drawDots(); if(qi>=sec.qs.length){finishSec();return;} show(sec.qs[qi]);}
+  function finishSec(){
+    area.innerHTML="";const sp=sec.qs.reduce((a,q,i)=>a+(st.pts[sec.id+":"+i]||0),0);
+    area.append(el("div","done-banner",`✔ أنهيتما محطّة ${sec.city} — ${sp} من ${sec.qs.length*10} نقطة`));
+    if(!st.done[sec.id]){st.done[sec.id]=1; if(st.open<si+1) st.open=si+1; if(si===S.length-1 && !st.end) st.end=Date.now(); save(); refresh(); const n=document.getElementById(si+1<S.length?S[si+1].id:"final"); if(n) setTimeout(()=>n.scrollIntoView({behavior:"smooth",block:"start"}),400);}
+  }
+  function show(q){
+    area.innerHTML=""; let err=0;
+    const qd=el("div","q",q.q); area.append(qd);
+    const body=el("div"); area.append(body);
+    const fb=el("div","feedback"); const row=el("div","row");
+    const hb=el("button","btn ghost","تلميح"); hb.type="button"; const hint=el("div","hintbox",`ارجعا إلى شرح هذه المحطّة أعلاه (${sec.p}).`);
+    hb.onclick=()=>{hint.style.display="block";};
+    row.append(hb); area.append(hint,fb,row);
+    function wrong(e){err++; if(e){e.classList.add("wrong");shake(e);setTimeout(()=>e.classList.remove("wrong"),900);}}
+    function solved(){
+      const p=LADDER[Math.min(err,LADDER.length-1)];
+      st.pts[sec.id+":"+qi]=p; save(); upScore(); drawDots();
+      fb.innerHTML=`<b>✔ صحيح (+${p})</b><br>${q.why||""}`; fb.classList.add("show");
+      hb.remove(); hint.remove();
+      const nb=el("button","btn",qi+1<sec.qs.length?"السؤال التالي ←":"إنهاء المحطّة ✔"); nb.type="button";
+      nb.onclick=()=>{qi++;next();}; row.append(nb); nb.focus({preventScroll:true});
+    }
+    if(q.t==="mcq"){
+      const o=el("div","opts"); body.append(o);
+      shuffle(q.c.map((txt,k)=>({txt,k}))).forEach(({txt,k})=>{
+        const b=el("button","opt",txt); b.type="button";
+        b.onclick=()=>{ if(k===q.a){b.classList.add("right");o.querySelectorAll("button").forEach(x=>x.disabled=true);solved();} else {b.disabled=true;wrong(b);setTimeout(()=>b.classList.add("wrong"),920);} };
+        o.append(b);
+      });
+    }
+    else if(q.t==="order"){
+      const seq=el("ol","seq"), pool=el("div","pool"); body.append(el("div","small","اضغطا الخطوات بالترتيب الصحيح:"),seq,pool);
+      let k=0;
+      q.items.forEach(()=>{seq.append(el("li","empty","…"));});
+      shuffle(q.items.map((txt,i)=>({txt,i}))).forEach(({txt,i})=>{
+        const b=el("button","chip",txt); b.type="button";
+        b.onclick=()=>{ if(i===k){const li=seq.children[k];li.className="";li.textContent=(k+1)+". "+txt;b.remove();k++;if(k===q.items.length)solved();} else wrong(b); };
+        pool.append(b);
+      });
+    }
+    else if(q.t==="sort"||q.t==="match"){
+      let items,bins;
+      if(q.t==="sort"){bins=q.bins.slice();items=shuffle(q.items.map(([txt,b])=>({txt,b})));}
+      else{bins=q.pairs.map(p=>p[1]);items=shuffle(q.pairs.map((p,i)=>({txt:p[0],b:i})));}
+      const order=q.t==="match"?shuffle(bins.map((t,i)=>i)):bins.map((t,i)=>i);
+      const card=el("div","card"); const bw=el("div","bins"); body.append(card,bw);
+      body.prepend(el("div","small",q.t==="sort"?"اقرآ البطاقة، ثم اضغطا المجموعة التي تنتمي إليها:":"اقرآ البطاقة، ثم اضغطا الوصف المطابق لها:"));
+      const counts=bins.map(()=>0); let k=0; const btns=[];
+      order.forEach(bi=>{const b=el("button","bin",`${bins[bi]}<span class="cnt"></span>`);b.type="button";b.dataset.k=bi;btns[bi]=b;
+        b.onclick=()=>{ const it=items[k]; if(+b.dataset.k===it.b){counts[bi]++; b.querySelector(".cnt").textContent=q.t==="sort"?("✔ ".repeat(counts[bi])).trim():"✔ "+it.txt; if(q.t==="match"){b.disabled=true;b.style.borderColor="var(--ok)";b.style.background="var(--ok2)";} k++; if(k===items.length){card.innerHTML="✔ اكتمل";solved();} else drawCard(); } else wrong(b); };
+        bw.append(b);});
+      function drawCard(){card.innerHTML=`<span class="lab">البطاقة ${k+1} من ${items.length}</span>${items[k].txt}`;}
+      drawCard();
+    }
+    else if(q.t==="hot"){
+      const w=el("div"); w.innerHTML=screenSVG(); body.append(w); const svg=w.firstElementChild; let doneHot=false;
+      svg.addEventListener("click",ev=>{ if(doneHot)return; const r=hitPart(ev); if(!r)return;
+        if(r===q.target){doneHot=true;markPart(svg,r,"good");solved();}
+        else{err++;markPart(svg,r,"bad");shake(w);hint.style.display="block";hint.textContent="هذا الجزء هو: "+PARTS[r][0]+" — جرّبا مرة أخرى.";}
+      });
+    }
+  }
+  next();
+}
+
+/* ---------- بناء الصفحة ---------- */
+const secsBox=$("#secs");
+S.forEach((sec,si)=>{
+  const s=el("section","sec"); s.id=sec.id;
+  s.innerHTML=`<div class="sechead"><span class="station">محطّة ${si+1} · ${sec.city}</span><h2>${sec.title}</h2><span class="pg">${sec.p}</span></div><div class="lockmsg">🔒 تُفتح بعد إنهاء المحطّة السابقة.</div>`;
+  const body=el("div","body"); body.innerHTML=sec.explain;
+  if(sec.tryit){body.append(el("div","tryit","<b>🖥️ على جهاز المختبر — </b>"+sec.tryit));}
+  const gb=el("div","gamebox"); body.append(gb); s.append(body); secsBox.append(s);
+  sec._gb=gb;
+});
+// وضع الاستكشاف لشاشة سكراتش
+document.querySelectorAll('.screen-wrap[data-mode="explore"]').forEach(w=>{
+  w.innerHTML=screenSVG(); const svg=w.firstElementChild;
+  svg.addEventListener("click",ev=>{const r=hitPart(ev);if(!r)return;svg.querySelectorAll(".hl").forEach(x=>x.classList.remove("hl"));const f=svg.querySelector(`[data-r="${r}"]`).querySelector("rect,circle,path");f.classList.add("hl");$("#explore-out").innerHTML=`<b>${PARTS[r][0]}:</b> ${PARTS[r][1]}`;});
+});
+const started={};
+function refresh(){
+  const rail=$("#rail"); rail.innerHTML="";
+  S.forEach((sec,si)=>{
+    const node=document.getElementById(sec.id); const open=si<=st.open;
+    node.classList.toggle("locked",!open);
+    if(open && !started[sec.id]){started[sec.id]=1;runGame(sec,sec._gb,si);}
+    const b=el("button",(st.done[sec.id]?"done":"")+(si===st.open?" cur":""),`${si+1}. ${sec.city}`);b.type="button";b.disabled=!open;b.onclick=()=>node.scrollIntoView({behavior:"smooth",block:"start"});rail.append(b);
+  });
+  const allDone=S.every(s=>st.done[s.id]);
+  $("#final").classList.toggle("locked",!allDone);
+  upScore(); drawCert();
+}
+function drawCert(){
+  const sc=score(), pct=Math.round(sc/total*100);
+  const mins=st.end?Math.max(1,Math.round((st.end-st.start)/60000)):null;
+  const d=new Date();
+  $("#cert").innerHTML=`<div>أنهى/أنهت رحلة المحطّات السبع في درس</div><b>مقدمة في برمجية سكراتش</b><div class="big">${sc} / ${total}</div><div>النسبة: ${pct}%${mins?` · مدّة الإنجاز: ${mins} دقيقة`:""}</div><hr><div><b>${esc(st.n1)||"…"}</b> و <b>${esc(st.n2)||"…"}</b></div><div>${esc(st.cls)||"الشعبة: …"}</div><div class="small">${d.toLocaleDateString("ar-JO")}</div>`;
+}
+function esc(s){return String(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+["n1","n2","cls"].forEach(id=>{const e=document.getElementById(id);e.value=st[id]||"";e.addEventListener("input",()=>{st[id]=e.value;save();drawCert();});e.addEventListener("change",()=>{st[id]=e.value;save();drawCert();});});
+$("#calm").onclick=()=>document.body.classList.toggle("calm");
+let armed=false;$("#reset").onclick=e=>{const b=e.currentTarget;if(!armed){armed=true;b.textContent="اضغطا مرة ثانية للتأكيد — ستُمسح النقاط";setTimeout(()=>{armed=false;b.textContent="البدء من جديد";},4000);return;}try{localStorage.removeItem(L.key);}catch(e){}location.reload();};
+refresh();
+})();
+</script>
+</body>
+</html>
