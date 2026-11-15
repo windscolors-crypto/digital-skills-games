@@ -116,6 +116,8 @@ body.calm *{animation:none!important;transition:none!important}
       <label>اسم الطالب/ـة الثاني/ة<input id="n2" autocomplete="off"></label>
       <label>الشعبة<select id="cls"><option value="">— اختارا الشعبة —</option><option>الثامن أ</option><option>الثامن ب</option><option>الثامن ج</option></select></label>
       <div class="cert" id="cert"></div>
+      <div class="row" style="justify-content:center"><a class="btn" id="sendbtn" target="_blank" rel="noopener" style="text-decoration:none;pointer-events:none;opacity:.5">📤 إرسال النتيجة</a></div>
+      <p class="small" id="sendnote" style="text-align:center">اكتبا الاسمين واختارا الشعبة أولًا، ثم اضغطا «إرسال النتيجة»، وفي النموذج اضغطا «إرسال» / Submit فقط.</p>
       <div class="proj"><h4>المهمة القادمة: مشروع «يوم الطفل العالمي»</h4><img class="slide" data-s="12" alt=""><img class="slide" data-s="13" alt=""><img class="slide" data-s="14" alt=""></div>
       <p class="small">صوّرا البطاقة: على الحاسوب <b dir="ltr">Win + Shift + S</b>، وعلى الهاتف لقطة شاشة عادية.</p>
     </div>
@@ -517,7 +519,27 @@ function drawCert(){
   const sc=score(), pct=Math.round(sc/total*100);
   const mins=st.end?Math.max(1,Math.round((st.end-st.start)/60000)):null;
   const d=new Date();
+  drawSend();
   $("#cert").innerHTML=`<div>أنهى/أنهت رحلة المحطّات السبع في درس</div><b>مقدمة في برمجية سكراتش</b><div class="big">${sc} / ${total}</div><div>النسبة: ${pct}%${mins?` · مدّة الإنجاز: ${mins} دقيقة`:""}</div><hr><div><b>${esc(st.n1)||"…"}</b> و <b>${esc(st.n2)||"…"}</b></div><div>${esc(st.cls)||"الشعبة: …"}</div><div class="small">${d.toLocaleDateString("ar-JO")}</div>`;
+}
+
+const RESULT_FORM={url:"https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=QoWSx2QeIUimYh4GU_yQCXkPYNJN8CJDkPMMgh2Vy6tUQzFUN1k1OEI2S1Y5NlozQ05MMVVGT1JPMy4u",field:"r5fcb6c37d72c494ea4afd2dda3eabe41",game:"G8U2L1"};
+function bestRec(){let r={best:-1,secs:0,tries:0};try{r=Object.assign(r,JSON.parse(localStorage.getItem(L.key+":best")||"{}"));}catch(e){}return r;}
+function recordFinish(){ if(!st.end||st.counted) return; const r=bestRec(); const sc=score(), secs=Math.round((st.end-st.start)/1000);
+  r.tries++; if(sc>r.best||(sc===r.best&&secs<r.secs)){r.best=sc;r.secs=secs;}
+  try{localStorage.setItem(L.key+":best",JSON.stringify(r));}catch(e){} st.counted=1; save(); }
+function drawSend(){
+  const a=$("#sendbtn"); if(!a) return; recordFinish();
+  const clean=x=>String(x||"").replace(/[|\n\r]/g," ").trim();
+  const names=clean([st.n1,st.n2].map(clean).filter(Boolean).join(" و ")), cls=clean(st.cls);
+  const ready=!!(st.end && names && cls);
+  a.style.pointerEvents=ready?"auto":"none"; a.style.opacity=ready?"1":".5";
+  if(!ready){a.removeAttribute("href");return;}
+  const r=bestRec(), max=total, lvn=1, gnum=parseInt(RESULT_FORM.game.replace(/\D/g,""),10);
+  const chk=(r.best*7919+r.secs*104+r.tries*31+max*17+lvn*101+gnum*1009+52813)%99991;
+  const code=[RESULT_FORM.game,lvn,r.best,max,r.secs,r.tries,names,cls,names,chk].join("|");
+  a.href=RESULT_FORM.url+"&"+RESULT_FORM.field+"="+encodeURIComponent(code);
+  $("#sendnote").textContent="أفضل نتيجة لكما "+r.best+" من "+max+" · عدد المحاولات "+r.tries+". افتحا الرابط واضغطا «إرسال» / Submit فقط.";
 }
 function esc(s){return String(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 ["n1","n2","cls"].forEach(id=>{const e=document.getElementById(id);e.value=st[id]||"";e.addEventListener("input",()=>{st[id]=e.value;save();drawCert();});e.addEventListener("change",()=>{st[id]=e.value;save();drawCert();});});
