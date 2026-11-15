@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>المتغيّرات البرمجية في سكراتش — الصف التاسع</title>
+<style>
+:root{--ink:#1f2a24;--muted:#5d6b62;--bg:#f6f3ea;--card:#fff;--olive:#4f6b2c;--olive2:#e7eedb;--red:#a3262b;--red2:#f6e1e1;--gold:#c88a12;--gold2:#fbf0d6;--blue:#2d5b8f;--blue2:#e3ecf6;--ok:#2e7d32;--ok2:#e3f2e4;--bad:#c62828;--line:#ddd6c4}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,"Noto Naskh Arabic",Arial,sans-serif;font-size:17px;line-height:1.75}
+header.top{background:var(--olive);color:#fff;padding:14px 16px 10px;position:sticky;top:0;z-index:20;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+header.top h1{margin:0;font-size:19px}
+header.top .sub{font-size:13px;opacity:.9}
+.tatreez{height:8px;background:repeating-linear-gradient(90deg,var(--red) 0 8px,transparent 8px 12px,var(--red) 12px 14px,transparent 14px 22px);opacity:.85}
+.rail{display:flex;gap:4px;margin-top:8px;overflow-x:auto}
+.rail button{flex:1 0 auto;border:0;border-radius:14px;padding:3px 9px;font:inherit;font-size:12px;background:rgba(255,255,255,.18);color:#fff;cursor:pointer;white-space:nowrap}
+.rail button.done{background:#fff;color:var(--olive);font-weight:700}
+.rail button.cur{outline:2px solid #fff}
+.rail button:disabled{opacity:.45;cursor:default}
+.score{float:left;background:#fff;color:var(--olive);border-radius:12px;padding:1px 10px;font-weight:700;font-size:14px}
+main{max-width:760px;margin:0 auto;padding:12px}
+.intro,.sec,.final{background:var(--card);border-radius:16px;padding:16px;margin:14px 0;box-shadow:0 1px 4px rgba(0,0,0,.07);border:1px solid var(--line)}
+.sec.locked{opacity:.55}
+.sec.locked .body{display:none}
+.lockmsg{display:none;color:var(--muted);font-size:15px}
+.sec.locked .lockmsg{display:block}
+.sechead{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:6px}
+.station{background:var(--red);color:#fff;border-radius:10px;padding:2px 10px;font-size:13px;white-space:nowrap}
+.sechead h2{margin:0;font-size:20px;color:var(--olive)}
+.pg{color:var(--muted);font-size:13px;margin-inline-start:auto;white-space:nowrap}
+h4{margin:12px 0 4px;color:var(--blue)}
+ul,ol{padding-inline-start:22px;margin:6px 0}
+.note{background:var(--gold2);border-inline-start:5px solid var(--gold);border-radius:10px;padding:10px 12px;margin:10px 0}
+.note.citizen{background:var(--blue2);border-color:var(--blue)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:620px){.two{grid-template-columns:1fr}}
+.box{background:var(--olive2);border-radius:10px;padding:10px 12px}
+.tryit{background:#eef6f7;border:1px dashed #3c8b94;border-radius:10px;padding:8px 12px;margin:10px 0;font-size:15px}
+.tryit b{color:#2b6f77}
+.small{font-size:13px;color:var(--muted)}
+.gamebox{margin-top:14px;border-top:3px dotted var(--line);padding-top:12px}
+.gamebar{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted);margin-bottom:6px}
+.dots{display:flex;gap:4px}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--line);display:inline-block}
+.dots i.ok{background:var(--ok)}
+.dots i.now{background:var(--gold)}
+.q{font-weight:700;margin:6px 0 10px;font-size:17.5px}
+.opts{display:grid;gap:8px}
+.opt,.chip,.bin{font:inherit;font-size:16px;text-align:right;background:#fff;border:2px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer;color:var(--ink);transition:transform .15s}
+.opt:hover,.chip:hover,.bin:hover{border-color:var(--olive)}
+.opt.wrong,.chip.wrong,.bin.wrong{border-color:var(--bad);background:#fdecec}
+.opt.right{border-color:var(--ok);background:var(--ok2)}
+.opt:disabled{cursor:default}
+.shake{animation:sh .35s}
+@keyframes sh{25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-3px)}}
+.seq{list-style:none;padding:0;margin:0 0 10px;display:grid;gap:6px}
+.seq li{background:var(--ok2);border:2px solid var(--ok);border-radius:12px;padding:8px 12px}
+.seq li.empty{background:#fafafa;border:2px dashed var(--line);color:#aaa}
+.pool{display:grid;gap:8px}
+.card{background:var(--blue2);border:2px solid var(--blue);border-radius:14px;padding:12px;text-align:center;font-weight:700;font-size:18px;margin-bottom:10px}
+.card .lab{display:block;font-size:12px;font-weight:400;color:var(--muted)}
+.bins{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.bin{text-align:center;font-weight:700}
+.bin .cnt{display:block;font-weight:400;font-size:13px;color:var(--muted);min-height:1.2em}
+.feedback{margin-top:10px;border-radius:12px;padding:10px 12px;display:none}
+.feedback.show{display:block;background:var(--ok2);border:1px solid var(--ok)}
+.btn{font:inherit;border:0;border-radius:12px;padding:10px 18px;background:var(--olive);color:#fff;font-weight:700;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--olive);border:2px solid var(--olive)}
+.btn:disabled{opacity:.5}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.hintbox{font-size:14px;color:var(--muted);margin-top:6px;display:none}
+.done-banner{background:var(--ok2);border:2px solid var(--ok);border-radius:12px;padding:10px 12px;font-weight:700;color:var(--ok)}
+svg.scr{width:100%;height:auto;display:block;border-radius:10px;border:1px solid #c9c9c9;background:#fff;touch-action:manipulation}
+svg.scr [data-r]{cursor:pointer}
+svg.scr .hl{stroke:#e0a800;stroke-width:3}
+svg.scr .bad{stroke:var(--bad);stroke-width:3}
+svg.scr .good{stroke:var(--ok);stroke-width:3}
+.explore-out{background:var(--olive2);border-radius:10px;padding:8px 12px;margin-top:8px;min-height:3em}
+.final h2{color:var(--olive);margin-top:0}
+.final input,.final select{font:inherit;padding:8px 10px;border:2px solid var(--line);border-radius:10px;width:100%;margin:4px 0 8px}
+.cert{border:3px double var(--olive);border-radius:14px;padding:14px;text-align:center;background:#fffdf6;margin-top:10px}
+.cert .big{font-size:34px;font-weight:800;color:var(--olive)}
+@media(max-width:620px){header.top .sub{display:none}header.top h1{font-size:17px}}
+.sec,.final{scroll-margin-top:110px}
+.slide{display:block;width:100%;border-radius:12px;margin:8px 0 12px;box-shadow:0 2px 8px rgba(0,0,0,.12);cursor:zoom-in}
+.slidecap{font-size:12px;color:var(--muted);text-align:center;margin-top:-8px;margin-bottom:10px}
+#lb{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;z-index:99;padding:8px}
+#lb.show{display:flex}#lb img{max-width:100%;max-height:100%;border-radius:8px}
+#lb .x{position:absolute;top:10px;left:14px;color:#fff;font-size:30px;background:none;border:0;cursor:pointer}
+.proj{margin-top:16px}
+.blk{display:inline-block;background:#ff8c1a;color:#fff;border-radius:8px;padding:1px 10px;font-weight:700;font-size:15px;margin:0 2px}
+.varbox-demo{display:flex;gap:10px;align-items:center;justify-content:center;font-weight:700;margin:8px 0}
+.vb-data{background:#9966ff;color:#fff;border-radius:8px;padding:4px 12px}.vb-box{background:#c8956b;color:#fff;border-radius:8px;padding:6px 14px}
+.varsim{background:#fff7ee;border:2px solid #ff8c1a;border-radius:14px;padding:12px;margin:8px 0}
+.vs-stage{display:flex;align-items:center;justify-content:center;min-height:56px;background:#eef6ff;border-radius:10px;margin-bottom:10px}
+.vs-mon{background:#e9eef7;border:2px solid #ccd;border-radius:8px;padding:4px 10px;font-weight:700}.vs-mon b{background:#ff8c1a;color:#fff;border-radius:6px;padding:0 10px;margin-inline-start:6px;display:inline-block;min-width:2.2em;text-align:center}
+.vs-btns{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}.vs-btns button{font:inherit;font-size:15px;border:0;border-radius:10px;padding:8px 12px;background:#ff8c1a;color:#fff;cursor:pointer}
+.vs-btns button.vis{background:#4c97ff}.vs-log{font-size:14px;color:var(--muted);text-align:center;margin-top:6px;min-height:1.4em}
+.proj.note{margin-top:14px}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
+body.calm *{animation:none!important;transition:none!important}
+</style>
+</head>
+<body>
+<header class="top">
+  <span class="score" id="score">0</span>
+  <h1>المتغيّرات البرمجية في سكراتش</h1>
+  <div class="sub">الصف التاسع · الوحدة الثانية · الدرس الأول · Scratch Variables</div>
+  <div class="rail" id="rail"></div>
+</header>
+<div class="tatreez"></div>
+<main id="main">
+  <section class="intro">
+        <b>رحلة المحطّات السبع 🫒</b>
+    <p style="margin:6px 0">في كل محطّة: اقرآ الشرح، ثم العبا اللعبة القصيرة تحتها. لا تنتقلان للسؤال التالي حتى تكون الإجابة صحيحة، والنقاط تقلّ مع كل محاولة خاطئة. عند إنهاء المحطّة تُفتح المحطّة التالية.</p>
+    <div class="row"><button class="btn ghost" id="calm" type="button">تخفيف الحركة</button><button class="btn ghost" id="reset" type="button">البدء من جديد</button></div>
+  </section>
+  <div id="secs"></div>
+  <section class="final sec locked" id="final">
+    <div class="sechead"><span class="station">المحطّة الأخيرة</span><h2>بطاقة الإنجاز</h2></div>
+    <div class="lockmsg">🔒 تُفتح بعد إنهاء المحطّات كلها.</div>
+    <div class="body">
+      <label>اسم الطالب/ـة الأول/ى<input id="n1" autocomplete="off"></label>
+      <label>اسم الطالب/ـة الثاني/ة<input id="n2" autocomplete="off"></label>
+      <label>الشعبة<select id="cls"><option value="">— اختارا الشعبة —</option><option>التاسع أ</option><option>التاسع ب</option><option>التاسع ج</option></select></label>
+      <div class="cert" id="cert"></div>
+      <div class="row" style="justify-content:center"><a class="btn" id="sendbtn" target="_blank" rel="noopener" style="text-decoration:none;pointer-events:none;opacity:.5">📤 إرسال النتيجة</a></div>
+      <p class="small" id="sendnote" style="text-align:center">اكتبا الاسمين واختارا الشعبة أولًا، ثم اضغطا «إرسال النتيجة»، وفي النموذج اضغطا «إرسال» / Submit فقط.</p>
+      <div class="proj note"><b>المهمة القادمة (المشروع ص ٨٠):</b> تصميم لعبة تعليمية تفاعلية باستخدام سكراتش — مرحلة التخطيط والتحليل، ثم مرحلة التصميم وإنشاء المتغيّرات لتتبّع النقاط.</div>
+      <p class="small">صوّرا البطاقة: على الحاسوب <b dir="ltr">Win + Shift + S</b>، وعلى الهاتف لقطة شاشة عادية.</p>
+    </div>
+  </section>
+</main>
+<div id="lb"><button class="x" type="button" aria-label="إغلاق">✕</button><img alt=""></div>
+<footer>المحتوى من كتاب الطالب — المهارات الرقمية، الصف التاسع، الفصل الأول، ص ٦٨–٨٢</footer>
+
+<script>
+// الصف التاسع — الوحدة الثانية — الدرس الأول: المتغيّرات البرمجية في برمجية سكراتش (ص ٦٨–٨٢)
+const LESSON = {
+  key: "jofeh:g9u2l1:v1",
+  sections: [
+  {
+    id: "s0", city: "يافا", title: "تجزئة المشكلة", p: "ص ٦٩–٧١",
+    explain: `
+<p>تمرّ عملية تطوير البرنامج بمراحل عديدة، تبدأ بـ<b>تجزئة المشكلة (Decomposition)</b>: أي تقسيم المشكلة الكبيرة التي يُراد إيجاد حلّ برمجي لها إلى <b>أجزاء صغيرة</b>؛ ما يسهّل فهمها وإدارتها وبرمجتها.</p>
+<p>يُعدّ هذا النهج جزءًا أساسيًا من <b>التفكير الحاسوبي</b>: نتعامل مع كل جزء على حدة، ثم نجمع الحلول الجزئية وصولًا إلى الحلّ المتكامل.</p>
+<div class="note"><b>مثال من الكتاب — لعبة كرة القدم</b> (تسجيل نقطة للاعب كلما أحرز هدفًا):
+<ol>
+<li><b>اختيار الشخصيات والخلفيات:</b> الكائنات (Sprites) مثل: اللاعب، والكرة، والمرمى؛ والخلفية (Backdrop) مثل: ملعب كرة القدم.</li>
+<li><b>كتابة الأوامر البرمجية (Codes):</b> التحكّم في الكائنات وتحريكها وتغيير مواقعها، وتحديد ما يحدث عند اصطدام الكائنات ببعضها؛ فمثلًا يُسجَّل هدف وتُحسب نقطة للاعب عند اصطدام الكرة بشباك المرمى.</li>
+<li><b>تعديل قيم المتغيّرات وحفظها:</b> مثل زيادة متغيّر الأهداف بمقدار (1)، ثم حفظ القيمة الجديدة.</li>
+</ol></div>`,
+    tryit: "نشاط تمهيدي (ص ٦٩): سجّلا الدخول إلى سكراتش، واستكشفا فئات اللبنات: الحركة، والهيئة، والصوت، والتحكّم، والمتغيّرات، وناقشا أهمية كلٍّ منها.",
+    qs: [
+      {t:"mcq", q:"ما المقصود بتجزئة المشكلة (Decomposition)؟",
+        c:["تقسيم المشكلة الكبيرة إلى أجزاء صغيرة","حذف الأجزاء الصعبة من المشكلة وترك السهل منها فقط","كتابة البرنامج كاملًا مرة واحدة دون تقسيم أو تخطيط","تخزين المشكلة في ذاكرة الحاسوب لحلّها في وقت لاحق"], a:0,
+        why:"التجزئة: تقسيم المشكلة الكبيرة إلى أجزاء صغيرة؛ ما يسهّل فهمها وإدارتها وبرمجتها."},
+      {t:"order", q:"رتّبا خطوات تطوير لعبة كرة القدم كما في الكتاب:",
+        items:["اختيار الشخصيات والخلفيات المناسبة","كتابة الأوامر البرمجية اللازمة لتشغيل اللعبة","تعديل قيم المتغيّرات وحفظها"],
+        why:"أولًا الكائنات والخلفية، ثم الأوامر البرمجية، ثم المتغيّرات."},
+      {t:"sort", q:"صنّفا عناصر لعبة كرة القدم:",
+        bins:["كائن Sprite","خلفية Backdrop"],
+        items:[["اللاعب",0],["ملعب كرة القدم",1],["الكرة",0],["المرمى",0]],
+        why:"اللاعب والكرة والمرمى كائنات، والملعب خلفية."},
+      {t:"mcq", q:"متى تُحسب نقطة للاعب في مثال الكتاب؟",
+        c:["عند اصطدام الكرة بشباك المرمى","عند الضغط على العلم الأخضر لبدء اللعبة","عند اختيار خلفية ملعب كرة القدم من المكتبة","عند إضافة كائن جديد إلى لوحة الكائنات"], a:0,
+        why:"يُسجَّل هدف وتُحسب نقطة للاعب عند اصطدام الكرة بشباك المرمى."}
+    ]
+  },
+  {
+    id: "s1", city: "عكّا", title: "تعريف المتغيّر وأهميته", p: "ص ٧٢",
+    explain: `
+<p><b>المتغيّر:</b> هو <b>مساحة تخزينية في ذاكرة البرنامج</b>، وهي جزء من ذاكرة الحاسوب، وفيها توضع القيمة المرتبطة بالمتغيّر، ويُستعمل <b>اسم المتغيّر</b> للإشارة إلى تلك القيمة.</p>
+<div class="varbox-demo"><span class="vb-data">بيانات Data</span> ← <span class="vb-box">📦 متغيّر Variable</span></div>
+<p>يُستخدم المتغيّر في تخزين <b>البيانات (Data)</b> التي قد تتعرّض للتغيير أثناء تنفيذ المشروع، ويمكن للمتغيّرات في سكراتش تخزين أنواع مختلفة من البيانات.</p>
+<p><b>أهمية المتغيّرات:</b></p>
+<ul><li>إمكانية <b>إعادة استعمالها</b> لتخزين أكثر من قيمة.</li>
+<li>استخدامها في تنفيذ <b>العمليات الحسابية والعمليات المنطقية</b> بسهولة.</li></ul>
+<p>تحديد المتغيّرات وتسميتها يكون لاستخدامها في أماكن مختلفة من البرنامج في وقت لاحق.</p>`,
+    qs: [
+      {t:"mcq", q:"ما المتغيّر في البرمجة؟",
+        c:["مساحة تخزينية في ذاكرة البرنامج تُوضع فيها قيمة","لبنة برمجية صفراء تبدأ البرنامج عند النقر على العلم","خلفية يمكن تغييرها في أثناء تشغيل المشروع البرمجي","كائن يتحرك على المنصّة عند الضغط على مفاتيح الأسهم"], a:0,
+        why:"المتغيّر مساحة تخزينية في ذاكرة البرنامج، ويُستعمل اسمه للإشارة إلى القيمة المخزّنة فيه."},
+      {t:"mcq", q:"لماذا نستخدم اسم المتغيّر؟",
+        c:["للإشارة إلى القيمة المخزّنة فيه","لتغيير لون الكائن على المنصّة في كل مرة","لحذف القيمة نهائيًا من ذاكرة الحاسوب","لتسمية المشروع عند حفظه على الحاسوب"], a:0,
+        why:"يُستعمل اسم المتغيّر للإشارة إلى القيمة المرتبطة به."},
+      {t:"mcq", q:"أيّ مجموعة كلّها من أهمية المتغيّرات كما في الكتاب؟",
+        c:["إعادة استعمالها، واستخدامها في العمليات الحسابية والمنطقية","تلوين الكائنات وتكبيرها وإخفاؤها عن المنصّة عند الحاجة إلى ذلك","تسريع جهاز الحاسوب وحماية ملفاته من الفيروسات والاختراق","إضافة الأصوات والخلفيات الجاهزة إلى المشروع بسرعة"], a:0,
+        why:"تكمن أهمية المتغيّرات في إعادة استعمالها لتخزين أكثر من قيمة، واستخدامها في العمليات الحسابية والمنطقية بسهولة."},
+      {t:"mcq", q:"البيانات التي تُخزَّن في المتغيّر:",
+        c:["قد تتعرّض للتغيير أثناء تنفيذ المشروع","ثابتة دائمًا ولا يمكن تغييرها أبدًا بعد إدخالها","تُحذف تلقائيًا عند الضغط على العلم الأخضر","لا تكون إلا أرقامًا ولا يمكن أن تكون نصوصًا"], a:0,
+        why:"يُستخدم المتغيّر في تخزين البيانات التي قد تتعرّض للتغيير أثناء تنفيذ المشروع."}
+    ]
+  },
+  {
+    id: "s2", city: "حيفا", title: "تسمية المتغيّر", p: "ص ٧٢–٧٣",
+    explain: `
+<p>من العوامل التي ينبغي مراعاتها عند <b>تسمية المتغيّر</b>:</p>
+<ul>
+<li>اختيار <b>اسم فريد</b> للمتغيّر؛ بحيث يُعرف به وحده.</li>
+<li><b>دلالة الاسم على الهدف</b> من استخدام المتغيّر، وارتباطه بموضوع البرنامج؛ ما يسهّل فهمه.</li>
+<li>اختيار <b>اسم قصير</b> كي يسهل تذكّره.</li>
+<li><b>تجنّب</b> استخدام اسم افتراضي للمتغيّر، مثل: (س) و(ص).</li>
+<li>اشتمال اسم المتغيّر على أحرف، أو أرقام، أو رموز معيّنة (مثل _ ).</li>
+<li>اسم المتغيّر يكون إمّا كلمة، وإمّا جملة قصيرة.</li>
+<li>اسم المتغيّر يكون إمّا بالعربية، وإمّا بالإنجليزية.</li>
+</ul>
+<div class="note"><b>مثال:</b> عند إنشاء متغيّر لحفظ قيمة الساعة أو الوقت، فالأفضل أن يُطلق عليه اسم <b>الساعة</b>، لا اسم (س)؛ لتسهيل فهمه وتتبّع قيمته في البرنامج.</div>`,
+    qs: [
+      {t:"mcq", q:"تريدان إنشاء متغيّر لحفظ قيمة الوقت. ما أفضل اسم له؟",
+        c:["الساعة","س","المتغيّر_رقم_واحد_في_البرنامج","ص"], a:0,
+        why:"الأفضل اسم يدلّ على الهدف مثل «الساعة»، لا اسم افتراضي مثل (س)."},
+      {t:"sort", q:"صنّفا كل اسم: هل هو اسم مناسب للمتغيّر أم غير مناسب؟",
+        bins:["اسم مناسب","اسم غير مناسب"],
+        items:[["النتيجة",0],["س",1],["عدد_الأهداف",0],["ص",1],["score",0],["المتغيّر_الذي_يحفظ_عدد_المرات_التي_سجّل_فيها_اللاعب",1]],
+        why:"الاسم المناسب قصير ويدلّ على الهدف ويمكن أن يكون بالعربية أو الإنجليزية؛ ونتجنّب (س) و(ص) والأسماء الطويلة."},
+      {t:"mcq", q:"أيّ الرموز يمكن أن يشتمل عليها اسم المتغيّر حسب الكتاب؟",
+        c:["الشرطة السفلية _","لا يُسمح بأيّ رمز أو رقم في الاسم أبدًا","المسافات الطويلة وعلامات الاستفهام فقط","الصور والأيقونات الملوّنة من مكتبة سكراتش"], a:0,
+        why:"يمكن أن يشتمل اسم المتغيّر على أحرف، أو أرقام، أو رموز معيّنة مثل _ ."},
+      {t:"mcq", q:"لماذا نختار اسمًا قصيرًا للمتغيّر؟",
+        c:["كي يسهل تذكّره","كي يأخذ مساحة أكبر من ذاكرة الحاسوب","كي لا يستطيع أحد غيرنا قراءة البرنامج","كي يتغيّر لونه في لوحة اللبنات البرمجية"], a:0,
+        why:"اختيار اسم قصير للمتغيّر كي يسهل تذكّره."}
+    ]
+  },
+  {
+    id: "s3", city: "الناصرة", title: "مكوّنات المتغيّر وأنواع البيانات", p: "ص ٧٣–٧٤",
+    explain: `
+<p>يمتاز كلّ متغيّر بـ:</p>
+<ul><li><b>اسم (Name)</b> يُستدعى به.</li>
+<li><b>قيمة (Value)</b> تُخزَّن داخله، وتكون قابلة للتبديل والتعديل.</li>
+<li><b>نوع للبيانات (Data type)</b>: أي نوع القيمة المخزّنة داخل المتغيّر.</li></ul>
+<h4>أبرز أنواع البيانات:</h4>
+<div class="two">
+<div class="box"><b>العدد الصحيح (Integer)</b><br>يُخزِّن العدد الصحيح، مثل: 1، 2، 3، 4، 321، ‎-15</div>
+<div class="box"><b>النصّ (String)</b><br>يُخزِّن النصّ باستخدام الحروف أو الكلمات، مثل: مرحبًا، علي</div>
+<div class="box"><b>القيمة المنطقية (Boolean)</b><br>تأخذ <b>الصواب</b> أو <b>الخطأ</b>.</div>
+</div>`,
+    tryit: "نشاط جماعي (ص ٧٣) ونشاط فردي (ص ٧٤): حدّدا أنواع المتغيّرات في لعبة الأسئلة بين المجموعات، ونوع المتغيّر المناسب لتخزين اسم الطالب وعلامته ونتيجته.",
+    qs: [
+      {t:"sort", q:"صنّفا كل قيمة حسب نوع بياناتها:",
+        bins:["عدد صحيح Integer","نصّ String","قيمة منطقية Boolean"],
+        items:[["321",0],["مرحبًا",1],["الصواب",2],["‎-15",0],["علي",1],["الخطأ",2]],
+        why:"الأعداد الصحيحة: 321 و‎-15. النصوص: مرحبًا وعلي. القيم المنطقية: الصواب والخطأ."},
+      {t:"match", q:"طابقا كل مكوّن من مكوّنات المتغيّر مع معناه:",
+        pairs:[["الاسم Name","يُستدعى به المتغيّر"],["القيمة Value","تُخزَّن داخله وتقبل التعديل"],["نوع البيانات Data type","نوع القيمة المخزّنة داخله"]],
+        why:"لكل متغيّر اسم وقيمة ونوع بيانات."},
+      {t:"mcq", q:"ما نوع البيانات المناسب لتخزين اسم الطالب؟",
+        c:["نصّ String","عدد صحيح Integer","قيمة منطقية Boolean","لا يمكن تخزين الاسم في متغيّر أبدًا"], a:0,
+        why:"الاسم حروف وكلمات، فيُخزَّن نصًّا (String)."},
+      {t:"mcq", q:"القيمة المنطقية (Boolean) تأخذ:",
+        c:["الصواب أو الخطأ","أيّ عدد صحيح موجب أو سالب","أيّ نصّ مكتوب بالعربية أو بالإنجليزية","قيمتين عدديتين هما 50 و100 فقط"], a:0,
+        why:"القيمة المنطقية نوع من البيانات يأخذ الصواب أو الخطأ."}
+    ]
+  },
+  {
+    id: "s4", city: "القدس", title: "إنشاء متغيّر: عامّ أم محلّي؟", p: "ص ٧٤–٧٥",
+    explain: `
+<h4>خطوات إنشاء متغيّر في سكراتش:</h4>
+<ol class="steps">
+<li>الضغط على علامة التبويب <b>(المقاطع البرمجية)</b> في الجانب الأيمن العلوي من واجهة البرمجية.</li>
+<li>اختيار فئة <b>(المتغيّرات Variables)</b> من القائمة.</li>
+<li>الضغط على زرّ <b>(إنشاء متغيّر)</b> في الجزء العلوي من لوحة (المتغيّرات).</li>
+<li><b>تسمية المتغيّر</b> في النافذة المنبثقة بكتابة الاسم في حقل النصّ، مع مراعاة أن يكون الاسم فريدًا ومعبّرًا عن الغرض.</li>
+<li><b>تحديد نطاق المتغيّر:</b> إمّا خاصًّا فقط بالكائن النشط <b>(For this sprite only)</b>، وإمّا متاحًا لجميع الكائنات <b>(For all sprites)</b>.</li>
+</ol>
+<h4>ما الفرق بين المتغيّر المحلّي والمتغيّر العامّ؟</h4>
+<div class="two">
+<div class="box"><b>🌍 متغيّر عامّ</b> — عند اختيار <b>(لجميع الكائنات)</b>: يمكن تغييره أو الوصول إليه من أيّ كائن في المشروع، بغضّ النظر عن الكائن الذي أُنشئ عليه.<br><span class="small">مثل الحوسبة السحابية (Google Drive): نصل إلى الملف من أيّ جهاز.</span></div>
+<div class="box"><b>🏠 متغيّر محلّي</b> — عند اختيار <b>(هذا الكائن فقط)</b>: لا يمكن تغييره أو الوصول إليه إلّا من الكائن الذي أُنشئ عليه.<br><span class="small">مثل ملف محفوظ على القرص الصلب لحاسوبي الخاصّ.</span></div>
+</div>
+<div class="note"><b>إضاءة:</b> عملية اختيار المتغيّر (محلّي أو عامّ) لا تخضع لقاعدة معيّنة، وإنّما تعتمد على البرنامج المستخدم وطبيعة المتغيّر نفسه.</div>`,
+    qs: [
+      {t:"order", q:"رتّبا خطوات إنشاء متغيّر في سكراتش:",
+        items:["أضغط تبويب «المقاطع البرمجية»","أختار فئة «المتغيّرات»","أضغط زرّ «إنشاء متغيّر»","أكتب اسم المتغيّر","أحدّد نطاق المتغيّر ثم «موافق»"],
+        why:"المقاطع البرمجية ← المتغيّرات ← إنشاء متغيّر ← الاسم ← النطاق."},
+      {t:"mcq", q:"أنشأتما متغيّرًا واخترتما «لجميع الكائنات» (For all sprites). ما نوعه؟",
+        c:["متغيّر عامّ","متغيّر محلّي","قيمة منطقية","نصّ String"], a:0,
+        why:"اختيار «لجميع الكائنات» يجعل المتغيّر عامًّا يمكن الوصول إليه من أيّ كائن."},
+      {t:"mcq", q:"المتغيّر المحلّي:",
+        c:["لا يُغيَّر إلّا من الكائن الذي أُنشئ عليه","يمكن تغييره من أيّ كائن في المشروع دون استثناء","يُحذف تلقائيًا بعد تشغيل البرنامج مرّة واحدة","يُحفظ في Google Drive ليصل إليه كل المستخدمين"], a:0,
+        why:"المتغيّر المحلّي لا يمكن تغييره أو الوصول إليه إلّا من الكائن الذي أُنشئ عليه."},
+      {t:"mcq", q:"أيّ مثال من الكتاب يشبه المتغيّر العامّ؟",
+        c:["ملف في Google Drive نصل إليه من أيّ جهاز","ملف محفوظ على القرص الصلب لحاسوبي الخاصّ فقط","ورقة مكتوبة بخط اليد ومحفوظة في درج المكتب","رسالة صوتية مسجّلة على هاتف شخص واحد فقط"], a:0,
+        why:"الحوسبة السحابية تشبه المتغيّر العامّ؛ لأنّنا نصل إلى الملف من أيّ جهاز."}
+    ]
+  },
+  {
+    id: "s5", city: "الخليل", title: "لبنات المتغيّرات", p: "ص ٧٥–٧٧",
+    explain: `
+<p>في ما يأتي اللبنات التي تُستخدم في التعامل مع المتغيّر والتحكّم فيه:</p>
+<ol>
+<li><b>لبنات إظهار المتغيّر وإخفائه:</b> عند تفعيل العلامة الزرقاء ☑ بجانب اسم المتغيّر يظهر المتغيّر وقيمته على الشاشة عند تشغيل البرنامج، ولإخفائه نزيل العلامة.</li>
+<li><b>لبنات تحديد قيمة المتغيّر</b> <span class="blk">اجعل النتيجة مساويًا 0</span>: لحفظ القيمة داخل المتغيّر، وهي تعادل: النتيجة = 0. يمكن استخدامها في أيّ جزء من البرنامج.</li>
+<li><b>لبنات تغيير قيمة المتغيّر</b> <span class="blk">غيّر النتيجة بمقدار 1</span>: لتغيير القيمة داخل المتغيّر بزيادتها (قيمة موجبة) أو إنقاصها (قيمة سالبة)، وهي تعادل: النتيجة = النتيجة + 1.</li>
+</ol>
+<p><b>جرّبا بنفسيكما:</b> اضغطا اللبنات وراقبا قيمة المتغيّر (النتيجة):</p>
+<div class="varsim"></div>
+<p class="small">في لعبة كرة القدم: القيمة المبدئية للنتيجة صفر، ثم تزيد بمقدار (1) كلّما سجّل اللاعب هدفًا.</p>`,
+    tryit: "نشاط عملي (ص ٧٦): أنشئا متغيّرًا اسمه «النتيجة» لجميع الكائنات، واجعلا قيمته المبدئية (0) باستخدام لبنة «اجعل».",
+    qs: [
+      {t:"match", q:"طابقا كل لبنة مع عملها:",
+        pairs:[["العلامة ☑ بجانب اسم المتغيّر","إظهار المتغيّر وقيمته على الشاشة"],["اجعل النتيجة مساويًا 0","تحديد قيمة المتغيّر"],["غيّر النتيجة بمقدار 1","زيادة القيمة أو إنقاصها"]],
+        why:"☑ للإظهار، «اجعل» لتحديد القيمة، «غيّر» لزيادتها أو إنقاصها."},
+      {t:"mcq", q:"عند النقر على العلم نُفّذت: «اجعل النتيجة مساويًا 1» ثم «غيّر النتيجة بمقدار 3». كم تصبح النتيجة؟",
+        c:["4","3","1","13"], a:0,
+        why:"النتيجة = 1، ثم النتيجة = 1 + 3 = 4 (نشاط «أفكر وأحلّل» ص ٧٧)."},
+      {t:"mcq", q:"في البرنامج السابق، ما التعديل الذي يجعل القيمة النهائية (‎-2)؟",
+        c:["تغيير مقدار «غيّر» من 3 إلى ‎-3","تغيير «اجعل» من 1 إلى 3 فقط","حذف لبنة «عند نقر العلم» من البرنامج","إخفاء المتغيّر بإزالة العلامة الزرقاء"], a:0,
+        why:"1 + (‎-3) = ‎-2؛ القيمة السالبة في لبنة «غيّر» تُنقص قيمة المتغيّر."},
+      {t:"mcq", q:"في لعبة كرة القدم بدأت النتيجة من 0، وتزيد بمقدار 1 مع كل هدف. سجّل اللاعب 3 أهداف. كم النتيجة؟",
+        c:["3","0","1","30"], a:0,
+        why:"0 + 1 + 1 + 1 = 3."},
+      {t:"mcq", q:"لبنة «غيّر النتيجة بمقدار 1» تعادل المعادلة:",
+        c:["النتيجة = النتيجة + 1","النتيجة = 1 دائمًا مهما كانت قيمتها","النتيجة = النتيجة × 10 في كل مرة","النتيجة = 0 ثم تتوقّف عن التغيير"], a:0,
+        why:"لبنة التغيير تضيف المقدار إلى القيمة الحالية: النتيجة = النتيجة + 1."}
+    ]
+  },
+  {
+    id: "s6", city: "غزّة", title: "استخدام المتغيّرات في البرامج", p: "ص ٧٨–٧٩",
+    explain: `
+<h4>١) المتغيّرات مع لبنات العمليات الحسابية والمنطقية</h4>
+<div class="two">
+<div class="box"><b>لبنات العمليات الحسابية:</b> الجمع (+)، والطرح (−)، والضرب (×)، والقسمة (÷).</div>
+<div class="box"><b>لبنات العمليات المنطقية:</b> أكبر من (&gt;)، وأصغر من (&lt;)، ويساوي (=).</div>
+</div>
+<p><b>مثال:</b> برنامج لإيجاد مساحة المستطيل: <span class="blk">اجعل المساحة مساويًا الطول × العرض</span> أي: المساحة = الطول × العرض.</p>
+<h4>٢) المتغيّرات مع لبنات دمج النصوص</h4>
+<p>يمكن دمج النصوص معًا بحيث تظهر نصًّا واحدًا باستخدام لبنة <b>(ارتبط)</b>؛ مثل دمج الاسم الأول لشخص في اسم عائلته ليبدو الاسم الأول مع اسم العائلة اسمًا واحدًا.</p>
+<div class="note"><b>إثراء — دورة حياة تطوير البرمجيات (SDLC):</b> خطوات تطوير المشروع التي تساعد على تنظيم عملية تطوير البرمجيات وإدارتها:
+<b>التخطيط</b> ← <b>التحليل</b> ← <b>التصميم</b> ← <b>التنفيذ</b> ← <b>الاختبار</b> ← <b>النشر</b>.</div>
+<div class="note citizen"><b>المواطنة الرقمية:</b> <b>التفاعلات الإيجابية</b>: ملاحظات بنّاءة عند التعليق على مشروعات الآخرين، وتجنّب اللغة السلبية أو الضارّة. <b>التعلّم المستمرّ</b>: الاستفادة من الموارد التعليمية، والنظر إلى الأخطاء بوصفها فرصًا للتعلّم.</div>`,
+    tryit: "نشاط جماعي (ص ٧٩): ابحثا عن أمثلة على برامج تتطلّب دمج النصوص فيها، ودوّنا النتائج وشاركاها مع الصف.",
+    qs: [
+      {t:"sort", q:"صنّفا كل لبنة: حسابية أم منطقية؟",
+        bins:["عملية حسابية","عملية منطقية"],
+        items:[["الجمع +",0],["أكبر من >",1],["الضرب ×",0],["يساوي =",1],["القسمة ÷",0],["أصغر من <",1]],
+        why:"الحسابية: + − × ÷ . المنطقية: > < = ."},
+      {t:"mcq", q:"طول مستطيل 5 وعرضه 4. ما قيمة متغيّر المساحة بعد تنفيذ «اجعل المساحة مساويًا الطول × العرض»؟",
+        c:["20","9","1","540"], a:0,
+        why:"المساحة = الطول × العرض = 5 × 4 = 20."},
+      {t:"mcq", q:"أيّ لبنة تُستخدم لدمج الاسم الأول مع اسم العائلة في نصّ واحد؟",
+        c:["ارتبط","غيّر بمقدار","أكبر من","اجعل مساويًا 0"], a:0,
+        why:"تُستخدم لبنة (ارتبط) لدمج النصوص معًا بحيث تظهر نصًّا واحدًا."},
+      {t:"order", q:"رتّبا مراحل دورة حياة تطوير البرمجيات (SDLC):",
+        items:["التخطيط Planning","التحليل Analysis","التصميم Design","التنفيذ Implementing","الاختبار Testing","النشر Deployment"],
+        why:"التخطيط ← التحليل ← التصميم ← التنفيذ ← الاختبار ← النشر."},
+      {t:"mcq", q:"علّق أحدهم على مشروع زميلكما في سكراتش. أيّ تعليق يراعي المواطنة الرقمية؟",
+        c:["فكرة جميلة، ويمكن إضافة صوت عند تسجيل الهدف","مشروع سيئ جدًا ولا يستحق أن يُنشر على الموقع","لماذا تنشر مشروعًا كهذا؟ احذفه فورًا من الموقع","لا أحد يحب هذه الألعاب، توقّف عن البرمجة"], a:0,
+        why:"التفاعلات الإيجابية: ملاحظات بنّاءة وتجنّب اللغة السلبية أو الضارّة."}
+    ]
+  }
+  ]
+};
+if (typeof module !== "undefined") module.exports = LESSON;
+
+const SLIDES={};
+
+</script>
+<script>
+(function(){
+const L = LESSON, S = L.sections;
+const LADDER=[10,7,5,3,2];
+let st = {open:0, pts:{}, done:{}, start:Date.now(), end:null, n1:"", n2:"", cls:""};
+function load(){try{const s=JSON.parse(localStorage.getItem(L.key)||"null");if(s&&s.pts)st=Object.assign(st,s);}catch(e){}}
+function save(){try{localStorage.setItem(L.key,JSON.stringify(st));}catch(e){}}
+load();
+const $=(s,r=document)=>r.querySelector(s);
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function shake(e){e.classList.remove("shake");void e.offsetWidth;e.classList.add("shake");}
+const total=S.reduce((a,s)=>a+s.qs.length*10,0);
+function score(){return Object.values(st.pts).reduce((a,b)=>a+b,0);}
+function upScore(){$("#score").textContent=score()+" / "+total;}
+
+/* ---------- شاشة سكراتش المبسّطة ---------- */
+const PARTS={
+ menu:["القائمة (Menu)","توفّر خيارات متعددة مثل إنشاء مشروع جديد، وفتح مشروع مخزّن مسبقًا، أو حفظ المشروع الحالي، والوصول إلى دروس المساعدة."],
+ login:["زرّ تسجيل الدخول (Login Button)","يُستخدم لتسجيل الدخول إلى الحساب الشخصي على موقع Scratch؛ مما يسمح بحفظ المشروعات ومشاركتها والانضمام إلى مجتمع Scratch."],
+ palette:["لوحة اللبنات البرمجية (Blocks Palette)","تحتوي مجموعة متنوّعة من الأوامر المصنّفة إلى فئات مثل: الحركة (Motion)، والمظاهر (Looks)، والصوت (Sound)، والتحكّم (Control). تُسحب منها اللبنات إلى منطقة البرمجة."],
+ script:["منطقة البرمجة (Scripting Area)","المكان الذي تُجمَّع فيه اللبنات البرمجية وتُرتَّب لإنشاء المقاطع البرمجية (الأكواد) التي تحدّد سلوك الكائنات."],
+ sprite:["الكائن (Sprite)","العنصر التفاعلي في المشروع، يمثّل الشخصيات أو العناصر التي تتحرك أو تتفاعل مع المستخدمين، ويمكن تخصيص ألوانه وأشكاله وخصائصه."],
+ sprites:["لوحة الكائنات (Sprites Pane)","تُظهر الكائنات المستخدمة في المشروع، ومنها تُضاف كائنات جديدة، وتُحذف أو تُعدَّل الكائنات الحالية."],
+ stage:["المنصّة (Stage)","تمثّل شاشة العرض؛ تُعرض فيها التفاعلات بين الكائنات والخلفيات، فنتصوّر النتائج النهائية للمشروع."],
+ zoom:["تكبير/تصغير اللبنات (Zoom Blocks)","أدوات للتحكّم في حجم اللبنات البرمجية؛ مما يسهّل قراءة التعليمات ويجعل البرمجة أوضح وأكثر تنظيمًا."],
+ info:["بيانات الكائن","تظهر فيها بيانات الكائن المحدّد، كما في الشكل (١–١) في الكتاب."]
+};
+function screenSVG(){
+ return `<svg class="scr" viewBox="0 0 360 250" xmlns="http://www.w3.org/2000/svg" font-family="Tahoma,Arial" direction="rtl">
+ <rect x="0" y="0" width="360" height="20" fill="#855cd6"/>
+ <g data-r="menu"><rect x="200" y="1" width="158" height="18" rx="3" fill="#855cd6"/><rect x="318" y="4" width="36" height="12" rx="3" fill="#ffab19"/><text x="336" y="13" font-size="7" fill="#fff" text-anchor="middle">Scratch</text><text x="300" y="13" font-size="8" fill="#fff" text-anchor="middle">ملف</text><text x="275" y="13" font-size="8" fill="#fff" text-anchor="middle">تحرير</text><text x="240" y="13" font-size="8" fill="#fff" text-anchor="middle">الدروس</text></g>
+ <g data-r="login"><rect x="3" y="3" width="64" height="14" rx="3" fill="#7346c7"/><text x="35" y="13" font-size="8" fill="#fff" text-anchor="middle">تسجيل الدخول</text></g>
+ <g data-r="palette"><rect x="270" y="22" width="88" height="226" fill="#f4f6fb" stroke="#ddd"/>
+  <circle cx="349" cy="36" r="5" fill="#4c97ff"/><circle cx="349" cy="54" r="5" fill="#9966ff"/><circle cx="349" cy="72" r="5" fill="#cf63cf"/><circle cx="349" cy="90" r="5" fill="#ffbf00"/><circle cx="349" cy="108" r="5" fill="#ffab19"/><circle cx="349" cy="126" r="5" fill="#5cb1d6"/><circle cx="349" cy="144" r="5" fill="#59c059"/><circle cx="349" cy="162" r="5" fill="#ff8c1a"/>
+  <rect x="276" y="32" width="60" height="10" rx="3" fill="#4c97ff"/><rect x="276" y="47" width="50" height="10" rx="3" fill="#4c97ff"/><rect x="276" y="62" width="58" height="10" rx="3" fill="#4c97ff"/><rect x="276" y="82" width="52" height="10" rx="3" fill="#9966ff"/><rect x="276" y="97" width="44" height="10" rx="3" fill="#9966ff"/><rect x="276" y="117" width="56" height="10" rx="3" fill="#cf63cf"/><rect x="276" y="137" width="48" height="10" rx="3" fill="#ffbf00"/><rect x="276" y="157" width="58" height="10" rx="3" fill="#ffab19"/><rect x="276" y="177" width="50" height="10" rx="3" fill="#5cb1d6"/><rect x="276" y="197" width="54" height="10" rx="3" fill="#59c059"/><rect x="276" y="217" width="46" height="10" rx="3" fill="#ff8c1a"/></g>
+ <g data-r="script"><rect x="152" y="22" width="116" height="226" fill="#f9f9f9" stroke="#ddd"/>
+  <path d="M175 70 h50 v14 h-50 z" fill="#ffbf00"/><path d="M175 62 q25 -10 50 0 v8 h-50 z" fill="#ffbf00"/><text x="200" y="80" font-size="5.5" fill="#fff" text-anchor="middle">عند نقر العلم</text>
+  <rect x="175" y="84" width="58" height="13" rx="2" fill="#4c97ff"/><rect x="175" y="97" width="52" height="13" rx="2" fill="#4c97ff"/></g>
+ <g data-r="zoom"><rect x="155" y="186" width="20" height="58" rx="6" fill="#f9f9f9"/><circle cx="165" cy="196" r="7" fill="#fff" stroke="#9aa"/><text x="165" y="199" font-size="9" text-anchor="middle" fill="#567">+</text><circle cx="165" cy="214" r="7" fill="#fff" stroke="#9aa"/><text x="165" y="217" font-size="9" text-anchor="middle" fill="#567">−</text><circle cx="165" cy="232" r="7" fill="#fff" stroke="#9aa"/><text x="165" y="235" font-size="8" text-anchor="middle" fill="#567">=</text></g>
+ <g data-r="stage"><rect x="2" y="22" width="148" height="112" fill="#fff" stroke="#ccc"/><circle cx="130" cy="29" r="3.5" fill="#59c059"/><circle cx="120" cy="29" r="3.5" fill="#e04848"/></g>
+ <g data-r="sprite"><circle cx="72" cy="80" r="18" fill="#ffb347" stroke="#c77a12"/><circle cx="66" cy="76" r="3" fill="#333"/><circle cx="79" cy="76" r="3" fill="#333"/><path d="M64 87 q8 6 16 0" stroke="#333" fill="none" stroke-width="1.6"/><path d="M58 64 l4 6 M86 64 l-4 6" stroke="#c77a12" stroke-width="2"/></g>
+ <g data-r="info"><rect x="2" y="136" width="148" height="30" fill="#f3f3f3" stroke="#ddd"/><rect x="10" y="142" width="40" height="8" rx="3" fill="#fff" stroke="#ccc"/><rect x="58" y="142" width="22" height="8" rx="3" fill="#fff" stroke="#ccc"/><rect x="86" y="142" width="22" height="8" rx="3" fill="#fff" stroke="#ccc"/><rect x="10" y="154" width="22" height="8" rx="3" fill="#fff" stroke="#ccc"/></g>
+ <g data-r="sprites"><rect x="2" y="168" width="148" height="80" fill="#e9eef7" stroke="#ccc"/><rect x="104" y="176" width="36" height="36" rx="5" fill="#fff" stroke="#855cd6" stroke-width="2"/><circle cx="122" cy="192" r="9" fill="#ffb347"/><circle cx="20" cy="232" r="10" fill="#855cd6"/><text x="20" y="236" font-size="12" fill="#fff" text-anchor="middle">+</text></g>
+</svg>`;
+}
+function markPart(svg,r,cls){const g=svg.querySelector(`[data-r="${r}"]`);if(!g)return;const first=g.querySelector("rect,circle,path");if(!first)return;first.classList.add(cls);setTimeout(()=>first.classList.remove(cls),cls==="good"?100000:700);}
+function hitPart(ev){const t=ev.target.closest("[data-r]");return t?t.dataset.r:null;}
+
+/* ---------- محرّك الأسئلة ---------- */
+function runGame(sec, box, si){
+  let qi=0;
+  const bar=el("div","gamebar"), dots=el("span","dots"), lab=el("span");
+  bar.append("🎮 لعبة المحطّة",dots,lab);
+  const area=el("div");
+  box.append(bar,area);
+  function drawDots(){dots.innerHTML="";sec.qs.forEach((q,i)=>{const d=el("i");if(st.pts[sec.id+":"+i]!=null)d.className="ok";else if(i===qi)d.className="now";dots.append(d);});lab.textContent=`السؤال ${Math.min(qi+1,sec.qs.length)} من ${sec.qs.length}`;}
+  // استئناف
+  while(qi<sec.qs.length && st.pts[sec.id+":"+qi]!=null) qi++;
+  function next(){drawDots(); if(qi>=sec.qs.length){finishSec();return;} show(sec.qs[qi]);}
+  function finishSec(){
+    area.innerHTML="";const sp=sec.qs.reduce((a,q,i)=>a+(st.pts[sec.id+":"+i]||0),0);
+    area.append(el("div","done-banner",`✔ أنهيتما محطّة ${sec.city} — ${sp} من ${sec.qs.length*10} نقطة`));
+    if(!st.done[sec.id]){st.done[sec.id]=1; if(st.open<si+1) st.open=si+1; if(si===S.length-1 && !st.end) st.end=Date.now(); save(); refresh(); const n=document.getElementById(si+1<S.length?S[si+1].id:"final"); if(n) setTimeout(()=>n.scrollIntoView({behavior:"smooth",block:"start"}),400);}
+  }
+  function show(q){
+    area.innerHTML=""; let err=0;
+    const qd=el("div","q",q.q); area.append(qd);
+    const body=el("div"); area.append(body);
+    const fb=el("div","feedback"); const row=el("div","row");
+    const hb=el("button","btn ghost","تلميح"); hb.type="button"; const hint=el("div","hintbox",`ارجعا إلى شرح هذه المحطّة أعلاه (${sec.p}).`);
+    hb.onclick=()=>{hint.style.display="block";};
+    row.append(hb); area.append(hint,fb,row);
+    function wrong(e){err++; if(e){e.classList.add("wrong");shake(e);setTimeout(()=>e.classList.remove("wrong"),900);}}
+    function solved(){
+      const p=LADDER[Math.min(err,LADDER.length-1)];
+      st.pts[sec.id+":"+qi]=p; save(); upScore(); drawDots();
+      fb.innerHTML=`<b>✔ صحيح (+${p})</b><br>${q.why||""}`; fb.classList.add("show");
+      hb.remove(); hint.remove();
+      const nb=el("button","btn",qi+1<sec.qs.length?"السؤال التالي ←":"إنهاء المحطّة ✔"); nb.type="button";
+      nb.onclick=()=>{qi++;next();}; row.append(nb); nb.focus({preventScroll:true});
+    }
+    if(q.t==="mcq"){
+      const o=el("div","opts"); body.append(o);
+      shuffle(q.c.map((txt,k)=>({txt,k}))).forEach(({txt,k})=>{
+        const b=el("button","opt",txt); b.type="button";
+        b.onclick=()=>{ if(k===q.a){b.classList.add("right");o.querySelectorAll("button").forEach(x=>x.disabled=true);solved();} else {b.disabled=true;wrong(b);setTimeout(()=>b.classList.add("wrong"),920);} };
+        o.append(b);
+      });
+    }
+    else if(q.t==="order"){
+      const seq=el("ol","seq"), pool=el("div","pool"); body.append(el("div","small","اضغطا الخطوات بالترتيب الصحيح:"),seq,pool);
+      let k=0;
+      q.items.forEach(()=>{seq.append(el("li","empty","…"));});
+      shuffle(q.items.map((txt,i)=>({txt,i}))).forEach(({txt,i})=>{
+        const b=el("button","chip",txt); b.type="button";
+        b.onclick=()=>{ if(i===k){const li=seq.children[k];li.className="";li.textContent=(k+1)+". "+txt;b.remove();k++;if(k===q.items.length)solved();} else wrong(b); };
+        pool.append(b);
+      });
+    }
+    else if(q.t==="sort"||q.t==="match"){
+      let items,bins;
+      if(q.t==="sort"){bins=q.bins.slice();items=shuffle(q.items.map(([txt,b])=>({txt,b})));}
+      else{bins=q.pairs.map(p=>p[1]);items=shuffle(q.pairs.map((p,i)=>({txt:p[0],b:i})));}
+      const order=q.t==="match"?shuffle(bins.map((t,i)=>i)):bins.map((t,i)=>i);
+      const card=el("div","card"); const bw=el("div","bins"); body.append(card,bw);
+      body.prepend(el("div","small",q.t==="sort"?"اقرآ البطاقة، ثم اضغطا المجموعة التي تنتمي إليها:":"اقرآ البطاقة، ثم اضغطا الوصف المطابق لها:"));
+      const counts=bins.map(()=>0); let k=0; const btns=[];
+      order.forEach(bi=>{const b=el("button","bin",`${bins[bi]}<span class="cnt"></span>`);b.type="button";b.dataset.k=bi;btns[bi]=b;
+        b.onclick=()=>{ const it=items[k]; if(+b.dataset.k===it.b){counts[bi]++; b.querySelector(".cnt").textContent=q.t==="sort"?("✔ ".repeat(counts[bi])).trim():"✔ "+it.txt; if(q.t==="match"){b.disabled=true;b.style.borderColor="var(--ok)";b.style.background="var(--ok2)";} k++; if(k===items.length){card.innerHTML="✔ اكتمل";solved();} else drawCard(); } else wrong(b); };
+        bw.append(b);});
+      function drawCard(){card.innerHTML=`<span class="lab">البطاقة ${k+1} من ${items.length}</span>${items[k].txt}`;}
+      drawCard();
+    }
+    else if(q.t==="hot"){
+      const w=el("div"); w.innerHTML=screenSVG(); body.append(w); const svg=w.firstElementChild; let doneHot=false;
+      svg.addEventListener("click",ev=>{ if(doneHot)return; const r=hitPart(ev); if(!r)return;
+        if(r===q.target){doneHot=true;markPart(svg,r,"good");solved();}
+        else{err++;markPart(svg,r,"bad");shake(w);hint.style.display="block";hint.textContent="هذا الجزء هو: "+PARTS[r][0]+" — جرّبا مرة أخرى.";}
+      });
+    }
+  }
+  next();
+}
+
+/* ---------- بناء الصفحة ---------- */
+const secsBox=$("#secs");
+S.forEach((sec,si)=>{
+  const s=el("section","sec"); s.id=sec.id;
+  s.innerHTML=`<div class="sechead"><span class="station">محطّة ${si+1} · ${sec.city}</span><h2>${sec.title}</h2><span class="pg">${sec.p}</span></div><div class="lockmsg">🔒 تُفتح بعد إنهاء المحطّة السابقة.</div>`;
+  const body=el("div","body"); body.innerHTML=(sec.slides||[]).map(n=>`<img class="slide" data-s="${n}" alt="">`).join("")+sec.explain;
+  if(sec.tryit){body.append(el("div","tryit","<b>🖥️ على جهاز المختبر — </b>"+sec.tryit));}
+  const gb=el("div","gamebox"); body.append(gb); s.append(body); secsBox.append(s);
+  sec._gb=gb;
+});
+// وضع الاستكشاف لشاشة سكراتش
+document.querySelectorAll('.screen-wrap[data-mode="explore"]').forEach(w=>{
+  w.innerHTML=screenSVG(); const svg=w.firstElementChild;
+  svg.addEventListener("click",ev=>{const r=hitPart(ev);if(!r)return;svg.querySelectorAll(".hl").forEach(x=>x.classList.remove("hl"));const f=svg.querySelector(`[data-r="${r}"]`).querySelector("rect,circle,path");f.classList.add("hl");$("#explore-out").innerHTML=`<b>${PARTS[r][0]}:</b> ${PARTS[r][1]}`;});
+});
+document.querySelectorAll("img.slide").forEach(im=>{im.src=SLIDES[im.dataset.s];im.loading="lazy";im.addEventListener("click",()=>{const lb=$("#lb");lb.querySelector("img").src=im.src;lb.classList.add("show");});});
+$("#lb").addEventListener("click",()=>$("#lb").classList.remove("show"));
+document.querySelectorAll(".varsim").forEach(w=>{let v=0,shown=true;
+ w.innerHTML='<div class="vs-stage"><span class="vs-mon">النتيجة <b>0</b></span></div><div class="vs-btns"><button data-a="set0">اجعل النتيجة مساويًا 0</button><button data-a="p1">غيّر النتيجة بمقدار 1</button><button data-a="p3">غيّر النتيجة بمقدار 3</button><button data-a="m3">غيّر النتيجة بمقدار -3</button><button class="vis" data-a="vis">☑ إظهار/إخفاء المتغيّر</button></div><div class="vs-log">اضغطا لبنة…</div>';
+ const mon=w.querySelector(".vs-mon"),val=mon.querySelector("b"),log=w.querySelector(".vs-log");
+ w.querySelectorAll("button").forEach(b=>b.onclick=()=>{const a=b.dataset.a;const old=v;
+  if(a==="set0"){v=0;log.textContent="النتيجة = 0";}
+  else if(a==="vis"){shown=!shown;mon.style.visibility=shown?"visible":"hidden";log.textContent=shown?"ظهر المتغيّر على المنصّة":"اختفى المتغيّر (لكن قيمته محفوظة: "+v+")";return;}
+  else{const d={p1:1,p3:3,m3:-3}[a];v+=d;log.textContent="النتيجة = "+old+" + ("+d+") = "+v;}
+  val.textContent=v;});
+});
+const started={};
+function refresh(){
+  const rail=$("#rail"); rail.innerHTML="";
+  S.forEach((sec,si)=>{
+    const node=document.getElementById(sec.id); const open=si<=st.open;
+    node.classList.toggle("locked",!open);
+    if(open && !started[sec.id]){started[sec.id]=1;runGame(sec,sec._gb,si);}
+    const b=el("button",(st.done[sec.id]?"done":"")+(si===st.open?" cur":""),`${si+1}. ${sec.city}`);b.type="button";b.disabled=!open;b.onclick=()=>node.scrollIntoView({behavior:"smooth",block:"start"});rail.append(b);
+  });
+  const allDone=S.every(s=>st.done[s.id]);
+  $("#final").classList.toggle("locked",!allDone);
+  upScore(); drawCert();
+}
+function drawCert(){
+  const sc=score(), pct=Math.round(sc/total*100);
+  const mins=st.end?Math.max(1,Math.round((st.end-st.start)/60000)):null;
+  const d=new Date();
+  drawSend();
+  $("#cert").innerHTML=`<div>أنهى/أنهت رحلة المحطّات السبع في درس</div><b>المتغيّرات البرمجية في سكراتش</b><div class="big">${sc} / ${total}</div><div>النسبة: ${pct}%${mins?` · مدّة الإنجاز: ${mins} دقيقة`:""}</div><hr><div><b>${esc(st.n1)||"…"}</b> و <b>${esc(st.n2)||"…"}</b></div><div>${esc(st.cls)||"الشعبة: …"}</div><div class="small">${d.toLocaleDateString("ar-JO")}</div>`;
+}
+
+const RESULT_FORM={url:"https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=QoWSx2QeIUimYh4GU_yQCXkPYNJN8CJDkPMMgh2Vy6tUQzFUN1k1OEI2S1Y5NlozQ05MMVVGT1JPMy4u",field:"r5fcb6c37d72c494ea4afd2dda3eabe41",game:"G9U2L1"};
+function bestRec(){let r={best:-1,secs:0,tries:0};try{r=Object.assign(r,JSON.parse(localStorage.getItem(L.key+":best")||"{}"));}catch(e){}return r;}
+function recordFinish(){ if(!st.end||st.counted) return; const r=bestRec(); const sc=score(), secs=Math.round((st.end-st.start)/1000);
+  r.tries++; if(sc>r.best||(sc===r.best&&secs<r.secs)){r.best=sc;r.secs=secs;}
+  try{localStorage.setItem(L.key+":best",JSON.stringify(r));}catch(e){} st.counted=1; save(); }
+function drawSend(){
+  const a=$("#sendbtn"); if(!a) return; recordFinish();
+  const clean=x=>String(x||"").replace(/[|\n\r]/g," ").trim();
+  const names=clean([st.n1,st.n2].map(clean).filter(Boolean).join(" و ")), cls=clean(st.cls);
+  const ready=!!(st.end && names && cls);
+  a.style.pointerEvents=ready?"auto":"none"; a.style.opacity=ready?"1":".5";
+  if(!ready){a.removeAttribute("href");return;}
+  const r=bestRec(), max=total, lvn=1, gnum=parseInt(RESULT_FORM.game.replace(/\D/g,""),10);
+  const chk=(r.best*7919+r.secs*104+r.tries*31+max*17+lvn*101+gnum*1009+52813)%99991;
+  const code=[RESULT_FORM.game,lvn,r.best,max,r.secs,r.tries,names,cls,names,chk].join("|");
+  a.href=RESULT_FORM.url+"&"+RESULT_FORM.field+"="+encodeURIComponent(code);
+  $("#sendnote").textContent="أفضل نتيجة لكما "+r.best+" من "+max+" · عدد المحاولات "+r.tries+". افتحا الرابط واضغطا «إرسال» / Submit فقط.";
+}
+function esc(s){return String(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+["n1","n2","cls"].forEach(id=>{const e=document.getElementById(id);e.value=st[id]||"";e.addEventListener("input",()=>{st[id]=e.value;save();drawCert();});e.addEventListener("change",()=>{st[id]=e.value;save();drawCert();});});
+$("#calm").onclick=()=>document.body.classList.toggle("calm");
+let armed=false;$("#reset").onclick=e=>{const b=e.currentTarget;if(!armed){armed=true;b.textContent="اضغطا مرة ثانية للتأكيد — ستُمسح النقاط";setTimeout(()=>{armed=false;b.textContent="البدء من جديد";},4000);return;}try{localStorage.removeItem(L.key);}catch(e){}location.reload();};
+refresh();
+})();
+</script>
+</body>
+</html>
