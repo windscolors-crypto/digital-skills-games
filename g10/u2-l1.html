@@ -116,6 +116,7 @@ svg.scr .good{stroke:var(--ok);stroke-width:3}
 .spk{position:absolute;pointer-events:none;color:#ffb300;font-style:normal;font-size:16px;animation:spk .8s forwards;z-index:5}
 @keyframes spk{to{transform:translate(var(--dx),var(--dy)) scale(.3);opacity:0}}
 body.calm .dk-stage img.kb{animation:none}
+.namebox{background:var(--gold2);border:2px dashed var(--gold);border-radius:14px;padding:12px;margin:10px 0;text-align:right;display:flex;flex-direction:column;gap:6px}.namebox label{display:block}.namebox input,.namebox select{display:block;width:100%;box-sizing:border-box;font:inherit;padding:8px 10px;margin-top:4px;border:2px solid var(--line);border-radius:10px;background:#fff}body.pres .intro .namebox b:first-child{font-size:17px;color:var(--ink)}
 body.pres footer{display:none}
 body.pres main{padding-bottom:110px}
 body.pres #main > section,body.pres #secs > section{display:none;margin-top:10px}
@@ -686,6 +687,9 @@ let armed=false;$("#reset").onclick=e=>{const b=e.currentTarget;if(!armed){armed
 /* ---------- وضع العرض التقديمي ---------- */
 (function(){
  document.body.classList.add("pres");
+ (function(){const intro=$(".intro");const box=el("div","namebox","<b>✍️ قبل أن تبدآ: اكتبا اسميكما واختارا الشعبة</b>");
+  ["n1","n2","cls"].forEach(id=>{const e=document.getElementById(id);if(e){box.append(e.closest("label"));e.addEventListener("input",()=>window.PRES&&PRES.upd());e.addEventListener("change",()=>window.PRES&&PRES.upd());}});
+  const row=intro.querySelector(".row");intro.insertBefore(box,row);})();
  const KN={deck:"العرض",exp:"الشرح",game:"اللعبة"};
  const scr=[{node:$(".intro"),title:"البداية"}];
  S.forEach((sec,si)=>{const node=document.getElementById(sec.id);const parts=[...node.querySelectorAll(".scr")];
@@ -697,13 +701,14 @@ let armed=false;$("#reset").onclick=e=>{const b=e.currentTarget;if(!armed){armed
  const prev=nav.querySelector(".pprev"),next=nav.querySelector(".pnext"),cnt=nav.querySelector(".pcnt"),bar=nav.querySelector(".pbar i");
  let cur=0;try{cur=Math.min(+(localStorage.getItem(L.key+":scr")||0),scr.length-1);}catch(e){}
  const open=i=>{const x=scr[i];if(!x)return false;if(x.fin)return S.every(s=>st.done[s.id]);if(x.si==null)return true;return x.si<=st.open;};
- const blocked=i=>{const x=scr[i];return x&&x.part&&x.part.dataset.k==="game"&&!st.done[S[x.si].id];};
+ const needNames=()=>!((st.n1||"").trim()&&(st.cls||"").trim());
+ const blocked=i=>{if(i===0&&needNames())return true;const x=scr[i];return x&&x.part&&x.part.dataset.k==="game"&&!st.done[S[x.si].id];};
  while(cur>0&&!open(cur))cur--;
  function upd(){const x=scr[cur];
   prev.disabled=cur===0;
   const can=cur<scr.length-1&&open(cur+1)&&!blocked(cur);
   next.disabled=!can;
-  next.textContent=blocked(cur)?"🔒 أنهيا اللعبة أولًا":(scr[cur+1]&&scr[cur+1].fin?"بطاقة الإنجاز ←":"التالي ←");
+  next.textContent=(cur===0&&needNames())?"✍️ اكتبا الاسم والشعبة أولًا":blocked(cur)?"🔒 أنهيا اللعبة أولًا":(scr[cur+1]&&scr[cur+1].fin?"بطاقة الإنجاز ←":"التالي ←");
   cnt.textContent=`${cur+1} / ${scr.length}`;bar.style.width=((cur+1)/scr.length*100)+"%";}
  function go(i,dir){if(i<0||i>=scr.length||!open(i))return;const old=scr[cur];cur=i;const x=scr[cur];
   document.querySelectorAll("#main > section, #secs > section").forEach(n=>n.classList.remove("cur"));
