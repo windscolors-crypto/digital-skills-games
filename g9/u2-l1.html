@@ -117,6 +117,26 @@ svg.scr .good{stroke:var(--ok);stroke-width:3}
 @keyframes spk{to{transform:translate(var(--dx),var(--dy)) scale(.3);opacity:0}}
 body.calm .dk-stage img.kb{animation:none}
 
+body.pres footer{display:none}
+body.pres main{padding-bottom:110px}
+body.pres #main > section,body.pres #secs > section{display:none;margin-top:10px}
+body.pres #main > section.cur,body.pres #secs > section.cur{display:block}
+body.pres .sec.locked{opacity:1}
+body.pres .scr{display:none}body.pres .scr.on{display:block}
+body.pres .intro{min-height:60vh;display:flex!important;flex-direction:column;justify-content:center;text-align:center}
+body.pres .intro:not(.cur){display:none!important}
+body.pres .intro b:first-child{font-size:24px;color:var(--olive)}
+body.pres .intro .row{justify-content:center}
+.steps{display:flex;gap:6px;margin:0 0 10px}.stp{font-size:13px;background:var(--olive2);color:var(--olive);border-radius:999px;padding:2px 10px}.stp.on{background:var(--olive);color:#fff;font-weight:700}
+.inN{animation:pIn .45s cubic-bezier(.2,.8,.2,1)}.inP{animation:pInP .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes pIn{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}
+@keyframes pInP{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+.pnav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);box-shadow:0 -2px 10px rgba(0,0,0,.08);z-index:30;padding:0 0 calc(8px + env(safe-area-inset-bottom))}
+.pbar{height:5px;background:var(--line)}.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--olive));transition:width .4s;margin-inline-start:0}
+.prow{max-width:760px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px 0}
+.prow .btn{white-space:nowrap}.prow .btn:disabled{opacity:.45}.pcnt{font-size:14px;color:var(--muted)}
+body.calm .inN,body.calm .inP{animation:none}
+
 #lb{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;z-index:99;padding:8px}
 #lb.show{display:flex}#lb img{max-width:100%;max-height:100%;border-radius:8px}
 #lb .x{position:absolute;top:10px;left:14px;color:#fff;font-size:30px;background:none;border:0;cursor:pointer}
@@ -145,7 +165,7 @@ body.calm *{animation:none!important;transition:none!important}
 <main id="main">
   <section class="intro">
         <b>رحلة المحطّات السبع 🫒</b>
-    <p style="margin:6px 0">في كل محطّة: اقرآ الشرح، ثم العبا اللعبة القصيرة تحتها. لا تنتقلان للسؤال التالي حتى تكون الإجابة صحيحة، والنقاط تقلّ مع كل محاولة خاطئة. عند إنهاء المحطّة تُفتح المحطّة التالية.</p>
+    <p style="margin:6px 0">في كل محطّة ثلاث شاشات: العرض، ثم الشرح، ثم اللعبة. تنقّلا بزرّي «التالي» و«السابق» في الأسفل (أو اسحبا الشاشة). لا تنتقلان للسؤال التالي حتى تكون الإجابة صحيحة، والنقاط تقلّ مع كل محاولة خاطئة. عند إنهاء المحطّة تُفتح المحطّة التالية.</p>
     <div class="row"><button class="btn ghost" id="sfx" type="button">🔊 الأصوات</button><button class="btn ghost" id="calm" type="button">تخفيف الحركة</button><button class="btn ghost" id="reset" type="button">البدء من جديد</button></div>
   </section>
   <div id="secs"></div>
@@ -467,7 +487,7 @@ function runGame(sec, box, si){
   function finishSec(){
     area.innerHTML="";const sp=sec.qs.reduce((a,q,i)=>a+(st.pts[sec.id+":"+i]||0),0);
     area.append(el("div","done-banner",`✔ أنهيتما محطّة ${sec.city} — ${sp} من ${sec.qs.length*10} نقطة`));
-    if(!st.done[sec.id]){st.done[sec.id]=1; if(st.open<si+1) st.open=si+1; if(si===S.length-1 && !st.end) st.end=Date.now(); save(); refresh(); const n=document.getElementById(si+1<S.length?S[si+1].id:"final"); if(n) setTimeout(()=>n.scrollIntoView({behavior:"smooth",block:"start"}),400);}
+    if(!st.done[sec.id]){st.done[sec.id]=1; if(st.open<si+1) st.open=si+1; if(si===S.length-1 && !st.end) st.end=Date.now(); save(); refresh(); SFX.win(); if(window.PRES) PRES.secDone(si);}
   }
   function show(q){
     area.innerHTML=""; let err=0;
@@ -534,9 +554,10 @@ const secsBox=$("#secs");
 S.forEach((sec,si)=>{
   const s=el("section","sec"); s.id=sec.id;
   s.innerHTML=`<div class="sechead"><span class="station">محطّة ${si+1} · ${sec.city}</span><h2>${sec.title}</h2><span class="pg">${sec.p}</span></div><div class="lockmsg">🔒 تُفتح بعد إنهاء المحطّة السابقة.</div>`;
-  const body=el("div","body"); body.innerHTML=(sec.slides&&sec.slides.length?`<div class="deck" data-sl="${sec.slides.join(",")}"></div>`:"")+sec.explain;
-  if(sec.tryit){body.append(el("div","tryit","<b>🖥️ على جهاز المختبر — </b>"+sec.tryit));}
-  const gb=el("div","gamebox"); body.append(gb); s.append(body); secsBox.append(s);
+  const body=el("div","body");
+  if(sec.slides&&sec.slides.length){const d=el("div","scr scr-deck",`<div class="deck" data-sl="${sec.slides.join(",")}"></div>`);d.dataset.k="deck";body.append(d);}
+  const ex=el("div","scr scr-exp",sec.explain); ex.dataset.k="exp"; if(sec.tryit){ex.append(el("div","tryit","<b>🖥️ على جهاز المختبر — </b>"+sec.tryit));} body.append(ex);
+  const gw=el("div","scr scr-game"); gw.dataset.k="game"; const gb=el("div","gamebox"); gw.append(gb); body.append(gw); s.append(body); secsBox.append(s);
   sec._gb=gb;
 });
 // وضع الاستكشاف لشاشة سكراتش
@@ -612,11 +633,11 @@ function refresh(){
     const node=document.getElementById(sec.id); const open=si<=st.open;
     node.classList.toggle("locked",!open);
     if(open && !started[sec.id]){started[sec.id]=1;runGame(sec,sec._gb,si);}
-    const b=el("button",(st.done[sec.id]?"done":"")+(si===st.open?" cur":""),`${si+1}. ${sec.city}`);b.type="button";b.disabled=!open;b.onclick=()=>node.scrollIntoView({behavior:"smooth",block:"start"});rail.append(b);
+    const b=el("button",(st.done[sec.id]?"done":"")+(si===st.open?" cur":""),`${si+1}. ${sec.city}`);b.type="button";b.disabled=!open;b.onclick=()=>{if(window.PRES)PRES.goSec(si);else node.scrollIntoView({behavior:"smooth",block:"start"});};rail.append(b);
   });
   const allDone=S.every(s=>st.done[s.id]);
   $("#final").classList.toggle("locked",!allDone);
-  upScore(); drawCert();
+  upScore(); drawCert(); if(window.PRES) PRES.upd();
 }
 function drawCert(){
   const sc=score(), pct=Math.round(sc/total*100);
@@ -648,6 +669,45 @@ function esc(s){return String(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt
 ["n1","n2","cls"].forEach(id=>{const e=document.getElementById(id);e.value=st[id]||"";e.addEventListener("input",()=>{st[id]=e.value;save();drawCert();});e.addEventListener("change",()=>{st[id]=e.value;save();drawCert();});});
 $("#calm").onclick=()=>document.body.classList.toggle("calm");
 let armed=false;$("#reset").onclick=e=>{const b=e.currentTarget;if(!armed){armed=true;b.textContent="اضغطا مرة ثانية للتأكيد — ستُمسح النقاط";setTimeout(()=>{armed=false;b.textContent="البدء من جديد";},4000);return;}try{localStorage.removeItem(L.key);}catch(e){}location.reload();};
+
+/* ---------- وضع العرض التقديمي ---------- */
+(function(){
+ document.body.classList.add("pres");
+ const KN={deck:"العرض",exp:"الشرح",game:"اللعبة"};
+ const scr=[{node:$(".intro"),title:"البداية"}];
+ S.forEach((sec,si)=>{const node=document.getElementById(sec.id);const parts=[...node.querySelectorAll(".scr")];
+  const steps=el("div","steps");parts.forEach((p,j)=>steps.append(el("span","stp",(j+1)+". "+KN[p.dataset.k])));node.querySelector(".sechead").after(steps);
+  parts.forEach((p,j)=>scr.push({node,part:p,si,j,steps}));});
+ scr.push({node:$("#final"),fin:1});
+ const nav=el("nav","pnav",`<div class="pbar"><i></i></div><div class="prow"><button class="btn ghost pprev" type="button">→ السابق</button><span class="pcnt"></span><button class="btn pnext" type="button">التالي ←</button></div>`);
+ document.body.append(nav);
+ const prev=nav.querySelector(".pprev"),next=nav.querySelector(".pnext"),cnt=nav.querySelector(".pcnt"),bar=nav.querySelector(".pbar i");
+ let cur=0;try{cur=Math.min(+(localStorage.getItem(L.key+":scr")||0),scr.length-1);}catch(e){}
+ const open=i=>{const x=scr[i];if(!x)return false;if(x.fin)return S.every(s=>st.done[s.id]);if(x.si==null)return true;return x.si<=st.open;};
+ const blocked=i=>{const x=scr[i];return x&&x.part&&x.part.dataset.k==="game"&&!st.done[S[x.si].id];};
+ while(cur>0&&!open(cur))cur--;
+ function upd(){const x=scr[cur];
+  prev.disabled=cur===0;
+  const can=cur<scr.length-1&&open(cur+1)&&!blocked(cur);
+  next.disabled=!can;
+  next.textContent=blocked(cur)?"🔒 أنهيا اللعبة أولًا":(scr[cur+1]&&scr[cur+1].fin?"بطاقة الإنجاز ←":"التالي ←");
+  cnt.textContent=`${cur+1} / ${scr.length}`;bar.style.width=((cur+1)/scr.length*100)+"%";}
+ function go(i,dir){if(i<0||i>=scr.length||!open(i))return;const old=scr[cur];cur=i;const x=scr[cur];
+  document.querySelectorAll("#main > section, #secs > section").forEach(n=>n.classList.remove("cur"));
+  x.node.classList.add("cur");
+  if(x.part){x.node.querySelectorAll(".scr").forEach(p=>p.classList.toggle("on",p===x.part));x.steps.querySelectorAll(".stp").forEach((t,j)=>t.classList.toggle("on",j===x.j));}
+  const anim=x.part||x.node;anim.classList.remove("inN","inP");void anim.offsetWidth;anim.classList.add(dir<0?"inP":"inN");
+  if(old!==x&&dir)SFX.whoosh();next.classList.remove("pulse");
+  try{localStorage.setItem(L.key+":scr",cur);}catch(e){}
+  window.scrollTo({top:0,behavior:"auto"});upd();}
+ prev.onclick=()=>go(cur-1,-1);next.onclick=()=>go(cur+1,1);
+ document.addEventListener("keydown",e=>{if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;if(e.key==="ArrowLeft"&&!next.disabled)go(cur+1,1);if(e.key==="ArrowRight"&&!prev.disabled)go(cur-1,-1);});
+ let tx=null,ty=0;const m=$("#main");
+ m.addEventListener("touchstart",e=>{if(e.target.closest(".dk-stage,input,select,.bins,.pool"))return tx=null;tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+ m.addEventListener("touchend",e=>{if(tx==null)return;const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;tx=null;if(Math.abs(dx)>70&&Math.abs(dy)<50){if(dx>0&&!next.disabled)go(cur+1,1);else if(dx<0&&!prev.disabled)go(cur-1,-1);}},{passive:true});
+ window.PRES={upd,secDone(si){upd();next.classList.add("pulse");},goSec(si){const i=scr.findIndex(x=>x.si===si);if(i>=0)go(i,i>cur?1:-1);}};
+ go(cur,0);
+})();
 refresh();
 })();
 </script>
