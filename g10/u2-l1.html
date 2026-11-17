@@ -193,7 +193,7 @@ details.fcbook summary{cursor:pointer;font-weight:700}
 .rg{position:absolute;border-radius:8px;transition:all .35s;pointer-events:none;opacity:0}
 .rgl{position:absolute;bottom:100%;right:0;background:#ffd400;color:#000;font-weight:800;font-size:13px;padding:1px 8px;border-radius:8px;white-space:nowrap;margin-bottom:3px}
 .fcwrap.spot .rg.on{opacity:1;outline:4px solid #ffd400;box-shadow:0 0 0 9999px rgba(0,0,0,.6);animation:rgp 1.2s ease-in-out 2}
-.rg.dn .rgl{bottom:auto;top:100%;margin:3px 0 0}
+.rg.lt .rgl{right:auto;left:0}.rg.dn .rgl{bottom:auto;top:100%;margin:3px 0 0}
 @keyframes rgp{50%{outline-color:#fff}}
 .fc.sel .in{box-shadow:0 0 0 4px #ffd400;border-radius:16px}
 .hl{scroll-margin-top:200px;animation:hlp 1s ease-in-out 3;outline:4px solid #ffd400;outline-offset:3px;border-radius:12px}
@@ -201,6 +201,10 @@ details.fcbook summary{cursor:pointer;font-weight:700}
 .fcexp{background:#fffbe6;border:3px solid #ffd400;border-radius:14px;padding:10px 12px;margin:8px 0 12px;font-size:16px;line-height:1.7;min-height:2em;scroll-margin-top:200px}
 .fcexp b{display:block;font-size:18px;margin-bottom:2px}.fcexp .ph{color:#777;font-size:14px}
 .fcexp.pop{animation:fxp .5s ease}@keyframes fxp{0%{transform:scale(.96);background:#ffe36b}100%{transform:none}}
+.pwwarn{background:#ffe0e0;border-radius:10px;padding:6px;font-weight:700;margin-bottom:8px;font-size:14px}
+.pwin{width:100%;box-sizing:border-box;font-size:18px;padding:10px;border:2px solid #999;border-radius:10px}
+.pwbar{height:14px;background:#eee;border-radius:8px;margin:10px 0;overflow:hidden}.pwbar i{display:block;height:100%;width:0;transition:all .3s}
+.pwr{list-style:none;padding:0;margin:0;text-align:right;font-size:15px;line-height:1.9}.pwr li.ok{color:#2e7d32;font-weight:700}
 .lyr .code mark{background:#ffd400;color:#000;border-radius:3px}
 .lyr .out.flash{animation:hlp .6s ease-in-out 3;outline:4px solid #ffd400}
 .fcfig{margin:6px 0 12px;text-align:center}.fcfig img{width:100%;border-radius:12px;box-shadow:0 3px 10px rgba(0,0,0,.18);cursor:zoom-in}.fcfig figcaption{font-size:13px;color:#666;margin-top:4px}
@@ -494,7 +498,7 @@ const CARDS={"s0": {"img": "data:image/webp;base64,UklGRnCkAABXRUJQVlA4IGSkAADQQ
   let wid=C.widget||empties.join("");
   empties.forEach(e=>{book=book.replace(e,"");});
   const cards=C.cards.map((c,i)=>`<div class="fc" data-s="${sec.id}" data-i="${i}" data-l="${c[3]==null?"":c[3]}" style="--c:${COLS[i%COLS.length]}"><div class="in"><div class="f"><span class="ic">${c[0]}</span><b>${c[1]}</b><i>👆 اكبسا</i></div><div class="b"><small>${c[0]} ${c[1]}</small>${c[2]}</div></div></div>`).join("");
-  const regs=(C.regs||[]).map((r,i)=>`<div class="rg${r[1]<15?" dn":""}" data-i="${i}" style="left:${r[0]}%;top:${r[1]}%;width:${r[2]}%;height:${r[3]}%"><span class="rgl">${r[4]}</span></div>`).join("");
+  const regs=(C.regs||[]).map((r,i)=>`<div class="rg${r[1]<15?" dn":""}${r[0]<30?" lt":""}" data-i="${i}" style="left:${r[0]}%;top:${r[1]}%;width:${r[2]}%;height:${r[3]}%"><span class="rgl">${r[4]}</span></div>`).join("");
   const fig=C.img?`<figure class="fcfig"><div class="fcwrap"><img src="${C.img}" alt="">${regs}</div><figcaption>🔍 ${C.cap||"مثال حقيقي — اضغطا للتكبير"}</figcaption></figure>`:"";
   const hasX=C.cards.some(c=>c[4]);const pan=hasX?`<div class="fcexp"><span class="ph">👆 اكبسا على أي بطاقة ليظهر شرحها هنا</span></div>`:"";
   sec.explain=(fig?fig+pan:"")+`<div class="fcintro">اقلبا كل البطاقات 👇</div><div class="fcgrid">${cards}</div>`+(fig?"":pan)+`<div class="fcprog">0 / ${C.cards.length}</div>`+(wid?`<div class="fcwid">${wid}</div>`:"")+notes.map(n=>n.replace('class="note"','class="fctask"')).join("")+`<details class="fcbook"><summary>📖 النص الكامل من الكتاب</summary>${book}</details>`;
@@ -525,6 +529,15 @@ const CARDS={"s0": {"img": "data:image/webp;base64,UklGRnCkAABXRUJQVlA4IGSkAADQQ
   w.className+=" sdt";w.innerHTML='<div class="sw"><button data-k="st" class="on">🧱 ثابت</button><button data-k="dy">⚙️ ديناميكي</button></div><div class="vw"></div><div class="msg"></div>';
   const show=k=>{w.querySelectorAll(".sw button").forEach(b=>b.classList.toggle("on",b.dataset.k===k));w.querySelector(".vw").innerHTML=V[k].v;w.querySelector(".msg").textContent=V[k].m;};
   w.querySelectorAll(".sw button").forEach(b=>b.onclick=()=>{show(b.dataset.k);try{SFX.tick();}catch(_){}});show("st");});
+ document.querySelectorAll(".pwcheck").forEach(w=>{
+  w.className+=" sdt";w.innerHTML='<div class="pwwarn">⚠️ لا تكتبي كلمة مرورك الحقيقية! جرّبي كلمة من خيالك.</div><input class="pwin" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="مثال: 1234 أو Sara2013 أو Qamar#Jofeh7" dir="ltr"><div class="pwbar"><i></i></div><ul class="pwr"></ul><div class="msg"></div>';
+  const R=[["٨ أحرف أو أكثر",v=>v.length>=8],["فيها حرف كبير وصغير (A a)",v=>/[a-z]/.test(v)&&/[A-Z]/.test(v)],["فيها رقم",v=>/\d/.test(v)],["فيها رمز مثل # ! @",v=>/[^A-Za-z0-9\u0600-\u06FF\s]/.test(v)],["ليست سهلة مثل 1234 أو password",v=>v.length>0&&!/^(1234|12345|123456|12345678|password|qwerty|0000|1111)/i.test(v)]];
+  const inp=w.querySelector(".pwin"),bar=w.querySelector(".pwbar i"),ul=w.querySelector(".pwr"),msg=w.querySelector(".msg");
+  const up=()=>{const v=inp.value;const ok=R.map(r=>r[1](v));const n=ok.filter(Boolean).length;
+   ul.innerHTML=R.map((r,i)=>`<li class="${ok[i]?"ok":""}">${ok[i]?"✅":"⬜"} ${r[0]}</li>`).join("");
+   bar.style.width=(n/R.length*100)+"%";bar.style.background=n<=2?"#d32f2f":n<=3?"#f9a825":"#2e7d32";
+   msg.textContent=!v?"اكتبي كلمة لتجرّبي 👆":n<=2?"😟 ضعيفة — سهل تخمينها":n<=3?"😐 متوسّطة — أضيفي رقمًا أو رمزًا":n<5?"🙂 جيّدة":"💪 قويّة جدًّا!";};
+  inp.oninput=up;up();});
  document.querySelectorAll(".layers").forEach(w=>{
   const H='<h1>مدرستي</h1>\n<p>أهلًا بكم في موقع مدرستنا</p>\n<button>اضغطي هنا</button>';
   const C='body{font-family:sans-serif;background:#eef6ff;text-align:center}\nh1{color:#2d5b8f}\nbutton{background:#a3262b;color:#fff;border:0;padding:10px 20px;border-radius:20px}';
