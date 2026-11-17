@@ -155,7 +155,38 @@ body.calm .inN,body.calm .inP{animation:none}
 footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
 body.calm *{animation:none!important;transition:none!important}
 </style>
-</head>
+<style id="fc-css">
+.fcintro{font-weight:700;margin:4px 0 10px;color:var(--muted,#555)}
+.fcgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:8px 0 14px}
+@media(min-width:760px){.fcgrid{grid-template-columns:repeat(3,1fr)}}
+.fc{perspective:900px;height:150px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.fc .in{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.3,1.4,.5,1);transform-style:preserve-3d}
+.fc.flip .in{transform:rotateY(180deg)}
+.fc .f,.fc .b{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px;box-shadow:0 4px 12px rgba(0,0,0,.12)}
+.fc .f{background:#fff;border:3px solid var(--c)}
+.fc .f .ic{font-size:44px;line-height:1.1;animation:fcb 2.4s ease-in-out infinite}
+.fc .f b{font-size:18px;margin-top:6px;color:#222}
+.fc .f i{font-style:normal;font-size:12px;color:#888;margin-top:2px}
+.fc .b{background:var(--c);color:#fff;transform:rotateY(180deg);font-size:17px;font-weight:700;line-height:1.5}
+.fc .b small{display:block;font-size:13px;opacity:.85;margin-bottom:4px}
+@keyframes fcb{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.fc.flip .f .ic{animation:none}
+.fcprog{font-weight:700;text-align:center;margin:4px 0 10px}
+.fcprog.ok{color:var(--ok,#2e7d32)}
+.fctask{background:#fff8e1;border:2px solid #e0b000;border-radius:14px;padding:10px 12px;margin:12px 0}
+.fcwid h3{margin:14px 0 6px;font-size:18px}
+details.fcbook{margin:14px 0;border:1px solid #ccc;border-radius:12px;padding:6px 12px;background:#fafafa}
+details.fcbook summary{cursor:pointer;font-weight:700}
+.sdt{background:#fff;border:2px solid #ccc;border-radius:14px;padding:12px;text-align:center}
+.sdt .sw{display:inline-flex;border:2px solid #555;border-radius:30px;overflow:hidden;margin-bottom:10px}
+.sdt .sw button{border:0;padding:8px 16px;font:inherit;font-weight:700;background:#fff;cursor:pointer}
+.sdt .sw button.on{background:#333;color:#fff}
+.sdt .vw{display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap;font-size:15px;min-height:110px}
+.sdt .bx{border:2px solid #999;border-radius:10px;padding:8px;min-width:80px;background:#f7f7f7;transition:all .4s}
+.sdt .bx .ic{font-size:30px;display:block}
+.sdt .ar{font-size:22px}
+.sdt .msg{margin-top:8px;font-weight:700}
+</style></head>
 <body>
 <header class="top">
   <span class="score" id="score">0</span>
@@ -321,6 +352,40 @@ const DECK={};
 <script>
 (function(){
 const L = LESSON, S = L.sections;
+const CARDS={
+s0:{cards:[["🖥️🖥️","شبكة الحاسوب","جهازان أو أكثر متّصلة معًا"],["🔌","سلكي أو لاسلكي","بالأسلاك أو بدونها"],["🔄","لماذا؟","نتبادل البيانات ونشارك الطابعة"],["🏠","أين؟","في البيت والمدرسة والبنك"]]},
+s1:{cards:[["🌍","الإنترنت","أكبر شبكة في العالم"],["🕸️","الشبكة العنكبوتية","المواقع والصفحات التي نتصفّحها"],["🤝","الفرق","الويب يعمل من خلال الإنترنت"]]},
+s2:{cards:[["📁","مشاركة الملفات","بين الأجهزة بسهولة"],["🖨️","مشاركة الطابعة","طابعة واحدة للجميع"],["💬","التواصل","رسائل وبريد ومكالمات فيديو"],["📚","التعلّم","مصادر كثيرة للتعلّم"],["🎵","الترفيه","موسيقى وأفلام وألعاب"]]},
+s3:{cards:[["🕵️","الاختراق","سرقة المعلومات"],["🦠","الفيروسات","من روابط وبرامج غير آمنة"],["🔒","الخصوصية","نشر صورنا دون إذن"],["🛡️","نحمي أنفسنا","لا روابط مجهولة · كلمة المرور سرّ"]]}
+};
+
+
+/* ---- بطاقات الشرح التفاعلية ---- */
+(function(){
+ const COLS=["#2d5b8f","#a3262b","#4f6b2c","#c88a12","#6a3d9a","#1b7f7a"];
+ S.forEach(sec=>{const C=(typeof CARDS!=="undefined")&&CARDS[sec.id];if(!C)return;
+  const orig=sec.explain||"";
+  const notes=(orig.match(/<div class="note">[\s\S]*?<\/div>/g)||[]).filter(n=>!/إضاءة/.test(n));
+  let book=orig.replace(/<div class="note">[\s\S]*?<\/div>/g,m=>/إضاءة/.test(m)?m:"");
+  const empties=orig.match(/<div class="[a-z]+"><\/div>/g)||[];
+  let wid=C.widget||empties.join("");
+  empties.forEach(e=>{book=book.replace(e,"");});
+  const cards=C.cards.map((c,i)=>`<div class="fc" style="--c:${COLS[i%COLS.length]}"><div class="in"><div class="f"><span class="ic">${c[0]}</span><b>${c[1]}</b><i>👆 اكبسا</i></div><div class="b"><small>${c[0]} ${c[1]}</small>${c[2]}</div></div></div>`).join("");
+  sec.explain=`<div class="fcintro">اقلبا كل البطاقات 👇</div><div class="fcgrid">${cards}</div><div class="fcprog">0 / ${C.cards.length}</div>`+(wid?`<div class="fcwid">${wid}</div>`:"")+notes.map(n=>n.replace('class="note"','class="fctask"')).join("")+`<details class="fcbook"><summary>📖 النص الكامل من الكتاب</summary>${book}</details>`;
+ });
+ document.addEventListener("click",e=>{const c=e.target.closest(".fc");if(!c||c.classList.contains("flip"))return;c.classList.add("flip");try{SFX.pop();}catch(_){}
+  const box=c.closest(".fcgrid").parentNode,all=box.querySelectorAll(".fc"),n=box.querySelectorAll(".fc.flip").length,p=box.querySelector(".fcprog");
+  if(p){p.textContent=n<all.length?`${n} / ${all.length}`:"✅ أحسنتما! اضغطا «التالي»";p.classList.toggle("ok",n===all.length);}
+  if(n===all.length){try{SFX.ok();}catch(_){}}
+  if(window.PRES)PRES.upd();});
+ setTimeout(()=>document.querySelectorAll(".sdtoggle").forEach(w=>{
+  const V={st:{t:"🧱 ثابت",v:'<div class="bx"><span class="ic">📄</span>صفحة جاهزة</div><span class="ar">←</span><div class="bx"><span class="ic">👧👧👧</span>نفس الصفحة للجميع</div>',m:"المحتوى مكتوب مسبقًا ولا يتغيّر — أسهل وأقل تكلفة."},
+           dy:{t:"⚙️ ديناميكي",v:'<div class="bx"><span class="ic">🗃️</span>قاعدة بيانات</div><span class="ar">←</span><div class="bx"><span class="ic">⚙️</span>تُبنى الصفحة الآن</div><span class="ar">←</span><div class="bx"><span class="ic">👧</span>صفحة خاصّة بك</div>',m:"المحتوى يُبنى لحظة الطلب: تسجيل دخول، سلّة شراء، نتائج بحث."}};
+  w.className+=" sdt";w.innerHTML='<div class="sw"><button data-k="st" class="on">🧱 ثابت</button><button data-k="dy">⚙️ ديناميكي</button></div><div class="vw"></div><div class="msg"></div>';
+  const show=k=>{w.querySelectorAll(".sw button").forEach(b=>b.classList.toggle("on",b.dataset.k===k));w.querySelector(".vw").innerHTML=V[k].v;w.querySelector(".msg").textContent=V[k].m;};
+  w.querySelectorAll(".sw button").forEach(b=>b.onclick=()=>{show(b.dataset.k);try{SFX.tick();}catch(_){}});show("st");}),0);
+})();
+
 const LADDER=[10,7,5,3,2];
 let st = {open:0, pts:{}, done:{}, start:Date.now(), end:null, n1:"", n2:"", cls:""};
 function load(){try{const s=JSON.parse(localStorage.getItem(L.key)||"null");if(s&&s.pts)st=Object.assign(st,s);}catch(e){}}
@@ -582,13 +647,13 @@ let armed=false;$("#reset").onclick=e=>{const b=e.currentTarget;if(!armed){armed
  let cur=0;try{cur=Math.min(+(localStorage.getItem(L.key+":scr")||0),scr.length-1);}catch(e){}
  const open=i=>{const x=scr[i];if(!x)return false;if(x.fin)return S.every(s=>st.done[s.id]);if(x.si==null)return true;return x.si<=st.open;};
  const needNames=()=>!((st.n1||"").trim()&&(st.cls||"").trim());
- const blocked=i=>{if(i===0&&needNames())return true;const x=scr[i];return x&&x.part&&x.part.dataset.k==="game"&&!st.done[S[x.si].id];};
+ const blocked=i=>{if(i===0&&needNames())return true;const x=scr[i];return x&&x.part&&((x.part.dataset.k==="game"&&!st.done[S[x.si].id])||(x.part.dataset.k==="exp"&&x.part.querySelector(".fc:not(.flip)")));};
  while(cur>0&&!open(cur))cur--;
  function upd(){const x=scr[cur];
   prev.disabled=cur===0;
   const can=cur<scr.length-1&&open(cur+1)&&!blocked(cur);
   next.disabled=!can;
-  next.textContent=(cur===0&&needNames())?"✍️ اكتبا الاسم والشعبة أولًا":blocked(cur)?"🔒 أنهيا اللعبة أولًا":(scr[cur+1]&&scr[cur+1].fin?"بطاقة الإنجاز ←":"التالي ←");
+  next.textContent=(cur===0&&needNames())?"✍️ اكتبا الاسم والشعبة أولًا":blocked(cur)?(scr[cur].part.dataset.k==="exp"?"👆 اقلبا كل البطاقات":"🔒 أنهيا اللعبة أولًا"):(scr[cur+1]&&scr[cur+1].fin?"بطاقة الإنجاز ←":"التالي ←");
   cnt.textContent=`${cur+1} / ${scr.length}`;bar.style.width=((cur+1)/scr.length*100)+"%";}
  function go(i,dir){if(i<0||i>=scr.length||!open(i))return;const old=scr[cur];cur=i;const x=scr[cur];
   document.querySelectorAll("#main > section, #secs > section").forEach(n=>n.classList.remove("cur"));
