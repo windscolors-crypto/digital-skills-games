@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مقدّمة إلى شبكات الحاسوب — الصف السابع</title>
+<style>
+:root{--ink:#1f2a24;--muted:#5d6b62;--bg:#f6f3ea;--card:#fff;--olive:#4f6b2c;--olive2:#e7eedb;--red:#a3262b;--red2:#f6e1e1;--gold:#c88a12;--gold2:#fbf0d6;--blue:#2d5b8f;--blue2:#e3ecf6;--ok:#2e7d32;--ok2:#e3f2e4;--bad:#c62828;--line:#ddd6c4}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,"Noto Naskh Arabic",Arial,sans-serif;font-size:17px;line-height:1.75}
+header.top{background:var(--olive);color:#fff;padding:14px 16px 10px;position:sticky;top:0;z-index:20;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+header.top h1{margin:0;font-size:19px}
+header.top .sub{font-size:13px;opacity:.9}
+.tatreez{height:8px;background:repeating-linear-gradient(90deg,var(--red) 0 8px,transparent 8px 12px,var(--red) 12px 14px,transparent 14px 22px);opacity:.85}
+.rail{display:flex;gap:4px;margin-top:8px;overflow-x:auto}
+.rail button{flex:1 0 auto;border:0;border-radius:14px;padding:3px 9px;font:inherit;font-size:12px;background:rgba(255,255,255,.18);color:#fff;cursor:pointer;white-space:nowrap}
+.rail button.done{background:#fff;color:var(--olive);font-weight:700}
+.rail button.cur{outline:2px solid #fff}
+.rail button:disabled{opacity:.45;cursor:default}
+.score{float:left;background:#fff;color:var(--olive);border-radius:12px;padding:1px 10px;font-weight:700;font-size:14px}
+main{max-width:760px;margin:0 auto;padding:12px}
+.intro,.sec,.final{background:var(--card);border-radius:16px;padding:16px;margin:14px 0;box-shadow:0 1px 4px rgba(0,0,0,.07);border:1px solid var(--line)}
+.sec.locked{opacity:.55}
+.sec.locked .body{display:none}
+.lockmsg{display:none;color:var(--muted);font-size:15px}
+.sec.locked .lockmsg{display:block}
+.sechead{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:6px}
+.station{background:var(--red);color:#fff;border-radius:10px;padding:2px 10px;font-size:13px;white-space:nowrap}
+.sechead h2{margin:0;font-size:20px;color:var(--olive)}
+.pg{color:var(--muted);font-size:13px;margin-inline-start:auto;white-space:nowrap}
+h4{margin:12px 0 4px;color:var(--blue)}
+ul,ol{padding-inline-start:22px;margin:6px 0}
+.note{background:var(--gold2);border-inline-start:5px solid var(--gold);border-radius:10px;padding:10px 12px;margin:10px 0}
+.note.citizen{background:var(--blue2);border-color:var(--blue)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:620px){.two{grid-template-columns:1fr}}
+.box{background:var(--olive2);border-radius:10px;padding:10px 12px}
+.tryit{background:#eef6f7;border:1px dashed #3c8b94;border-radius:10px;padding:8px 12px;margin:10px 0;font-size:15px}
+.tryit b{color:#2b6f77}
+.small{font-size:13px;color:var(--muted)}
+.gamebox{margin-top:14px;border-top:3px dotted var(--line);padding-top:12px}
+.gamebar{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted);margin-bottom:6px}
+.dots{display:flex;gap:4px}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--line);display:inline-block}
+.dots i.ok{background:var(--ok)}
+.dots i.now{background:var(--gold)}
+.q{font-weight:700;margin:6px 0 10px;font-size:17.5px}
+.opts{display:grid;gap:8px}
+.opt,.chip,.bin{font:inherit;font-size:16px;text-align:right;background:#fff;border:2px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer;color:var(--ink);transition:transform .15s}
+.opt:hover,.chip:hover,.bin:hover{border-color:var(--olive)}
+.opt.wrong,.chip.wrong,.bin.wrong{border-color:var(--bad);background:#fdecec}
+.opt.right{border-color:var(--ok);background:var(--ok2)}
+.opt:disabled{cursor:default}
+.shake{animation:sh .35s}
+@keyframes sh{25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-3px)}}
+.seq{list-style:none;padding:0;margin:0 0 10px;display:grid;gap:6px}
+.seq li{background:var(--ok2);border:2px solid var(--ok);border-radius:12px;padding:8px 12px}
+.seq li.empty{background:#fafafa;border:2px dashed var(--line);color:#aaa}
+.pool{display:grid;gap:8px}
+.card{background:var(--blue2);border:2px solid var(--blue);border-radius:14px;padding:12px;text-align:center;font-weight:700;font-size:18px;margin-bottom:10px}
+.card .lab{display:block;font-size:12px;font-weight:400;color:var(--muted)}
+.bins{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.bin{text-align:center;font-weight:700}
+.bin .cnt{display:block;font-weight:400;font-size:13px;color:var(--muted);min-height:1.2em}
+.feedback{margin-top:10px;border-radius:12px;padding:10px 12px;display:none}
+.feedback.show{display:block;background:var(--ok2);border:1px solid var(--ok)}
+.btn{font:inherit;border:0;border-radius:12px;padding:10px 18px;background:var(--olive);color:#fff;font-weight:700;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--olive);border:2px solid var(--olive)}
+.btn:disabled{opacity:.5}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.hintbox{font-size:14px;color:var(--muted);margin-top:6px;display:none}
+.done-banner{background:var(--ok2);border:2px solid var(--ok);border-radius:12px;padding:10px 12px;font-weight:700;color:var(--ok)}
+svg.scr{width:100%;height:auto;display:block;border-radius:10px;border:1px solid #c9c9c9;background:#fff;touch-action:manipulation}
+svg.scr [data-r]{cursor:pointer}
+svg.scr .hl{stroke:#e0a800;stroke-width:3}
+svg.scr .bad{stroke:var(--bad);stroke-width:3}
+svg.scr .good{stroke:var(--ok);stroke-width:3}
+.explore-out{background:var(--olive2);border-radius:10px;padding:8px 12px;margin-top:8px;min-height:3em}
+.final h2{color:var(--olive);margin-top:0}
+.final input,.final select{font:inherit;padding:8px 10px;border:2px solid var(--line);border-radius:10px;width:100%;margin:4px 0 8px}
+.cert{border:3px double var(--olive);border-radius:14px;padding:14px;text-align:center;background:#fffdf6;margin-top:10px}
+.cert .big{font-size:34px;font-weight:800;color:var(--olive)}
+@media(max-width:620px){header.top .sub{display:none}header.top h1{font-size:17px}}
+.sec,.final{scroll-margin-top:110px}
+.slide{display:block;width:100%;border-radius:12px;margin:8px 0 12px;box-shadow:0 2px 8px rgba(0,0,0,.12);cursor:zoom-in}
+.slidecap{font-size:12px;color:var(--muted);text-align:center;margin-top:-8px;margin-bottom:10px}
+.deck{background:linear-gradient(180deg,#fff7ee,#fff);border:2px solid #ff8c1a;border-radius:16px;padding:10px;margin:6px 0 14px}
+.dk-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:13px}
+.dk-badge{background:#ff8c1a;color:#fff;border-radius:999px;padding:2px 10px;font-weight:700}.dk-n{color:var(--muted)}
+.dk-stage{position:relative;aspect-ratio:1100/614;overflow:hidden;border-radius:12px;background:#eee;box-shadow:0 2px 10px rgba(0,0,0,.15)}
+.dk-stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.dk-stage img.enter{animation:dkIn .6s cubic-bezier(.2,.8,.2,1)}.dk-stage img.enterL{animation:dkInL .6s cubic-bezier(.2,.8,.2,1)}
+.dk-stage img.kb{animation:dkKb 14s ease-in-out infinite alternate}
+@keyframes dkIn{from{opacity:0;transform:translateX(-12%) scale(.94)}to{opacity:1;transform:none}}
+@keyframes dkInL{from{opacity:0;transform:translateX(12%) scale(.94)}to{opacity:1;transform:none}}
+@keyframes dkKb{from{transform:scale(1)}to{transform:scale(1.035)}}
+.dk-hot{position:absolute;inset:0}
+.dk-cov{position:absolute;border:0;border-radius:10px;cursor:pointer;background:linear-gradient(135deg,#ff9f3f,#ff7a00);color:#fff;font:inherit;font-weight:700;font-size:clamp(10px,2.4vw,16px);box-shadow:0 3px 10px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;text-align:center;padding:2px;opacity:0;animation:dkPop .45s forwards,dkBreathe 2.2s 1.2s ease-in-out infinite;transition:transform .45s,opacity .45s}
+.dk-cov span{background:rgba(255,255,255,.18);border-radius:8px;padding:2px 8px}
+.dk-cov.gone{transform:scale(1.25) rotate(-4deg)!important;opacity:0!important;pointer-events:none;animation:none}
+@keyframes dkPop{from{opacity:0;transform:scale(.6)}70%{opacity:1;transform:scale(1.06)}to{opacity:1;transform:scale(1)}}
+@keyframes dkBreathe{0%,100%{box-shadow:0 3px 10px rgba(0,0,0,.25)}50%{box-shadow:0 0 0 4px rgba(255,140,26,.35),0 3px 10px rgba(0,0,0,.25)}}
+.dk-disc{position:absolute;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;border:3px solid #fff;background:#3b1f7a;color:#fff;font:inherit;font-weight:700;font-size:clamp(9px,2vw,14px);cursor:pointer;box-shadow:0 0 0 3px #ff8c1a;opacity:0;animation:dkPopC .4s forwards;line-height:1.1;padding:0}
+.dk-disc.on{background:#2e7d32;box-shadow:0 0 0 3px #ffd54a,0 0 14px #ffd54a}
+.dk-disc.shake{animation:dkShake .4s}
+@keyframes dkPopC{from{opacity:0;transform:translate(-50%,-50%) scale(.5)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@keyframes dkShake{0%,100%{opacity:1;transform:translate(-50%,-50%)}25%{transform:translate(-62%,-50%)}75%{transform:translate(-38%,-50%)}}
+.dk-ask{position:absolute;inset:0;background:rgba(31,42,36,.78);display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:10px;color:#fff;backdrop-filter:blur(2px)}
+.dk-ask.show{display:flex;animation:dkFade .35s}.dk-q{font-weight:700;text-align:center;font-size:clamp(13px,3vw,18px)}
+.dk-opts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.dk-opts .opt{min-width:90px;text-align:center;padding:6px 12px}
+@keyframes dkFade{from{opacity:0}to{opacity:1}}
+.dk-tip{font-size:14px;color:var(--ink);background:#fff;border-radius:10px;padding:6px 10px;margin:8px 0 4px;min-height:1.4em}
+.dk-tip.ok{background:var(--ok2);color:var(--ok);font-weight:700;animation:dkPop .4s}
+.dk-nav{display:flex;gap:6px;justify-content:space-between}.dk-nav .btn{padding:6px 10px;font-size:14px;white-space:nowrap}.deck.one .dk-prev,.deck.one .dk-next{visibility:hidden}.dk-nav .btn:disabled{opacity:.4}
+.btn.pulse{animation:dkPulse 1.2s infinite}@keyframes dkPulse{0%,100%{box-shadow:0 0 0 0 rgba(79,107,44,.5)}50%{box-shadow:0 0 0 8px rgba(79,107,44,0)}}
+.spk{position:absolute;pointer-events:none;color:#ffb300;font-style:normal;font-size:16px;animation:spk .8s forwards;z-index:5}
+@keyframes spk{to{transform:translate(var(--dx),var(--dy)) scale(.3);opacity:0}}
+body.calm .dk-stage img.kb{animation:none}
+body.pres footer{display:none}
+body.pres main{padding-bottom:110px}
+body.pres #main > section,body.pres #secs > section{display:none;margin-top:10px}
+body.pres #main > section.cur,body.pres #secs > section.cur{display:block}
+body.pres .sec.locked{opacity:1}
+body.pres .pscr{display:none}body.pres .pscr.on{display:block}
+body.pres .intro{min-height:60vh;display:flex!important;flex-direction:column;justify-content:center;text-align:center}
+body.pres .intro:not(.cur){display:none!important}
+body.pres .intro b:first-child{font-size:24px;color:var(--olive)}
+body.pres .intro .row{justify-content:center}
+.steps{display:flex;gap:6px;margin:0 0 10px}.stp{font-size:13px;background:var(--olive2);color:var(--olive);border-radius:999px;padding:2px 10px}.stp.on{background:var(--olive);color:#fff;font-weight:700}
+.inN{animation:pIn .45s cubic-bezier(.2,.8,.2,1)}.inP{animation:pInP .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes pIn{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}
+@keyframes pInP{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+.pnav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);box-shadow:0 -2px 10px rgba(0,0,0,.08);z-index:30;padding:0 0 calc(8px + env(safe-area-inset-bottom))}
+.pbar{height:5px;background:var(--line)}.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--olive));transition:width .4s;margin-inline-start:0}
+.prow{max-width:760px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px 0}
+.prow .btn{white-space:nowrap}.prow .btn:disabled{opacity:.45}.pcnt{font-size:14px;color:var(--muted)}
+body.calm .inN,body.calm .inP{animation:none}
+
+.labbox{background:#e8f1fb;border:2px dashed var(--blue);border-radius:12px;padding:8px 12px;margin-bottom:8px;font-size:15px}
+
+#lb{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;z-index:99;padding:8px}
+#lb.show{display:flex}#lb img{max-width:100%;max-height:100%;border-radius:8px}
+#lb .x{position:absolute;top:10px;left:14px;color:#fff;font-size:30px;background:none;border:0;cursor:pointer}
+.proj{margin-top:16px}
+.blk{display:inline-block;background:#ff8c1a;color:#fff;border-radius:8px;padding:1px 10px;font-weight:700;font-size:15px;margin:0 2px}
+.varbox-demo{display:flex;gap:10px;align-items:center;justify-content:center;font-weight:700;margin:8px 0}
+.vb-data{background:#9966ff;color:#fff;border-radius:8px;padding:4px 12px}.vb-box{background:#c8956b;color:#fff;border-radius:8px;padding:6px 14px}
+.varsim{background:#fff7ee;border:2px solid #ff8c1a;border-radius:14px;padding:12px;margin:8px 0}
+.vs-stage{display:flex;align-items:center;justify-content:center;min-height:56px;background:#eef6ff;border-radius:10px;margin-bottom:10px}
+.vs-mon{background:#e9eef7;border:2px solid #ccd;border-radius:8px;padding:4px 10px;font-weight:700}.vs-mon b{background:#ff8c1a;color:#fff;border-radius:6px;padding:0 10px;margin-inline-start:6px;display:inline-block;min-width:2.2em;text-align:center}
+.vs-btns{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}.vs-btns button{font:inherit;font-size:15px;border:0;border-radius:10px;padding:8px 12px;background:#ff8c1a;color:#fff;cursor:pointer}
+.vs-btns button.vis{background:#4c97ff}.vs-log{font-size:14px;color:var(--muted);text-align:center;margin-top:6px;min-height:1.4em}
+.proj.note{margin-top:14px}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
+body.calm *{animation:none!important;transition:none!important}
+</style>
+</head>
+<body>
+<header class="top">
+  <span class="score" id="score">0</span>
+  <h1>مقدّمة إلى شبكات الحاسوب</h1>
+  <div class="sub">الصف السابع · الوحدة الثانية · الدرس الأول · Computer Networks</div>
+  <div class="rail" id="rail"></div>
+</header>
+<div class="tatreez"></div>
+<main id="main">
+  <section class="intro">
+        <b>رحلة المحطّات الأربع 🫒</b>
+    <p style="margin:6px 0">في كل محطّة شاشات: العرض (إن وُجد)، ثم الشرح، ثم اللعبة. تنقّلا بزرّي «التالي» و«السابق» في الأسفل (أو اسحبا الشاشة). لا تنتقلان للسؤال التالي حتى تكون الإجابة صحيحة، والنقاط تقلّ مع كل محاولة خاطئة. عند إنهاء المحطّة تُفتح المحطّة التالية.</p>
+    <div class="row"><button class="btn ghost" id="sfx" type="button">🔊 الأصوات</button><button class="btn ghost" id="calm" type="button">تخفيف الحركة</button><button class="btn ghost" id="reset" type="button">البدء من جديد</button></div>
+  </section>
+  <div id="secs"></div>
+  <section class="final sec locked" id="final">
+    <div class="sechead"><span class="station">المحطّة الأخيرة</span><h2>بطاقة الإنجاز</h2></div>
+    <div class="lockmsg">🔒 تُفتح بعد إنهاء المحطّات كلها.</div>
+    <div class="body">
+      <label>اسم الطالب/ـة الأول/ى<input id="n1" autocomplete="off"></label>
+      <label>اسم الطالب/ـة الثاني/ة<input id="n2" autocomplete="off"></label>
+      <label>الشعبة<select id="cls"><option value="">— اختارا الشعبة —</option><option>السابع أ</option><option>السابع ب</option><option>السابع ج</option></select></label>
+      <div class="cert" id="cert"></div>
+      <div class="row" style="justify-content:center"><a class="btn" id="sendbtn" target="_blank" rel="noopener" style="text-decoration:none;pointer-events:none;opacity:.5">📤 إرسال النتيجة</a></div>
+      <p class="small" id="sendnote" style="text-align:center">اكتبا الاسمين واختارا الشعبة أولًا، ثم اضغطا «إرسال النتيجة»، وفي النموذج اضغطا «إرسال» / Submit فقط.</p>
+      <div class="proj note"><b>المشروع (ص ٧٢):</b> كتابة تقرير عن مزايا شبكات الحاسوب وعيوبها في المدرسة، ومشاركته على لوح Padlet.</div>
+      <p class="small">صوّرا البطاقة: على الحاسوب <b dir="ltr">Win + Shift + S</b>، وعلى الهاتف لقطة شاشة عادية.</p>
+    </div>
+  </section>
+</main>
+<div id="lb"><button class="x" type="button" aria-label="إغلاق">✕</button><img alt=""></div>
+<footer>المحتوى من كتاب الطالب — المهارات الرقمية، الصف السابع، الفصل الأول، ص ٦٦–٧٤</footer>
+
+<script>
+// الصف السابع — الوحدة الثانية — الدرس الأول: مقدّمة إلى شبكات الحاسوب (ص ٦٨–٧٤) — لغة مبسّطة
+const LESSON = {
+  key: "jofeh:g7u2l1:v1",
+  sections: [
+  {
+    id: "s0", city: "يافا", title: "ما شبكة الحاسوب؟", p: "ص ٦٩",
+    explain: `
+<div class="note"><b>🤔 فكّرا أولًا (نشاط تمهيدي):</b> انظرا حولكما في البيت أو المدرسة: حاسوب، هاتف، طابعة، راوتر (المُوجِّه). كيف يتّصل بعضها ببعض؟</div>
+<p><b>شبكة الحاسوب (Computer Network):</b> جهازا حاسوب أو أكثر <b>متّصلة معًا</b>.</p>
+<ul>
+<li>تتّصل بأجهزة اتصال <b>سلكية</b> (بالأسلاك) أو <b>لاسلكية</b> (بدون أسلاك).</li>
+<li>الهدف: <b>تبادل البيانات</b> و<b>مشاركة الموارد</b> مثل الطابعة.</li>
+</ul>
+<h4>أين نجد الشبكات؟</h4>
+<div class="two">
+<div class="box">🏠 <b>في البيت</b><br>شبكة صغيرة تربط الحاسوب والهاتف والراوتر.</div>
+<div class="box">🏫 <b>في المدرسة</b><br>تربط أجهزة مختبر الحاسوب وأجهزة المكتبة.</div>
+<div class="box">🏦 <b>في البنوك والمستشفيات</b><br>شبكات أكبر لتبادل المعلومات.</div>
+</div>`,
+    qs: [
+      {t:"mcq", q:"ما شبكة الحاسوب؟",
+        c:["جهازان أو أكثر متّصلة معًا","جهاز حاسوب واحد فقط بلا أيّ اتصال","برنامج لكتابة النصوص","لعبة على الهاتف"], a:0,
+        why:"شبكة الحاسوب: جهازا حاسوب أو أكثر متّصلة معًا لتبادل البيانات ومشاركة الموارد."},
+      {t:"sort", q:"صنّفا طريقة الاتصال:",
+        bins:["سلكية","لاسلكية"],
+        items:[["كابل (سلك) بين الحاسوب والراوتر",0],["واي فاي Wi-Fi",1],["سلك الطابعة",0],["بلوتوث Bluetooth",1]],
+        why:"السلكية بالأسلاك والكوابل، واللاسلكية بدون أسلاك مثل الواي فاي والبلوتوث."},
+      {t:"mcq", q:"لماذا نربط الأجهزة في شبكة؟",
+        c:["لتبادل البيانات ومشاركة الموارد","لتصبح الأجهزة أثقل وزنًا","لكي تنطفئ الأجهزة بسرعة في آخر اليوم","لنغيّر لون الشاشة"], a:0,
+        why:"الهدف من الشبكة تبادل البيانات ومشاركة الموارد مثل الطابعات."},
+      {t:"mcq", q:"في مختبر الحاسوب، كل الأجهزة تطبع على طابعة واحدة. هذا مثال على:",
+        c:["مشاركة الموارد","انتهاك الخصوصية","فيروسات الحاسوب","الترفيه"], a:0,
+        why:"استخدام طابعة واحدة لكل الأجهزة المتّصلة بالشبكة هو مشاركة للموارد."}
+    ]
+  },
+  {
+    id: "s1", city: "عكّا", title: "الإنترنت والشبكة العنكبوتية", p: "ص ٦٩، ٧٢",
+    explain: `
+<p><b>شبكة الإنترنت (Internet):</b> <b>أكبر</b> شبكة حاسوب في العالم.</p>
+<ul>
+<li>تربط عددًا كبيرًا جدًّا من الحواسيب والأجهزة في كل أنحاء العالم.</li>
+<li>بها نشارك ونتواصل ونصل إلى المعلومات <b>أينما كنّا</b>.</li>
+</ul>
+<p><b>الشبكة العنكبوتية العالمية (World Wide Web):</b> هي <b>المواقع والصفحات</b> التي نتصفّحها، وتعمل <b>من خلال</b> الإنترنت.</p>
+<div class="note"><b>💡 إضاءة:</b> عام <b>1991م</b> ظهرت الشبكة العنكبوتية العالمية (World Wide Web) على يد <b dir="ltr">Tim Berners-Lee</b>.</div>
+<p class="small">نشاط «أبحث»: ابحثا عن الفرق بين الإنترنت والشبكة العنكبوتية، وشاركا ما وجدتما.</p>`,
+    qs: [
+      {t:"mcq", q:"ما أكبر شبكة حاسوب في العالم؟",
+        c:["الإنترنت","شبكة المدرسة","شبكة البيت","شبكة المكتبة"], a:0,
+        why:"الإنترنت أكبر شبكة حاسوب في العالم."},
+      {t:"mcq", q:"المواقع والصفحات التي نتصفّحها تُسمّى:",
+        c:["الشبكة العنكبوتية العالمية","الطابعة","القرص الصلب داخل جهاز الحاسوب","لوحة المفاتيح"], a:0,
+        why:"الشبكة العنكبوتية العالمية (World Wide Web) هي المواقع والصفحات التي نتصفّحها."},
+      {t:"mcq", q:"ما العلاقة بين الإنترنت والشبكة العنكبوتية؟",
+        c:["الشبكة العنكبوتية تعمل من خلال الإنترنت","هما شيء واحد بالضبط ولا فرق بينهما أبدًا","الإنترنت جزء صغير من الشبكة العنكبوتية","لا علاقة بينهما أبدًا"], a:0,
+        why:"الإنترنت هو الشبكة الكبيرة، والشبكة العنكبوتية (المواقع) تعمل من خلالها."},
+      {t:"mcq", q:"في أيّ عام ظهرت الشبكة العنكبوتية العالمية؟",
+        c:["1991م","2020م","1950م","2005م"], a:0,
+        why:"عام 1991م ظهرت الشبكة العنكبوتية العالمية على يد Tim Berners-Lee."}
+    ]
+  },
+  {
+    id: "s2", city: "حيفا", title: "مزايا شبكات الحاسوب", p: "ص ٧٠–٧١",
+    explain: `
+<p>للشبكات <b>مزايا</b> كثيرة في حياتنا:</p>
+<div class="two">
+<div class="box">📁 <b>مشاركة الملفات</b><br>نشارك الملفات بسهولة بين الأجهزة.</div>
+<div class="box">🖨️ <b>مشاركة الموارد</b><br>طابعة واحدة لكل الأجهزة، فنوفّر المال.</div>
+<div class="box">💬 <b>الاتصال</b><br>نتواصل بالبريد الإلكتروني والرسائل الفورية والمؤتمرات المرئية.</div>
+<div class="box">📚 <b>التعلّم</b><br>مصادر تعلّم كثيرة، وتعلّم تعاوني وذاتي.</div>
+<div class="box">🎵 <b>الترفيه</b><br>موسيقى وأفلام وألعاب فيديو.</div>
+</div>
+<p class="small">نشاط فردي: فكّرا في ميزة أخرى للشبكات واكتباها في دفتركما.</p>`,
+    qs: [
+      {t:"match", q:"طابقا كل ميزة مع مثالها:",
+        pairs:[["مشاركة الموارد","طابعة واحدة لكل الأجهزة"],["الاتصال","مؤتمر مرئي مع صديقة في بلد آخر"],["التعلّم","حضور درس على الإنترنت"],["الترفيه","مشاهدة فيلم"]],
+        why:"لكل ميزة مثال من حياتنا اليومية."},
+      {t:"mcq", q:"كيف توفّر الشبكة المال في المدرسة؟",
+        c:["بمشاركة طابعة واحدة بدل طابعة لكل جهاز","بإطفاء الأجهزة طوال اليوم","بشراء أجهزة حاسوب جديدة للمختبر في كل شهر","بإلغاء مختبر الحاسوب"], a:0,
+        why:"مشاركة الموارد مثل الطابعة تقلّل التكلفة."},
+      {t:"sort", q:"صنّفا: هل هي ميزة أم خطر؟",
+        bins:["ميزة","خطر"],
+        items:[["مشاركة الملفات",0],["سرقة البيانات",1],["التواصل مع الأهل",0],["الفيروسات",1],["مصادر التعلّم",0]],
+        why:"المشاركة والتواصل والتعلّم مزايا، والسرقة والفيروسات مخاطر."},
+      {t:"mcq", q:"أيّ مما يأتي من طرق الاتصال عبر الشبكات؟",
+        c:["البريد الإلكتروني","الرسالة الورقية بالبريد العادي","اللوح الخشبي في الصف","الآلة الحاسبة"], a:0,
+        why:"البريد الإلكتروني والرسائل الفورية والمؤتمرات المرئية طرق اتصال عبر الشبكات."}
+    ]
+  },
+  {
+    id: "s3", city: "القدس", title: "مخاطر شبكات الحاسوب", p: "ص ٧١",
+    explain: `
+<p>للشبكات أيضًا <b>مخاطر</b> يجب أن ننتبه لها:</p>
+<div class="two">
+<div class="box">🕵️ <b>الاختراقات وسرقة المعلومات</b><br>بعض الأشخاص يحاولون سرقة البيانات.</div>
+<div class="box">🦠 <b>فيروسات الحاسوب</b><br>تصل عند تحميل برامج غير آمنة أو فتح روابط مجهولة، فتُبطئ الجهاز أو تُعطّله.</div>
+<div class="box">🔒 <b>انتهاك الخصوصية</b><br>نشر بياناتنا وصورنا الشخصية دون إذن.</div>
+</div>
+<h4>كيف نحمي أنفسنا؟</h4>
+<ul>
+<li>لا نفتح <b>روابط مجهولة</b>، ولا نحمّل <b>برامج غير آمنة</b>.</li>
+<li>لا ننشر <b>معلوماتنا وصورنا الشخصية</b>.</li>
+<li>نحافظ على <b>كلمة المرور</b> سرّية.</li>
+</ul>`,
+    qs: [
+      {t:"mcq", q:"وصلتكما رسالة فيها رابط مجهول: «اربحي هاتفًا! اضغطي هنا». ماذا تفعلان؟",
+        c:["لا نفتح الرابط ونخبر شخصًا كبيرًا نثق به","نفتح الرابط بسرعة قبل غيرنا لنربح الهاتف","نرسل الرابط لكل صديقاتنا","نكتب كلمة المرور في الرابط"], a:0,
+        why:"فتح الروابط المجهولة قد يسبّب الفيروسات أو سرقة البيانات."},
+      {t:"match", q:"طابقا كل خطر مع معناه:",
+        pairs:[["الاختراق","سرقة البيانات"],["الفيروسات","تُبطئ الجهاز أو تُعطّله"],["انتهاك الخصوصية","نشر صورنا دون إذن"]],
+        why:"لكل خطر معنى وطريقة للحماية منه."},
+      {t:"sort", q:"صنّفا كل تصرّف: آمن أم غير آمن؟",
+        bins:["تصرّف آمن","تصرّف غير آمن"],
+        items:[["أحافظ على كلمة المرور سرّية",0],["أنشر عنوان بيتي على الإنترنت",1],["أحمّل برامج من مواقع موثوقة",0],["أفتح أيّ رابط يصلني",1]],
+        why:"نحمي أنفسنا بسرّية كلمة المرور وعدم نشر المعلومات الشخصية وعدم فتح الروابط المجهولة."},
+      {t:"mcq", q:"أيّ معلومة لا يجوز نشرها على الإنترنت؟",
+        c:["كلمة المرور","اسم لعبتي المفضّلة","لوني المفضّل","اسم كتاب قرأته"], a:0,
+        why:"كلمة المرور سرّية ولا ننشرها أبدًا."}
+    ]
+  }
+  ]
+};
+if (typeof module !== "undefined") module.exports = LESSON;
+
+const SLIDES={};
+const DECK={};
+
+</script>
+<script>
+(function(){
+const L = LESSON, S = L.sections;
+const LADDER=[10,7,5,3,2];
+let st = {open:0, pts:{}, done:{}, start:Date.now(), end:null, n1:"", n2:"", cls:""};
+function load(){try{const s=JSON.parse(localStorage.getItem(L.key)||"null");if(s&&s.pts)st=Object.assign(st,s);}catch(e){}}
+function save(){try{localStorage.setItem(L.key,JSON.stringify(st));}catch(e){}}
+load();
+const $=(s,r=document)=>r.querySelector(s);
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function shake(e){e.classList.remove("shake");void e.offsetWidth;e.classList.add("shake");}
+const total=S.reduce((a,s)=>a+s.qs.length*10,0);
+function score(){return Object.values(st.pts).reduce((a,b)=>a+b,0);}
+function upScore(){$("#score").textContent=score()+" / "+total;}
+
+/* ---------- شاشة سكراتش المبسّطة ---------- */
+const PARTS={
+ menu:["القائمة (Menu)","توفّر خيارات متعددة مثل إنشاء مشروع جديد، وفتح مشروع مخزّن مسبقًا، أو حفظ المشروع الحالي، والوصول إلى دروس المساعدة."],
+ login:["زرّ تسجيل الدخول (Login Button)","يُستخدم لتسجيل الدخول إلى الحساب الشخصي على موقع Scratch؛ مما يسمح بحفظ المشروعات ومشاركتها والانضمام إلى مجتمع Scratch."],
+ palette:["لوحة اللبنات البرمجية (Blocks Palette)","تحتوي مجموعة متنوّعة من الأوامر المصنّفة إلى فئات مثل: الحركة (Motion)، والمظاهر (Looks)، والصوت (Sound)، والتحكّم (Control). تُسحب منها اللبنات إلى منطقة البرمجة."],
+ script:["منطقة البرمجة (Scripting Area)","المكان الذي تُجمَّع فيه اللبنات البرمجية وتُرتَّب لإنشاء المقاطع البرمجية (الأكواد) التي تحدّد سلوك الكائنات."],
+ sprite:["الكائن (Sprite)","العنصر التفاعلي في المشروع، يمثّل الشخصيات أو العناصر التي تتحرك أو تتفاعل مع المستخدمين، ويمكن تخصيص ألوانه وأشكاله وخصائصه."],
+ sprites:["لوحة الكائنات (Sprites Pane)","تُظهر الكائنات المستخدمة في المشروع، ومنها تُضاف كائنات جديدة، وتُحذف أو تُعدَّل الكائنات الحالية."],
+ stage:["المنصّة (Stage)","تمثّل شاشة العرض؛ تُعرض فيها التفاعلات بين الكائنات والخلفيات، فنتصوّر النتائج النهائية للمشروع."],
+ zoom:["تكبير/تصغير اللبنات (Zoom Blocks)","أدوات للتحكّم في حجم اللبنات البرمجية؛ مما يسهّل قراءة التعليمات ويجعل البرمجة أوضح وأكثر تنظيمًا."],
+ info:["بيانات الكائن","تظهر فيها بيانات الكائن المحدّد، كما في الشكل (١–١) في الكتاب."]
+};
+function screenSVG(){
+ return `<svg class="scr" viewBox="0 0 360 250" xmlns="http://www.w3.org/2000/svg" font-family="Tahoma,Arial" direction="rtl">
+ <rect x="0" y="0" width="360" height="20" fill="#855cd6"/>
+ <g data-r="menu"><rect x="200" y="1" width="158" height="18" rx="3" fill="#855cd6"/><rect x="318" y="4" width="36" height="12" rx="3" fill="#ffab19"/><text x="336" y="13" font-size="7" fill="#fff" text-anchor="middle">Scratch</text><text x="300" y="13" font-size="8" fill="#fff" text-anchor="middle">ملف</text><text x="275" y="13" font-size="8" fill="#fff" text-anchor="middle">تحرير</text><text x="240" y="13" font-size="8" fill="#fff" text-anchor="middle">الدروس</text></g>
+ <g data-r="login"><rect x="3" y="3" width="64" height="14" rx="3" fill="#7346c7"/><text x="35" y="13" font-size="8" fill="#fff" text-anchor="middle">تسجيل الدخول</text></g>
+ <g data-r="palette"><rect x="270" y="22" width="88" height="226" fill="#f4f6fb" stroke="#ddd"/>
+  <circle cx="349" cy="36" r="5" fill="#4c97ff"/><circle cx="349" cy="54" r="5" fill="#9966ff"/><circle cx="349" cy="72" r="5" fill="#cf63cf"/><circle cx="349" cy="90" r="5" fill="#ffbf00"/><circle cx="349" cy="108" r="5" fill="#ffab19"/><circle cx="349" cy="126" r="5" fill="#5cb1d6"/><circle cx="349" cy="144" r="5" fill="#59c059"/><circle cx="349" cy="162" r="5" fill="#ff8c1a"/>
+  <rect x="276" y="32" width="60" height="10" rx="3" fill="#4c97ff"/><rect x="276" y="47" width="50" height="10" rx="3" fill="#4c97ff"/><rect x="276" y="62" width="58" height="10" rx="3" fill="#4c97ff"/><rect x="276" y="82" width="52" height="10" rx="3" fill="#9966ff"/><rect x="276" y="97" width="44" height="10" rx="3" fill="#9966ff"/><rect x="276" y="117" width="56" height="10" rx="3" fill="#cf63cf"/><rect x="276" y="137" width="48" height="10" rx="3" fill="#ffbf00"/><rect x="276" y="157" width="58" height="10" rx="3" fill="#ffab19"/><rect x="276" y="177" width="50" height="10" rx="3" fill="#5cb1d6"/><rect x="276" y="197" width="54" height="10" rx="3" fill="#59c059"/><rect x="276" y="217" width="46" height="10" rx="3" fill="#ff8c1a"/></g>
+ <g data-r="script"><rect x="152" y="22" width="116" height="226" fill="#f9f9f9" stroke="#ddd"/>
+  <path d="M175 70 h50 v14 h-50 z" fill="#ffbf00"/><path d="M175 62 q25 -10 50 0 v8 h-50 z" fill="#ffbf00"/><text x="200" y="80" font-size="5.5" fill="#fff" text-anchor="middle">عند نقر العلم</text>
+  <rect x="175" y="84" width="58" height="13" rx="2" fill="#4c97ff"/><rect x="175" y="97" width="52" height="13" rx="2" fill="#4c97ff"/></g>
+ <g data-r="zoom"><rect x="155" y="186" width="20" height="58" rx="6" fill="#f9f9f9"/><circle cx="165" cy="196" r="7" fill="#fff" stroke="#9aa"/><text x="165" y="199" font-size="9" text-anchor="middle" fill="#567">+</text><circle cx="165" cy="214" r="7" fill="#fff" stroke="#9aa"/><text x="165" y="217" font-size="9" text-anchor="middle" fill="#567">−</text><circle cx="165" cy="232" r="7" fill="#fff" stroke="#9aa"/><text x="165" y="235" font-size="8" text-anchor="middle" fill="#567">=</text></g>
+ <g data-r="stage"><rect x="2" y="22" width="148" height="112" fill="#fff" stroke="#ccc"/><circle cx="130" cy="29" r="3.5" fill="#59c059"/><circle cx="120" cy="29" r="3.5" fill="#e04848"/></g>
+ <g data-r="sprite"><circle cx="72" cy="80" r="18" fill="#ffb347" stroke="#c77a12"/><circle cx="66" cy="76" r="3" fill="#333"/><circle cx="79" cy="76" r="3" fill="#333"/><path d="M64 87 q8 6 16 0" stroke="#333" fill="none" stroke-width="1.6"/><path d="M58 64 l4 6 M86 64 l-4 6" stroke="#c77a12" stroke-width="2"/></g>
+ <g data-r="info"><rect x="2" y="136" width="148" height="30" fill="#f3f3f3" stroke="#ddd"/><rect x="10" y="142" width="40" height="8" rx="3" fill="#fff" stroke="#ccc"/><rect x="58" y="142" width="22" height="8" rx="3" fill="#fff" stroke="#ccc"/><rect x="86" y="142" width="22" height="8" rx="3" fill="#fff" stroke="#ccc"/><rect x="10" y="154" width="22" height="8" rx="3" fill="#fff" stroke="#ccc"/></g>
+ <g data-r="sprites"><rect x="2" y="168" width="148" height="80" fill="#e9eef7" stroke="#ccc"/><rect x="104" y="176" width="36" height="36" rx="5" fill="#fff" stroke="#855cd6" stroke-width="2"/><circle cx="122" cy="192" r="9" fill="#ffb347"/><circle cx="20" cy="232" r="10" fill="#855cd6"/><text x="20" y="236" font-size="12" fill="#fff" text-anchor="middle">+</text></g>
+</svg>`;
+}
+function markPart(svg,r,cls){const g=svg.querySelector(`[data-r="${r}"]`);if(!g)return;const first=g.querySelector("rect,circle,path");if(!first)return;first.classList.add(cls);setTimeout(()=>first.classList.remove(cls),cls==="good"?100000:700);}
+function hitPart(ev){const t=ev.target.closest("[data-r]");return t?t.dataset.r:null;}
+
+/* ---------- محرّك الأسئلة ---------- */
+function runGame(sec, box, si){
+  let qi=0;
+  const bar=el("div","gamebar"), dots=el("span","dots"), lab=el("span");
+  bar.append("🎮 لعبة المحطّة",dots,lab);
+  const area=el("div");
+  box.append(bar,area);
+  function drawDots(){dots.innerHTML="";sec.qs.forEach((q,i)=>{const d=el("i");if(st.pts[sec.id+":"+i]!=null)d.className="ok";else if(i===qi)d.className="now";dots.append(d);});lab.textContent=`السؤال ${Math.min(qi+1,sec.qs.length)} من ${sec.qs.length}`;}
+  // استئناف
+  while(qi<sec.qs.length && st.pts[sec.id+":"+qi]!=null) qi++;
+  function next(){drawDots(); if(qi>=sec.qs.length){finishSec();return;} show(sec.qs[qi]);}
+  function finishSec(){
+    area.innerHTML="";const sp=sec.qs.reduce((a,q,i)=>a+(st.pts[sec.id+":"+i]||0),0);
+    area.append(el("div","done-banner",`✔ أنهيتما محطّة ${sec.city} — ${sp} من ${sec.qs.length*10} نقطة`));
+    if(!st.done[sec.id]){st.done[sec.id]=1; if(st.open<si+1) st.open=si+1; if(si===S.length-1 && !st.end) st.end=Date.now(); save(); refresh(); SFX.win(); if(window.PRES) PRES.secDone(si);}
+  }
+  function show(q){
+    area.innerHTML=""; let err=0;
+    const qd=el("div","q",q.q); area.append(qd);
+    if(q.lab){area.insertBefore(el("div","labbox","🖥️ <b>نفّذا أولًا على الجهاز:</b> "+q.lab),qd);}
+    const body=el("div"); area.append(body);
+    const fb=el("div","feedback"); const row=el("div","row");
+    const hb=el("button","btn ghost","تلميح"); hb.type="button"; const hint=el("div","hintbox",`ارجعا إلى شرح هذه المحطّة أعلاه (${sec.p}).`);
+    hb.onclick=()=>{hint.style.display="block";};
+    row.append(hb); area.append(hint,fb,row);
+    function wrong(e){err++;SFX.bad(); if(e){e.classList.add("wrong");shake(e);setTimeout(()=>e.classList.remove("wrong"),900);}}
+    function solved(){
+      SFX.ok();const p=LADDER[Math.min(err,LADDER.length-1)];
+      st.pts[sec.id+":"+qi]=p; save(); upScore(); drawDots();
+      fb.innerHTML=`<b>✔ صحيح (+${p})</b><br>${q.why||""}`; fb.classList.add("show");
+      hb.remove(); hint.remove();
+      const nb=el("button","btn",qi+1<sec.qs.length?"السؤال التالي ←":"إنهاء المحطّة ✔"); nb.type="button";
+      nb.onclick=()=>{qi++;next();}; row.append(nb); nb.focus({preventScroll:true});
+    }
+    if(q.t==="mcq"){
+      const o=el("div","opts"); body.append(o);
+      shuffle(q.c.map((txt,k)=>({txt,k}))).forEach(({txt,k})=>{
+        const b=el("button","opt",txt); b.type="button";
+        b.onclick=()=>{ if(k===q.a){b.classList.add("right");o.querySelectorAll("button").forEach(x=>x.disabled=true);solved();} else {b.disabled=true;wrong(b);setTimeout(()=>b.classList.add("wrong"),920);} };
+        o.append(b);
+      });
+    }
+    else if(q.t==="order"){
+      const seq=el("ol","seq"), pool=el("div","pool"); body.append(el("div","small","اضغطا الخطوات بالترتيب الصحيح:"),seq,pool);
+      let k=0;
+      q.items.forEach(()=>{seq.append(el("li","empty","…"));});
+      shuffle(q.items.map((txt,i)=>({txt,i}))).forEach(({txt,i})=>{
+        const b=el("button","chip",txt); b.type="button";
+        b.onclick=()=>{ if(i===k){const li=seq.children[k];li.className="";li.textContent=(k+1)+". "+txt;b.remove();k++;if(k===q.items.length)solved();} else wrong(b); };
+        pool.append(b);
+      });
+    }
+    else if(q.t==="sort"||q.t==="match"){
+      let items,bins;
+      if(q.t==="sort"){bins=q.bins.slice();items=shuffle(q.items.map(([txt,b])=>({txt,b})));}
+      else{bins=q.pairs.map(p=>p[1]);items=shuffle(q.pairs.map((p,i)=>({txt:p[0],b:i})));}
+      const order=q.t==="match"?shuffle(bins.map((t,i)=>i)):bins.map((t,i)=>i);
+      const card=el("div","card"); const bw=el("div","bins"); body.append(card,bw);
+      body.prepend(el("div","small",q.t==="sort"?"اقرآ البطاقة، ثم اضغطا المجموعة التي تنتمي إليها:":"اقرآ البطاقة، ثم اضغطا الوصف المطابق لها:"));
+      const counts=bins.map(()=>0); let k=0; const btns=[];
+      order.forEach(bi=>{const b=el("button","bin",`${bins[bi]}<span class="cnt"></span>`);b.type="button";b.dataset.k=bi;btns[bi]=b;
+        b.onclick=()=>{ const it=items[k]; if(+b.dataset.k===it.b){counts[bi]++; b.querySelector(".cnt").textContent=q.t==="sort"?("✔ ".repeat(counts[bi])).trim():"✔ "+it.txt; if(q.t==="match"){b.disabled=true;b.style.borderColor="var(--ok)";b.style.background="var(--ok2)";} k++; if(k===items.length){card.innerHTML="✔ اكتمل";solved();} else drawCard(); } else wrong(b); };
+        bw.append(b);});
+      function drawCard(){card.innerHTML=`<span class="lab">البطاقة ${k+1} من ${items.length}</span>${items[k].txt}`;}
+      drawCard();
+    }
+    else if(q.t==="hot"){
+      const w=el("div"); w.innerHTML=screenSVG(); body.append(w); const svg=w.firstElementChild; let doneHot=false;
+      svg.addEventListener("click",ev=>{ if(doneHot)return; const r=hitPart(ev); if(!r)return;
+        if(r===q.target){doneHot=true;markPart(svg,r,"good");solved();}
+        else{err++;markPart(svg,r,"bad");shake(w);hint.style.display="block";hint.textContent="هذا الجزء هو: "+PARTS[r][0]+" — جرّبا مرة أخرى.";}
+      });
+    }
+  }
+  next();
+}
+
+/* ---------- بناء الصفحة ---------- */
+const secsBox=$("#secs");
+S.forEach((sec,si)=>{
+  const s=el("section","sec"); s.id=sec.id;
+  s.innerHTML=`<div class="sechead"><span class="station">محطّة ${si+1} · ${sec.city}</span><h2>${sec.title}</h2><span class="pg">${sec.p}</span></div><div class="lockmsg">🔒 تُفتح بعد إنهاء المحطّة السابقة.</div>`;
+  const body=el("div","body");
+  if(sec.slides&&sec.slides.length){const d=el("div","pscr scr-deck",`<div class="deck" data-sl="${sec.slides.join(",")}"></div>`);d.dataset.k="deck";body.append(d);}
+  const ex=el("div","pscr scr-exp",sec.explain); ex.dataset.k="exp"; if(sec.tryit){ex.append(el("div","tryit","<b>🖥️ على جهاز المختبر — </b>"+sec.tryit));} body.append(ex);
+  const gw=el("div","pscr scr-game"); gw.dataset.k="game"; const gb=el("div","gamebox"); gw.append(gb); body.append(gw); s.append(body); secsBox.append(s);
+  sec._gb=gb;
+});
+// وضع الاستكشاف لشاشة سكراتش
+document.querySelectorAll('.screen-wrap[data-mode="explore"]').forEach(w=>{
+  w.innerHTML=screenSVG(); const svg=w.firstElementChild;
+  svg.addEventListener("click",ev=>{const r=hitPart(ev);if(!r)return;svg.querySelectorAll(".hl").forEach(x=>x.classList.remove("hl"));const f=svg.querySelector(`[data-r="${r}"]`).querySelector("rect,circle,path");f.classList.add("hl");$("#explore-out").innerHTML=`<b>${PARTS[r][0]}:</b> ${PARTS[r][1]}`;});
+});
+/* ---------- الأصوات (WebAudio، بدون ملفات) ---------- */
+const SFX=(()=>{let ctx=null,on=true;try{on=localStorage.getItem("jofeh:sfx")!=="0";}catch(e){}
+ function ac(){if(!ctx){try{ctx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}if(ctx&&ctx.state==="suspended")ctx.resume();return ctx;}
+ function tone(f,t0,d,type,vol,f2){const c=ac();if(!c||!on)return;const o=c.createOscillator(),g=c.createGain();o.type=type||"sine";o.frequency.setValueAtTime(f,c.currentTime+t0);if(f2)o.frequency.exponentialRampToValueAtTime(f2,c.currentTime+t0+d);g.gain.setValueAtTime(0.0001,c.currentTime+t0);g.gain.exponentialRampToValueAtTime(vol||.18,c.currentTime+t0+.015);g.gain.exponentialRampToValueAtTime(0.0001,c.currentTime+t0+d);o.connect(g).connect(c.destination);o.start(c.currentTime+t0);o.stop(c.currentTime+t0+d+.05);}
+ function noise(d,vol){const c=ac();if(!c||!on)return;const n=c.sampleRate*d,b=c.createBuffer(1,n,c.sampleRate),a=b.getChannelData(0);for(let i=0;i<n;i++)a[i]=(Math.random()*2-1)*(1-i/n);const s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();f.type="bandpass";f.frequency.setValueAtTime(600,c.currentTime);f.frequency.exponentialRampToValueAtTime(3000,c.currentTime+d);g.gain.value=vol||.12;s.buffer=b;s.connect(f).connect(g).connect(c.destination);s.start();}
+ return{get on(){return on},set on(v){on=v;try{localStorage.setItem("jofeh:sfx",v?"1":"0");}catch(e){}},
+  pop(){tone(520,0,.12,"sine",.2,980);},
+  whoosh(){noise(.28,.1);},
+  ok(){tone(660,0,.12,"triangle",.18);tone(880,.1,.18,"triangle",.18);},
+  bad(){tone(180,0,.22,"square",.07,120);},
+  win(){[523,659,784,1047].forEach((f,i)=>tone(f,i*.11,.22,"triangle",.16));},
+  tick(){tone(1200,0,.05,"sine",.08);}};})();
+function sparkle(host,x,y){for(let i=0;i<10;i++){const s=document.createElement("i");s.className="spk";s.textContent=["✦","★","•"][i%3];s.style.left=x+"px";s.style.top=y+"px";const a=Math.random()*Math.PI*2,r=30+Math.random()*40;s.style.setProperty("--dx",Math.cos(a)*r+"px");s.style.setProperty("--dy",Math.sin(a)*r+"px");host.append(s);setTimeout(()=>s.remove(),800);}}
+/* ---------- العرض التفاعلي ---------- */
+function buildDeck(w){
+ const list=w.dataset.sl.split(",").map(Number);let k=0;if(list.length===1)w.classList.add("one");
+ w.innerHTML=`<div class="dk-top"><span class="dk-badge">🎬 العرض التفاعلي</span><span class="dk-n"></span></div>
+ <div class="dk-stage"><img alt=""><div class="dk-hot"></div><div class="dk-ask"></div></div>
+ <div class="dk-tip"></div>
+ <div class="dk-nav"><button class="btn ghost dk-prev" type="button">→ السابقة</button><button class="btn ghost dk-zoom" type="button">🔍 تكبير</button><button class="btn dk-next" type="button">التالية ←</button></div>`;
+ const img=w.querySelector("img"),hot=w.querySelector(".dk-hot"),ask=w.querySelector(".dk-ask"),tip=w.querySelector(".dk-tip"),nEl=w.querySelector(".dk-n"),stage=w.querySelector(".dk-stage");
+ const prev=w.querySelector(".dk-prev"),next=w.querySelector(".dk-next");
+ function done(msg){tip.innerHTML="✔ "+msg;tip.classList.add("ok");SFX.win();next.classList.add("pulse");}
+ function show(dir){
+  const n=list[k],D=DECK[n]||{};nEl.textContent=`شريحة ${k+1} من ${list.length}`;
+  prev.disabled=k===0;next.disabled=k===list.length-1;next.classList.remove("pulse");
+  img.classList.remove("enter","enterL","kb");void img.offsetWidth;img.src=SLIDES[n];img.classList.add(dir<0?"enterL":"enter");setTimeout(()=>img.classList.add("kb"),700);
+  hot.innerHTML="";ask.innerHTML="";ask.classList.remove("show");tip.classList.remove("ok");
+  tip.textContent=D.tip?"👆 "+D.tip:"";
+  const startCovers=()=>{
+   if(D.order){let step=0;
+    D.order.forEach(([lab,x,y],i)=>{const b=document.createElement("button");b.type="button";b.className="dk-disc";b.style.left=x+"%";b.style.top=y+"%";b.style.width=(D.r*2)+"%";b.style.animationDelay=(i*.08)+"s";b.textContent="؟";
+     b.onclick=e=>{if(b.classList.contains("on"))return;if(i===step){b.classList.add("on");b.textContent=(step+1)+". "+lab;SFX.ok();const r=stage.getBoundingClientRect();sparkle(stage,e.clientX-r.left,e.clientY-r.top);step++;tip.textContent=`👆 ${step} من ${D.order.length}`;if(step===D.order.length)done("أحسنتما! التخطيط ← التحليل ← التصميم ← التنفيذ ← الاختبار ← النشر");}else{SFX.bad();b.classList.remove("shake");void b.offsetWidth;b.classList.add("shake");}};hot.append(b);});
+    return;}
+   const cv=D.cov||[];let left=cv.length;
+   cv.forEach(([x,y,ww,hh,lab],i)=>{const b=document.createElement("button");b.type="button";b.className="dk-cov";Object.assign(b.style,{left:x+"%",top:y+"%",width:ww+"%",height:hh+"%",animationDelay:(.5+i*.15)+"s"});b.innerHTML=`<span>${lab}</span>`;
+    b.onclick=e=>{if(b.classList.contains("gone"))return;b.classList.add("gone");SFX.pop();const r=stage.getBoundingClientRect();sparkle(stage,e.clientX-r.left,e.clientY-r.top);left--;if(left===0)done("كشفتما كل شيء في هذه الشريحة"+(k<list.length-1?" — انتقلا إلى التالية ←":""));};hot.append(b);});
+   if(!cv.length)tip.textContent="";
+  };
+  if(D.ask){ask.innerHTML=`<div class="dk-q">🤔 ${D.ask.q}</div><div class="dk-opts"></div>`;ask.classList.add("show");const o=ask.querySelector(".dk-opts");
+   D.ask.c.map((t,i)=>({t,i})).sort(()=>Math.random()-.5).forEach(({t,i})=>{const b=document.createElement("button");b.type="button";b.className="opt";b.textContent=t;b.onclick=()=>{if(i===D.ask.a){b.classList.add("right");SFX.ok();setTimeout(()=>{ask.classList.remove("show");startCovers();},650);}else{b.classList.add("wrong");b.disabled=true;SFX.bad();}};o.append(b);});}
+  else startCovers();
+ }
+ prev.onclick=()=>{if(k>0){k--;SFX.whoosh();show(-1);}};
+ next.onclick=()=>{if(k<list.length-1){k++;SFX.whoosh();show(1);}};
+ w.querySelector(".dk-zoom").onclick=()=>{const lb=$("#lb");lb.querySelector("img").src=img.src;lb.classList.add("show");};
+ show(1);
+}
+document.querySelectorAll(".deck").forEach(buildDeck);
+(()=>{const b=$("#sfx");if(!b)return;const draw=()=>b.textContent=SFX.on?"🔊 الأصوات: تعمل":"🔇 الأصوات: متوقفة";draw();b.onclick=()=>{SFX.on=!SFX.on;draw();if(SFX.on)SFX.tick();};})();
+
+$("#lb").addEventListener("click",()=>$("#lb").classList.remove("show"));
+document.querySelectorAll(".varsim").forEach(w=>{let v=0,shown=true;
+ w.innerHTML='<div class="vs-stage"><span class="vs-mon">النتيجة <b>0</b></span></div><div class="vs-btns"><button data-a="set0">اجعل النتيجة مساويًا 0</button><button data-a="p1">غيّر النتيجة بمقدار 1</button><button data-a="p3">غيّر النتيجة بمقدار 3</button><button data-a="m3">غيّر النتيجة بمقدار -3</button><button class="vis" data-a="vis">☑ إظهار/إخفاء المتغيّر</button></div><div class="vs-log">اضغطا لبنة…</div>';
+ const mon=w.querySelector(".vs-mon"),val=mon.querySelector("b"),log=w.querySelector(".vs-log");
+ w.querySelectorAll("button").forEach(b=>b.onclick=()=>{const a=b.dataset.a;const old=v;
+  if(a==="set0"){v=0;log.textContent="النتيجة = 0";}
+  else if(a==="vis"){shown=!shown;mon.style.visibility=shown?"visible":"hidden";log.textContent=shown?"ظهر المتغيّر على المنصّة":"اختفى المتغيّر (لكن قيمته محفوظة: "+v+")";return;}
+  else{const d={p1:1,p3:3,m3:-3}[a];v+=d;log.textContent="النتيجة = "+old+" + ("+d+") = "+v;}
+  val.textContent=v;});
+});
+const started={};
+function refresh(){
+  const rail=$("#rail"); rail.innerHTML="";
+  S.forEach((sec,si)=>{
+    const node=document.getElementById(sec.id); const open=si<=st.open;
+    node.classList.toggle("locked",!open);
+    if(open && !started[sec.id]){started[sec.id]=1;runGame(sec,sec._gb,si);}
+    const b=el("button",(st.done[sec.id]?"done":"")+(si===st.open?" cur":""),`${si+1}. ${sec.city}`);b.type="button";b.disabled=!open;b.onclick=()=>{if(window.PRES)PRES.goSec(si);else node.scrollIntoView({behavior:"smooth",block:"start"});};rail.append(b);
+  });
+  const allDone=S.every(s=>st.done[s.id]);
+  $("#final").classList.toggle("locked",!allDone);
+  upScore(); drawCert(); if(window.PRES) PRES.upd();
+}
+function drawCert(){
+  const sc=score(), pct=Math.round(sc/total*100);
+  const mins=st.end?Math.max(1,Math.round((st.end-st.start)/60000)):null;
+  const d=new Date();
+  drawSend();
+  $("#cert").innerHTML=`<div>أنهى/أنهت رحلة المحطّات الأربع في درس</div><b>مقدّمة إلى شبكات الحاسوب</b><div class="big">${sc} / ${total}</div><div>النسبة: ${pct}%${mins?` · مدّة الإنجاز: ${mins} دقيقة`:""}</div><hr><div><b>${esc(st.n1)||"…"}</b> و <b>${esc(st.n2)||"…"}</b></div><div>${esc(st.cls)||"الشعبة: …"}</div><div class="small">${d.toLocaleDateString("ar-JO")}</div>`;
+}
+
+const RESULT_FORM={url:"https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=QoWSx2QeIUimYh4GU_yQCXkPYNJN8CJDkPMMgh2Vy6tUQzFUN1k1OEI2S1Y5NlozQ05MMVVGT1JPMy4u",field:"r5fcb6c37d72c494ea4afd2dda3eabe41",game:"G7U2L1"};
+function bestRec(){let r={best:-1,secs:0,tries:0};try{r=Object.assign(r,JSON.parse(localStorage.getItem(L.key+":best")||"{}"));}catch(e){}return r;}
+function recordFinish(){ if(!st.end||st.counted) return; const r=bestRec(); const sc=score(), secs=Math.round((st.end-st.start)/1000);
+  r.tries++; if(sc>r.best||(sc===r.best&&secs<r.secs)){r.best=sc;r.secs=secs;}
+  try{localStorage.setItem(L.key+":best",JSON.stringify(r));}catch(e){} st.counted=1; save(); }
+function drawSend(){
+  const a=$("#sendbtn"); if(!a) return; recordFinish();
+  const clean=x=>String(x||"").replace(/[|\n\r]/g," ").trim();
+  const names=clean([st.n1,st.n2].map(clean).filter(Boolean).join(" و ")), cls=clean(st.cls);
+  const ready=!!(st.end && names && cls);
+  a.style.pointerEvents=ready?"auto":"none"; a.style.opacity=ready?"1":".5";
+  if(!ready){a.removeAttribute("href");return;}
+  const r=bestRec(), max=total, lvn=1, gnum=parseInt(RESULT_FORM.game.replace(/\D/g,""),10);
+  const chk=(r.best*7919+r.secs*104+r.tries*31+max*17+lvn*101+gnum*1009+52813)%99991;
+  const code=[RESULT_FORM.game,lvn,r.best,max,r.secs,r.tries,names,cls,names,chk].join("|");
+  a.href=RESULT_FORM.url+"&"+RESULT_FORM.field+"="+encodeURIComponent(code);
+  $("#sendnote").textContent="أفضل نتيجة لكما "+r.best+" من "+max+" · عدد المحاولات "+r.tries+". افتحا الرابط واضغطا «إرسال» / Submit فقط.";
+}
+function esc(s){return String(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+["n1","n2","cls"].forEach(id=>{const e=document.getElementById(id);e.value=st[id]||"";e.addEventListener("input",()=>{st[id]=e.value;save();drawCert();});e.addEventListener("change",()=>{st[id]=e.value;save();drawCert();});});
+$("#calm").onclick=()=>document.body.classList.toggle("calm");
+let armed=false;$("#reset").onclick=e=>{const b=e.currentTarget;if(!armed){armed=true;b.textContent="اضغطا مرة ثانية للتأكيد — ستُمسح النقاط";setTimeout(()=>{armed=false;b.textContent="البدء من جديد";},4000);return;}try{localStorage.removeItem(L.key);}catch(e){}location.reload();};
+/* ---------- وضع العرض التقديمي ---------- */
+(function(){
+ document.body.classList.add("pres");
+ const KN={deck:"العرض",exp:"الشرح",game:"اللعبة"};
+ const scr=[{node:$(".intro"),title:"البداية"}];
+ S.forEach((sec,si)=>{const node=document.getElementById(sec.id);const parts=[...node.querySelectorAll(".pscr")];
+  const steps=el("div","steps");parts.forEach((p,j)=>steps.append(el("span","stp",(j+1)+". "+KN[p.dataset.k])));node.querySelector(".sechead").after(steps);
+  parts.forEach((p,j)=>scr.push({node,part:p,si,j,steps}));});
+ scr.push({node:$("#final"),fin:1});
+ const nav=el("nav","pnav",`<div class="pbar"><i></i></div><div class="prow"><button class="btn ghost pprev" type="button">→ السابق</button><span class="pcnt"></span><button class="btn pnext" type="button">التالي ←</button></div>`);
+ document.body.append(nav);
+ const prev=nav.querySelector(".pprev"),next=nav.querySelector(".pnext"),cnt=nav.querySelector(".pcnt"),bar=nav.querySelector(".pbar i");
+ let cur=0;try{cur=Math.min(+(localStorage.getItem(L.key+":scr")||0),scr.length-1);}catch(e){}
+ const open=i=>{const x=scr[i];if(!x)return false;if(x.fin)return S.every(s=>st.done[s.id]);if(x.si==null)return true;return x.si<=st.open;};
+ const blocked=i=>{const x=scr[i];return x&&x.part&&x.part.dataset.k==="game"&&!st.done[S[x.si].id];};
+ while(cur>0&&!open(cur))cur--;
+ function upd(){const x=scr[cur];
+  prev.disabled=cur===0;
+  const can=cur<scr.length-1&&open(cur+1)&&!blocked(cur);
+  next.disabled=!can;
+  next.textContent=blocked(cur)?"🔒 أنهيا اللعبة أولًا":(scr[cur+1]&&scr[cur+1].fin?"بطاقة الإنجاز ←":"التالي ←");
+  cnt.textContent=`${cur+1} / ${scr.length}`;bar.style.width=((cur+1)/scr.length*100)+"%";}
+ function go(i,dir){if(i<0||i>=scr.length||!open(i))return;const old=scr[cur];cur=i;const x=scr[cur];
+  document.querySelectorAll("#main > section, #secs > section").forEach(n=>n.classList.remove("cur"));
+  x.node.classList.add("cur");
+  if(x.part){x.node.querySelectorAll(".pscr").forEach(p=>p.classList.toggle("on",p===x.part));x.steps.querySelectorAll(".stp").forEach((t,j)=>t.classList.toggle("on",j===x.j));}
+  const anim=x.part||x.node;anim.classList.remove("inN","inP");void anim.offsetWidth;anim.classList.add(dir<0?"inP":"inN");
+  if(old!==x&&dir)SFX.whoosh();next.classList.remove("pulse");
+  try{localStorage.setItem(L.key+":scr",cur);}catch(e){}
+  window.scrollTo({top:0,behavior:"auto"});upd();}
+ prev.onclick=()=>go(cur-1,-1);next.onclick=()=>go(cur+1,1);
+ document.addEventListener("keydown",e=>{if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;if(e.key==="ArrowLeft"&&!next.disabled)go(cur+1,1);if(e.key==="ArrowRight"&&!prev.disabled)go(cur-1,-1);});
+ let tx=null,ty=0;const m=$("#main");
+ m.addEventListener("touchstart",e=>{if(e.target.closest(".dk-stage,input,select,.bins,.pool"))return tx=null;tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+ m.addEventListener("touchend",e=>{if(tx==null)return;const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;tx=null;if(Math.abs(dx)>70&&Math.abs(dy)<50){if(dx>0&&!next.disabled)go(cur+1,1);else if(dx<0&&!prev.disabled)go(cur-1,-1);}},{passive:true});
+ window.PRES={upd,secDone(si){upd();next.classList.add("pulse");},goSec(si){const i=scr.findIndex(x=>x.si===si);if(i>=0)go(i,i>cur?1:-1);}};
+ go(cur,0);
+})();
+refresh();
+})();
+</script>
+</body>
+</html>
